@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- İlerleme çubuğunun dolu kısmı.
+     ProgressBar'ın kendi arka planını kullanmak yerine ayrı bir çizilebilir
+     tanımlandı: sistem temasının vurgu rengi cihazdan cihaza değişiyor ve
+     araç uygulamanın yeşiline değil telefonun rengine bürünüyordu. -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@android:id/background">
+        <shape android:shape="rectangle">
+            <corners android:radius="3dp" />
+            <solid android:color="@color/widget_track" />
+        </shape>
+    </item>
+    <item android:id="@android:id/progress">
+        <clip>
+            <shape android:shape="rectangle">
+                <corners android:radius="3dp" />
+                <solid android:color="@color/widget_accent" />
+            </shape>
+        </clip>
+    </item>
+</layer-list>

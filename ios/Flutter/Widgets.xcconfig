@@ -1,0 +1,13 @@
+// Araç uzantısının sürüm ayarları.
+//
+// Uzantı da uygulamayla aynı sürümü taşımalı — App Store, gömülü uzantının
+// sürümü uygulamanınkinden farklıysa paketi reddediyor.
+//
+// Sürüm elle yazılmaz: `Generated.xcconfig` Flutter tarafından
+// pubspec.yaml'daki `version` alanından üretiliyor, buradan devralınınca
+// uzantı sürümü kendiliğinden takip ediyor. Sabit yazılsaydı, pubspec
+// sürümü yükseltildiğinde burası unutulur ve yayın adımında fark edilirdi.
+#include "Generated.xcconfig"
+
+MARKETING_VERSION=$(FLUTTER_BUILD_NAME)
+CURRENT_PROJECT_VERSION=$(FLUTTER_BUILD_NUMBER)

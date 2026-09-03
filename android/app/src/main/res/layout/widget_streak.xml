@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Okuma serisi aracı.
+     Büyük rakam ve altında plan adı. Küçük boyutta bile seri sayısı
+     okunabilsin diye rakam baskın tutuldu.
+
+     Ölçüler 2x2 hücreye (~150dp) göre sıkı ayarlandı: rakam, plan adı ve
+     bugünün durumu birlikte taşıyordu ve alttaki satır kırpılıyordu. Yazı
+     tipi dolgusu kapatılarak (`includeFontPadding`) satır başına birkaç
+     piksel geri kazanıldı. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widget_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/widget_background"
+    android:orientation="vertical"
+    android:gravity="center_vertical"
+    android:padding="14dp"
+    android:theme="@style/Theme.WidgetContainer">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:src="@drawable/ic_widget_flame"
+            android:contentDescription="@null" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="6dp"
+            android:text="@string/widget_streak_label"
+            android:textColor="@color/widget_ink_faint"
+            android:textSize="10sp"
+            android:letterSpacing="0.12"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <!-- Seri sayısı ve "gün" birimi yan yana; rakam büyük, birim küçük. -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:orientation="horizontal"
+        android:baselineAligned="true">
+
+        <TextView
+            android:id="@+id/streak_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"
+            android:textColor="@color/widget_accent"
+            android:textSize="30sp"
+            android:maxLines="1"
+            android:includeFontPadding="false"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/streak_unit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:text="@string/widget_streak_days"
+            android:textColor="@color/widget_ink_muted"
+            android:textSize="13sp"
+            android:maxLines="1" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/plan_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:text="@string/widget_streak_empty"
+        android:textColor="@color/widget_ink"
+        android:textSize="13sp"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:includeFontPadding="false" />
+
+    <!-- Bugünün durumu. Seriyi sürdürmek için bugün okunması gerektiğini
+         hatırlatır — asıl davranış değişikliğini yaratan satır bu. -->
+    <TextView
+        android:id="@+id/today_status"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:textColor="@color/widget_ink_muted"
+        android:textSize="11sp"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:includeFontPadding="false" />
+</LinearLayout>

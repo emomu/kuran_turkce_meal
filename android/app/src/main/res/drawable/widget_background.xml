@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Araç zemini. Köşe yarıçapı Android 12+ araç şekliyle uyumlu tutuldu;
+     daha köşeli bir zemin sistemin kırptığı alanın içinde boşluk bırakır. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <corners android:radius="24dp" />
+    <solid android:color="@color/widget_background" />
+</shape>

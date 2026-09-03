@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Açılış zemini. Uygulamanın kendi zemin rengiyle aynı olsun diye
+     values/colors.xml ve values-night/colors.xml üzerinden gelir. -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@color/launch_background" />
+</layer-list>

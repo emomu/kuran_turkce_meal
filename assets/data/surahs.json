@@ -1,0 +1,1142 @@
+[
+ {
+  "number": 1,
+  "name": "Fâtiha",
+  "meaning": "Açılış",
+  "revelation_order": 5,
+  "revelation_place": "mekke",
+  "ayah_count": 7,
+  "name_en": "Al-Fatihah",
+  "meaning_en": "The Opening"
+ },
+ {
+  "number": 2,
+  "name": "Bakara",
+  "meaning": "İnek",
+  "revelation_order": 87,
+  "revelation_place": "medine",
+  "ayah_count": 286,
+  "name_en": "Al-Baqarah",
+  "meaning_en": "The Cow"
+ },
+ {
+  "number": 3,
+  "name": "Âl-i İmrân",
+  "meaning": "İmran Ailesi",
+  "revelation_order": 89,
+  "revelation_place": "medine",
+  "ayah_count": 200,
+  "name_en": "Ali 'Imran",
+  "meaning_en": "The Family of Imran"
+ },
+ {
+  "number": 4,
+  "name": "Nisâ",
+  "meaning": "Kadınlar",
+  "revelation_order": 92,
+  "revelation_place": "medine",
+  "ayah_count": 176,
+  "name_en": "An-Nisa",
+  "meaning_en": "The Women"
+ },
+ {
+  "number": 5,
+  "name": "Mâide",
+  "meaning": "Sofra",
+  "revelation_order": 112,
+  "revelation_place": "medine",
+  "ayah_count": 120,
+  "name_en": "Al-Ma'idah",
+  "meaning_en": "The Table Spread"
+ },
+ {
+  "number": 6,
+  "name": "En'âm",
+  "meaning": "Davarlar",
+  "revelation_order": 55,
+  "revelation_place": "mekke",
+  "ayah_count": 165,
+  "name_en": "Al-An'am",
+  "meaning_en": "The Cattle"
+ },
+ {
+  "number": 7,
+  "name": "A'râf",
+  "meaning": "Yüksek Yerler",
+  "revelation_order": 39,
+  "revelation_place": "mekke",
+  "ayah_count": 206,
+  "name_en": "Al-A'raf",
+  "meaning_en": "The Heights"
+ },
+ {
+  "number": 8,
+  "name": "Enfâl",
+  "meaning": "Ganimetler",
+  "revelation_order": 88,
+  "revelation_place": "medine",
+  "ayah_count": 75,
+  "name_en": "Al-Anfal",
+  "meaning_en": "The Spoils of War"
+ },
+ {
+  "number": 9,
+  "name": "Tevbe",
+  "meaning": "Tövbe",
+  "revelation_order": 113,
+  "revelation_place": "medine",
+  "ayah_count": 129,
+  "name_en": "At-Tawbah",
+  "meaning_en": "The Repentance"
+ },
+ {
+  "number": 10,
+  "name": "Yûnus",
+  "meaning": "Yunus",
+  "revelation_order": 51,
+  "revelation_place": "mekke",
+  "ayah_count": 109,
+  "name_en": "Yunus",
+  "meaning_en": "Jonah"
+ },
+ {
+  "number": 11,
+  "name": "Hûd",
+  "meaning": "Hud",
+  "revelation_order": 52,
+  "revelation_place": "mekke",
+  "ayah_count": 123,
+  "name_en": "Hud",
+  "meaning_en": "Hud"
+ },
+ {
+  "number": 12,
+  "name": "Yûsuf",
+  "meaning": "Yusuf",
+  "revelation_order": 53,
+  "revelation_place": "mekke",
+  "ayah_count": 111,
+  "name_en": "Yusuf",
+  "meaning_en": "Joseph"
+ },
+ {
+  "number": 13,
+  "name": "Ra'd",
+  "meaning": "Gök Gürültüsü",
+  "revelation_order": 96,
+  "revelation_place": "medine",
+  "ayah_count": 43,
+  "name_en": "Ar-Ra'd",
+  "meaning_en": "The Thunder"
+ },
+ {
+  "number": 14,
+  "name": "İbrâhim",
+  "meaning": "İbrahim",
+  "revelation_order": 72,
+  "revelation_place": "mekke",
+  "ayah_count": 52,
+  "name_en": "Ibrahim",
+  "meaning_en": "Abraham"
+ },
+ {
+  "number": 15,
+  "name": "Hicr",
+  "meaning": "Hicr",
+  "revelation_order": 54,
+  "revelation_place": "mekke",
+  "ayah_count": 99,
+  "name_en": "Al-Hijr",
+  "meaning_en": "The Rocky Tract"
+ },
+ {
+  "number": 16,
+  "name": "Nahl",
+  "meaning": "Arı",
+  "revelation_order": 70,
+  "revelation_place": "mekke",
+  "ayah_count": 128,
+  "name_en": "An-Nahl",
+  "meaning_en": "The Bee"
+ },
+ {
+  "number": 17,
+  "name": "İsrâ",
+  "meaning": "Gece Yürüyüşü",
+  "revelation_order": 50,
+  "revelation_place": "mekke",
+  "ayah_count": 111,
+  "name_en": "Al-Isra",
+  "meaning_en": "The Night Journey"
+ },
+ {
+  "number": 18,
+  "name": "Kehf",
+  "meaning": "Mağara",
+  "revelation_order": 69,
+  "revelation_place": "mekke",
+  "ayah_count": 110,
+  "name_en": "Al-Kahf",
+  "meaning_en": "The Cave"
+ },
+ {
+  "number": 19,
+  "name": "Meryem",
+  "meaning": "Meryem",
+  "revelation_order": 44,
+  "revelation_place": "mekke",
+  "ayah_count": 98,
+  "name_en": "Maryam",
+  "meaning_en": "Mary"
+ },
+ {
+  "number": 20,
+  "name": "Tâhâ",
+  "meaning": "Tâhâ",
+  "revelation_order": 45,
+  "revelation_place": "mekke",
+  "ayah_count": 135,
+  "name_en": "Ta-Ha",
+  "meaning_en": "Ta-Ha"
+ },
+ {
+  "number": 21,
+  "name": "Enbiyâ",
+  "meaning": "Peygamberler",
+  "revelation_order": 73,
+  "revelation_place": "mekke",
+  "ayah_count": 112,
+  "name_en": "Al-Anbiya",
+  "meaning_en": "The Prophets"
+ },
+ {
+  "number": 22,
+  "name": "Hac",
+  "meaning": "Hac",
+  "revelation_order": 103,
+  "revelation_place": "medine",
+  "ayah_count": 78,
+  "name_en": "Al-Hajj",
+  "meaning_en": "The Pilgrimage"
+ },
+ {
+  "number": 23,
+  "name": "Mü'minûn",
+  "meaning": "İnananlar",
+  "revelation_order": 74,
+  "revelation_place": "mekke",
+  "ayah_count": 118,
+  "name_en": "Al-Mu'minun",
+  "meaning_en": "The Believers"
+ },
+ {
+  "number": 24,
+  "name": "Nûr",
+  "meaning": "Işık",
+  "revelation_order": 102,
+  "revelation_place": "medine",
+  "ayah_count": 64,
+  "name_en": "An-Nur",
+  "meaning_en": "The Light"
+ },
+ {
+  "number": 25,
+  "name": "Furkân",
+  "meaning": "Ayırt Eden",
+  "revelation_order": 42,
+  "revelation_place": "mekke",
+  "ayah_count": 77,
+  "name_en": "Al-Furqan",
+  "meaning_en": "The Criterion"
+ },
+ {
+  "number": 26,
+  "name": "Şuarâ",
+  "meaning": "Şairler",
+  "revelation_order": 47,
+  "revelation_place": "mekke",
+  "ayah_count": 227,
+  "name_en": "Ash-Shu'ara",
+  "meaning_en": "The Poets"
+ },
+ {
+  "number": 27,
+  "name": "Neml",
+  "meaning": "Karınca",
+  "revelation_order": 48,
+  "revelation_place": "mekke",
+  "ayah_count": 93,
+  "name_en": "An-Naml",
+  "meaning_en": "The Ant"
+ },
+ {
+  "number": 28,
+  "name": "Kasas",
+  "meaning": "Kıssalar",
+  "revelation_order": 49,
+  "revelation_place": "mekke",
+  "ayah_count": 88,
+  "name_en": "Al-Qasas",
+  "meaning_en": "The Stories"
+ },
+ {
+  "number": 29,
+  "name": "Ankebût",
+  "meaning": "Örümcek",
+  "revelation_order": 85,
+  "revelation_place": "mekke",
+  "ayah_count": 69,
+  "name_en": "Al-'Ankabut",
+  "meaning_en": "The Spider"
+ },
+ {
+  "number": 30,
+  "name": "Rûm",
+  "meaning": "Romalılar",
+  "revelation_order": 84,
+  "revelation_place": "mekke",
+  "ayah_count": 60,
+  "name_en": "Ar-Rum",
+  "meaning_en": "The Romans"
+ },
+ {
+  "number": 31,
+  "name": "Lokmân",
+  "meaning": "Lokman",
+  "revelation_order": 57,
+  "revelation_place": "mekke",
+  "ayah_count": 34,
+  "name_en": "Luqman",
+  "meaning_en": "Luqman"
+ },
+ {
+  "number": 32,
+  "name": "Secde",
+  "meaning": "Secde",
+  "revelation_order": 75,
+  "revelation_place": "mekke",
+  "ayah_count": 30,
+  "name_en": "As-Sajdah",
+  "meaning_en": "The Prostration"
+ },
+ {
+  "number": 33,
+  "name": "Ahzâb",
+  "meaning": "Gruplar",
+  "revelation_order": 90,
+  "revelation_place": "medine",
+  "ayah_count": 73,
+  "name_en": "Al-Ahzab",
+  "meaning_en": "The Combined Forces"
+ },
+ {
+  "number": 34,
+  "name": "Sebe'",
+  "meaning": "Sebe",
+  "revelation_order": 58,
+  "revelation_place": "mekke",
+  "ayah_count": 54,
+  "name_en": "Saba",
+  "meaning_en": "Sheba"
+ },
+ {
+  "number": 35,
+  "name": "Fâtır",
+  "meaning": "Yaratan",
+  "revelation_order": 43,
+  "revelation_place": "mekke",
+  "ayah_count": 45,
+  "name_en": "Fatir",
+  "meaning_en": "Originator"
+ },
+ {
+  "number": 36,
+  "name": "Yâsîn",
+  "meaning": "Yâsîn",
+  "revelation_order": 41,
+  "revelation_place": "mekke",
+  "ayah_count": 83,
+  "name_en": "Ya-Sin",
+  "meaning_en": "Ya-Sin"
+ },
+ {
+  "number": 37,
+  "name": "Sâffât",
+  "meaning": "Saf Tutanlar",
+  "revelation_order": 56,
+  "revelation_place": "mekke",
+  "ayah_count": 182,
+  "name_en": "As-Saffat",
+  "meaning_en": "Those Who Line Up"
+ },
+ {
+  "number": 38,
+  "name": "Sâd",
+  "meaning": "Sâd",
+  "revelation_order": 38,
+  "revelation_place": "mekke",
+  "ayah_count": 88,
+  "name_en": "Sad",
+  "meaning_en": "Sad"
+ },
+ {
+  "number": 39,
+  "name": "Zümer",
+  "meaning": "Topluluklar",
+  "revelation_order": 59,
+  "revelation_place": "mekke",
+  "ayah_count": 75,
+  "name_en": "Az-Zumar",
+  "meaning_en": "The Troops"
+ },
+ {
+  "number": 40,
+  "name": "Mü'min",
+  "meaning": "İnanan",
+  "revelation_order": 60,
+  "revelation_place": "mekke",
+  "ayah_count": 85,
+  "name_en": "Ghafir",
+  "meaning_en": "The Forgiver"
+ },
+ {
+  "number": 41,
+  "name": "Fussilet",
+  "meaning": "Ayrıntılı Anlatılan",
+  "revelation_order": 61,
+  "revelation_place": "mekke",
+  "ayah_count": 54,
+  "name_en": "Fussilat",
+  "meaning_en": "Explained in Detail"
+ },
+ {
+  "number": 42,
+  "name": "Şûrâ",
+  "meaning": "Danışma",
+  "revelation_order": 62,
+  "revelation_place": "mekke",
+  "ayah_count": 53,
+  "name_en": "Ash-Shura",
+  "meaning_en": "The Consultation"
+ },
+ {
+  "number": 43,
+  "name": "Zuhruf",
+  "meaning": "Süs",
+  "revelation_order": 63,
+  "revelation_place": "mekke",
+  "ayah_count": 89,
+  "name_en": "Az-Zukhruf",
+  "meaning_en": "The Ornaments of Gold"
+ },
+ {
+  "number": 44,
+  "name": "Duhân",
+  "meaning": "Duman",
+  "revelation_order": 64,
+  "revelation_place": "mekke",
+  "ayah_count": 59,
+  "name_en": "Ad-Dukhan",
+  "meaning_en": "The Smoke"
+ },
+ {
+  "number": 45,
+  "name": "Câsiye",
+  "meaning": "Diz Çöken",
+  "revelation_order": 65,
+  "revelation_place": "mekke",
+  "ayah_count": 37,
+  "name_en": "Al-Jathiyah",
+  "meaning_en": "The Crouching"
+ },
+ {
+  "number": 46,
+  "name": "Ahkâf",
+  "meaning": "Kum Tepeleri",
+  "revelation_order": 66,
+  "revelation_place": "mekke",
+  "ayah_count": 35,
+  "name_en": "Al-Ahqaf",
+  "meaning_en": "The Sand Dunes"
+ },
+ {
+  "number": 47,
+  "name": "Muhammed",
+  "meaning": "Muhammed",
+  "revelation_order": 95,
+  "revelation_place": "medine",
+  "ayah_count": 38,
+  "name_en": "Muhammad",
+  "meaning_en": "Muhammad"
+ },
+ {
+  "number": 48,
+  "name": "Fetih",
+  "meaning": "Fetih",
+  "revelation_order": 111,
+  "revelation_place": "medine",
+  "ayah_count": 29,
+  "name_en": "Al-Fath",
+  "meaning_en": "The Victory"
+ },
+ {
+  "number": 49,
+  "name": "Hucurât",
+  "meaning": "Odalar",
+  "revelation_order": 106,
+  "revelation_place": "medine",
+  "ayah_count": 18,
+  "name_en": "Al-Hujurat",
+  "meaning_en": "The Rooms"
+ },
+ {
+  "number": 50,
+  "name": "Kâf",
+  "meaning": "Kâf",
+  "revelation_order": 34,
+  "revelation_place": "mekke",
+  "ayah_count": 45,
+  "name_en": "Qaf",
+  "meaning_en": "Qaf"
+ },
+ {
+  "number": 51,
+  "name": "Zâriyât",
+  "meaning": "Savuranlar",
+  "revelation_order": 67,
+  "revelation_place": "mekke",
+  "ayah_count": 60,
+  "name_en": "Adh-Dhariyat",
+  "meaning_en": "The Winnowing Winds"
+ },
+ {
+  "number": 52,
+  "name": "Tûr",
+  "meaning": "Tûr Dağı",
+  "revelation_order": 76,
+  "revelation_place": "mekke",
+  "ayah_count": 49,
+  "name_en": "At-Tur",
+  "meaning_en": "The Mount"
+ },
+ {
+  "number": 53,
+  "name": "Necm",
+  "meaning": "Yıldız",
+  "revelation_order": 23,
+  "revelation_place": "mekke",
+  "ayah_count": 62,
+  "name_en": "An-Najm",
+  "meaning_en": "The Star"
+ },
+ {
+  "number": 54,
+  "name": "Kamer",
+  "meaning": "Ay",
+  "revelation_order": 37,
+  "revelation_place": "mekke",
+  "ayah_count": 55,
+  "name_en": "Al-Qamar",
+  "meaning_en": "The Moon"
+ },
+ {
+  "number": 55,
+  "name": "Rahmân",
+  "meaning": "Rahman",
+  "revelation_order": 97,
+  "revelation_place": "medine",
+  "ayah_count": 78,
+  "name_en": "Ar-Rahman",
+  "meaning_en": "The Beneficent"
+ },
+ {
+  "number": 56,
+  "name": "Vâkıa",
+  "meaning": "Gerçekleşecek Olay",
+  "revelation_order": 46,
+  "revelation_place": "mekke",
+  "ayah_count": 96,
+  "name_en": "Al-Waqi'ah",
+  "meaning_en": "The Inevitable"
+ },
+ {
+  "number": 57,
+  "name": "Hadîd",
+  "meaning": "Demir",
+  "revelation_order": 94,
+  "revelation_place": "medine",
+  "ayah_count": 29,
+  "name_en": "Al-Hadid",
+  "meaning_en": "The Iron"
+ },
+ {
+  "number": 58,
+  "name": "Mücâdele",
+  "meaning": "Tartışan Kadın",
+  "revelation_order": 105,
+  "revelation_place": "medine",
+  "ayah_count": 22,
+  "name_en": "Al-Mujadila",
+  "meaning_en": "The Pleading Woman"
+ },
+ {
+  "number": 59,
+  "name": "Haşr",
+  "meaning": "Toplanma",
+  "revelation_order": 101,
+  "revelation_place": "medine",
+  "ayah_count": 24,
+  "name_en": "Al-Hashr",
+  "meaning_en": "The Exile"
+ },
+ {
+  "number": 60,
+  "name": "Mümtehine",
+  "meaning": "Sorgulanan Kadın",
+  "revelation_order": 91,
+  "revelation_place": "medine",
+  "ayah_count": 13,
+  "name_en": "Al-Mumtahanah",
+  "meaning_en": "She That Is To Be Examined"
+ },
+ {
+  "number": 61,
+  "name": "Saff",
+  "meaning": "Saf",
+  "revelation_order": 109,
+  "revelation_place": "medine",
+  "ayah_count": 14,
+  "name_en": "As-Saff",
+  "meaning_en": "The Ranks"
+ },
+ {
+  "number": 62,
+  "name": "Cum'a",
+  "meaning": "Cuma",
+  "revelation_order": 110,
+  "revelation_place": "medine",
+  "ayah_count": 11,
+  "name_en": "Al-Jumu'ah",
+  "meaning_en": "The Congregation"
+ },
+ {
+  "number": 63,
+  "name": "Münâfikûn",
+  "meaning": "İkiyüzlüler",
+  "revelation_order": 104,
+  "revelation_place": "medine",
+  "ayah_count": 11,
+  "name_en": "Al-Munafiqun",
+  "meaning_en": "The Hypocrites"
+ },
+ {
+  "number": 64,
+  "name": "Teğâbün",
+  "meaning": "Aldanma",
+  "revelation_order": 108,
+  "revelation_place": "medine",
+  "ayah_count": 18,
+  "name_en": "At-Taghabun",
+  "meaning_en": "The Mutual Disillusion"
+ },
+ {
+  "number": 65,
+  "name": "Talâk",
+  "meaning": "Boşanma",
+  "revelation_order": 99,
+  "revelation_place": "medine",
+  "ayah_count": 12,
+  "name_en": "At-Talaq",
+  "meaning_en": "The Divorce"
+ },
+ {
+  "number": 66,
+  "name": "Tahrîm",
+  "meaning": "Yasaklama",
+  "revelation_order": 107,
+  "revelation_place": "medine",
+  "ayah_count": 12,
+  "name_en": "At-Tahrim",
+  "meaning_en": "The Prohibition"
+ },
+ {
+  "number": 67,
+  "name": "Mülk",
+  "meaning": "Egemenlik",
+  "revelation_order": 77,
+  "revelation_place": "mekke",
+  "ayah_count": 30,
+  "name_en": "Al-Mulk",
+  "meaning_en": "The Sovereignty"
+ },
+ {
+  "number": 68,
+  "name": "Kalem",
+  "meaning": "Kalem",
+  "revelation_order": 2,
+  "revelation_place": "mekke",
+  "ayah_count": 52,
+  "name_en": "Al-Qalam",
+  "meaning_en": "The Pen"
+ },
+ {
+  "number": 69,
+  "name": "Hâkka",
+  "meaning": "Gerçekleşen",
+  "revelation_order": 78,
+  "revelation_place": "mekke",
+  "ayah_count": 52,
+  "name_en": "Al-Haqqah",
+  "meaning_en": "The Reality"
+ },
+ {
+  "number": 70,
+  "name": "Meâric",
+  "meaning": "Yükseliş Yolları",
+  "revelation_order": 79,
+  "revelation_place": "mekke",
+  "ayah_count": 44,
+  "name_en": "Al-Ma'arij",
+  "meaning_en": "The Ascending Stairways"
+ },
+ {
+  "number": 71,
+  "name": "Nûh",
+  "meaning": "Nuh",
+  "revelation_order": 71,
+  "revelation_place": "mekke",
+  "ayah_count": 28,
+  "name_en": "Nuh",
+  "meaning_en": "Noah"
+ },
+ {
+  "number": 72,
+  "name": "Cin",
+  "meaning": "Cinler",
+  "revelation_order": 40,
+  "revelation_place": "mekke",
+  "ayah_count": 28,
+  "name_en": "Al-Jinn",
+  "meaning_en": "The Jinn"
+ },
+ {
+  "number": 73,
+  "name": "Müzzemmil",
+  "meaning": "Örtünen",
+  "revelation_order": 3,
+  "revelation_place": "mekke",
+  "ayah_count": 20,
+  "name_en": "Al-Muzzammil",
+  "meaning_en": "The Enshrouded One"
+ },
+ {
+  "number": 74,
+  "name": "Müddessir",
+  "meaning": "Bürünen",
+  "revelation_order": 4,
+  "revelation_place": "mekke",
+  "ayah_count": 56,
+  "name_en": "Al-Muddaththir",
+  "meaning_en": "The Cloaked One"
+ },
+ {
+  "number": 75,
+  "name": "Kıyâme",
+  "meaning": "Diriliş",
+  "revelation_order": 31,
+  "revelation_place": "mekke",
+  "ayah_count": 40,
+  "name_en": "Al-Qiyamah",
+  "meaning_en": "The Resurrection"
+ },
+ {
+  "number": 76,
+  "name": "İnsân",
+  "meaning": "İnsan",
+  "revelation_order": 98,
+  "revelation_place": "medine",
+  "ayah_count": 31,
+  "name_en": "Al-Insan",
+  "meaning_en": "The Human"
+ },
+ {
+  "number": 77,
+  "name": "Mürselât",
+  "meaning": "Gönderilenler",
+  "revelation_order": 33,
+  "revelation_place": "mekke",
+  "ayah_count": 50,
+  "name_en": "Al-Mursalat",
+  "meaning_en": "Those Sent Forth"
+ },
+ {
+  "number": 78,
+  "name": "Nebe'",
+  "meaning": "Haber",
+  "revelation_order": 80,
+  "revelation_place": "mekke",
+  "ayah_count": 40,
+  "name_en": "An-Naba",
+  "meaning_en": "The Tidings"
+ },
+ {
+  "number": 79,
+  "name": "Nâziât",
+  "meaning": "Söküp Çıkaranlar",
+  "revelation_order": 81,
+  "revelation_place": "mekke",
+  "ayah_count": 46,
+  "name_en": "An-Nazi'at",
+  "meaning_en": "Those Who Drag Forth"
+ },
+ {
+  "number": 80,
+  "name": "Abese",
+  "meaning": "Yüzünü Ekşitti",
+  "revelation_order": 24,
+  "revelation_place": "mekke",
+  "ayah_count": 42,
+  "name_en": "'Abasa",
+  "meaning_en": "He Frowned"
+ },
+ {
+  "number": 81,
+  "name": "Tekvîr",
+  "meaning": "Dürülme",
+  "revelation_order": 7,
+  "revelation_place": "mekke",
+  "ayah_count": 29,
+  "name_en": "At-Takwir",
+  "meaning_en": "The Overthrowing"
+ },
+ {
+  "number": 82,
+  "name": "İnfitâr",
+  "meaning": "Yarılma",
+  "revelation_order": 82,
+  "revelation_place": "mekke",
+  "ayah_count": 19,
+  "name_en": "Al-Infitar",
+  "meaning_en": "The Cleaving"
+ },
+ {
+  "number": 83,
+  "name": "Mutaffifîn",
+  "meaning": "Ölçüde Hile Yapanlar",
+  "revelation_order": 86,
+  "revelation_place": "mekke",
+  "ayah_count": 36,
+  "name_en": "Al-Mutaffifin",
+  "meaning_en": "The Defrauding"
+ },
+ {
+  "number": 84,
+  "name": "İnşikâk",
+  "meaning": "Yarılma",
+  "revelation_order": 83,
+  "revelation_place": "mekke",
+  "ayah_count": 25,
+  "name_en": "Al-Inshiqaq",
+  "meaning_en": "The Sundering"
+ },
+ {
+  "number": 85,
+  "name": "Bürûc",
+  "meaning": "Burçlar",
+  "revelation_order": 27,
+  "revelation_place": "mekke",
+  "ayah_count": 22,
+  "name_en": "Al-Buruj",
+  "meaning_en": "The Mansions of the Stars"
+ },
+ {
+  "number": 86,
+  "name": "Târık",
+  "meaning": "Gece Gelen",
+  "revelation_order": 36,
+  "revelation_place": "mekke",
+  "ayah_count": 17,
+  "name_en": "At-Tariq",
+  "meaning_en": "The Nightcomer"
+ },
+ {
+  "number": 87,
+  "name": "A'lâ",
+  "meaning": "En Yüce",
+  "revelation_order": 8,
+  "revelation_place": "mekke",
+  "ayah_count": 19,
+  "name_en": "Al-A'la",
+  "meaning_en": "The Most High"
+ },
+ {
+  "number": 88,
+  "name": "Gâşiye",
+  "meaning": "Kaplayan",
+  "revelation_order": 68,
+  "revelation_place": "mekke",
+  "ayah_count": 26,
+  "name_en": "Al-Ghashiyah",
+  "meaning_en": "The Overwhelming"
+ },
+ {
+  "number": 89,
+  "name": "Fecr",
+  "meaning": "Şafak",
+  "revelation_order": 10,
+  "revelation_place": "mekke",
+  "ayah_count": 30,
+  "name_en": "Al-Fajr",
+  "meaning_en": "The Dawn"
+ },
+ {
+  "number": 90,
+  "name": "Beled",
+  "meaning": "Şehir",
+  "revelation_order": 35,
+  "revelation_place": "mekke",
+  "ayah_count": 20,
+  "name_en": "Al-Balad",
+  "meaning_en": "The City"
+ },
+ {
+  "number": 91,
+  "name": "Şems",
+  "meaning": "Güneş",
+  "revelation_order": 26,
+  "revelation_place": "mekke",
+  "ayah_count": 15,
+  "name_en": "Ash-Shams",
+  "meaning_en": "The Sun"
+ },
+ {
+  "number": 92,
+  "name": "Leyl",
+  "meaning": "Gece",
+  "revelation_order": 9,
+  "revelation_place": "mekke",
+  "ayah_count": 21,
+  "name_en": "Al-Layl",
+  "meaning_en": "The Night"
+ },
+ {
+  "number": 93,
+  "name": "Duhâ",
+  "meaning": "Kuşluk",
+  "revelation_order": 11,
+  "revelation_place": "mekke",
+  "ayah_count": 11,
+  "name_en": "Ad-Duha",
+  "meaning_en": "The Morning Hours"
+ },
+ {
+  "number": 94,
+  "name": "İnşirâh",
+  "meaning": "Ferahlama",
+  "revelation_order": 12,
+  "revelation_place": "mekke",
+  "ayah_count": 8,
+  "name_en": "Ash-Sharh",
+  "meaning_en": "The Relief"
+ },
+ {
+  "number": 95,
+  "name": "Tîn",
+  "meaning": "İncir",
+  "revelation_order": 28,
+  "revelation_place": "mekke",
+  "ayah_count": 8,
+  "name_en": "At-Tin",
+  "meaning_en": "The Fig"
+ },
+ {
+  "number": 96,
+  "name": "Alak",
+  "meaning": "Kan Pıhtısı",
+  "revelation_order": 1,
+  "revelation_place": "mekke",
+  "ayah_count": 19,
+  "name_en": "Al-'Alaq",
+  "meaning_en": "The Clot"
+ },
+ {
+  "number": 97,
+  "name": "Kadr",
+  "meaning": "Kadir",
+  "revelation_order": 25,
+  "revelation_place": "mekke",
+  "ayah_count": 5,
+  "name_en": "Al-Qadr",
+  "meaning_en": "The Power"
+ },
+ {
+  "number": 98,
+  "name": "Beyyine",
+  "meaning": "Apaçık Delil",
+  "revelation_order": 100,
+  "revelation_place": "medine",
+  "ayah_count": 8,
+  "name_en": "Al-Bayyinah",
+  "meaning_en": "The Clear Proof"
+ },
+ {
+  "number": 99,
+  "name": "Zilzâl",
+  "meaning": "Sarsıntı",
+  "revelation_order": 93,
+  "revelation_place": "medine",
+  "ayah_count": 8,
+  "name_en": "Az-Zalzalah",
+  "meaning_en": "The Earthquake"
+ },
+ {
+  "number": 100,
+  "name": "Âdiyât",
+  "meaning": "Koşanlar",
+  "revelation_order": 14,
+  "revelation_place": "mekke",
+  "ayah_count": 11,
+  "name_en": "Al-'Adiyat",
+  "meaning_en": "The Courser"
+ },
+ {
+  "number": 101,
+  "name": "Kâria",
+  "meaning": "Çarpacak Olay",
+  "revelation_order": 30,
+  "revelation_place": "mekke",
+  "ayah_count": 11,
+  "name_en": "Al-Qari'ah",
+  "meaning_en": "The Calamity"
+ },
+ {
+  "number": 102,
+  "name": "Tekâsür",
+  "meaning": "Çoklukla Övünme",
+  "revelation_order": 16,
+  "revelation_place": "mekke",
+  "ayah_count": 8,
+  "name_en": "At-Takathur",
+  "meaning_en": "The Rivalry in Worldly Increase"
+ },
+ {
+  "number": 103,
+  "name": "Asr",
+  "meaning": "Zaman",
+  "revelation_order": 13,
+  "revelation_place": "mekke",
+  "ayah_count": 3,
+  "name_en": "Al-'Asr",
+  "meaning_en": "The Declining Day"
+ },
+ {
+  "number": 104,
+  "name": "Hümeze",
+  "meaning": "Çekiştiren",
+  "revelation_order": 32,
+  "revelation_place": "mekke",
+  "ayah_count": 9,
+  "name_en": "Al-Humazah",
+  "meaning_en": "The Traducer"
+ },
+ {
+  "number": 105,
+  "name": "Fîl",
+  "meaning": "Fil",
+  "revelation_order": 19,
+  "revelation_place": "mekke",
+  "ayah_count": 5,
+  "name_en": "Al-Fil",
+  "meaning_en": "The Elephant"
+ },
+ {
+  "number": 106,
+  "name": "Kureyş",
+  "meaning": "Kureyş",
+  "revelation_order": 29,
+  "revelation_place": "mekke",
+  "ayah_count": 4,
+  "name_en": "Quraysh",
+  "meaning_en": "Quraysh"
+ },
+ {
+  "number": 107,
+  "name": "Mâûn",
+  "meaning": "Yardım",
+  "revelation_order": 17,
+  "revelation_place": "mekke",
+  "ayah_count": 7,
+  "name_en": "Al-Ma'un",
+  "meaning_en": "The Small Kindnesses"
+ },
+ {
+  "number": 108,
+  "name": "Kevser",
+  "meaning": "Bolluk",
+  "revelation_order": 15,
+  "revelation_place": "mekke",
+  "ayah_count": 3,
+  "name_en": "Al-Kawthar",
+  "meaning_en": "The Abundance"
+ },
+ {
+  "number": 109,
+  "name": "Kâfirûn",
+  "meaning": "İnkârcılar",
+  "revelation_order": 18,
+  "revelation_place": "mekke",
+  "ayah_count": 6,
+  "name_en": "Al-Kafirun",
+  "meaning_en": "The Disbelievers"
+ },
+ {
+  "number": 110,
+  "name": "Nasr",
+  "meaning": "Yardım",
+  "revelation_order": 114,
+  "revelation_place": "medine",
+  "ayah_count": 3,
+  "name_en": "An-Nasr",
+  "meaning_en": "The Divine Support"
+ },
+ {
+  "number": 111,
+  "name": "Tebbet",
+  "meaning": "Kurusun",
+  "revelation_order": 6,
+  "revelation_place": "mekke",
+  "ayah_count": 5,
+  "name_en": "Al-Masad",
+  "meaning_en": "The Palm Fibre"
+ },
+ {
+  "number": 112,
+  "name": "İhlâs",
+  "meaning": "İçtenlik",
+  "revelation_order": 22,
+  "revelation_place": "mekke",
+  "ayah_count": 4,
+  "name_en": "Al-Ikhlas",
+  "meaning_en": "The Sincerity"
+ },
+ {
+  "number": 113,
+  "name": "Felak",
+  "meaning": "Şafak",
+  "revelation_order": 20,
+  "revelation_place": "mekke",
+  "ayah_count": 5,
+  "name_en": "Al-Falaq",
+  "meaning_en": "The Daybreak"
+ },
+ {
+  "number": 114,
+  "name": "Nâs",
+  "meaning": "İnsanlar",
+  "revelation_order": 21,
+  "revelation_place": "mekke",
+  "ayah_count": 6,
+  "name_en": "An-Nas",
+  "meaning_en": "Mankind"
+ }
+]

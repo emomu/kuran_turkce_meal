@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<!-- Araç galerisinde görünen ad. Uygulamayla birebir aynı olmasın diye
+	     ayrı tutuldu; kullanıcı listede uygulamayı değil araçları arıyor. -->
+	<key>CFBundleDisplayName</key>
+	<string>Kur'an Meal Araçları</string>
+	<key>CFBundleExecutable</key>
+	<string>$(EXECUTABLE_NAME)</string>
+	<key>CFBundleIdentifier</key>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>$(PRODUCT_NAME)</string>
+	<key>CFBundlePackageType</key>
+	<string>$(PRODUCT_BUNDLE_PACKAGE_TYPE)</string>
+	<!-- Sürüm, derleme ayarlarından gelir (MARKETING_VERSION ve
+	     CURRENT_PROJECT_VERSION). Doğrudan $(FLUTTER_BUILD_NAME) yazılamaz:
+	     o değişken Flutter'ın xcconfig'inde tanımlı ve o dosya yalnızca
+	     Runner hedefine bağlı. Uzantıda boş çözülüyor, alan tümüyle
+	     düşüyor ve iOS paketi "Invalid placeholder attributes" diyerek
+	     kurmayı reddediyor. -->
+	<key>CFBundleShortVersionString</key>
+	<string>$(MARKETING_VERSION)</string>
+	<key>CFBundleVersion</key>
+	<string>$(CURRENT_PROJECT_VERSION)</string>
+	<key>NSExtension</key>
+	<dict>
+		<key>NSExtensionPointIdentifier</key>
+		<string>com.apple.widgetkit-extension</string>
+	</dict>
+</dict>
+</plist>

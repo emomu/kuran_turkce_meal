@@ -1,0 +1,52 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../data/db/app_database.dart';
+import '../../data/repositories/marks_repository.dart';
+import '../../data/repositories/progress_repository.dart';
+import '../../data/repositories/quran_repository.dart';
+import '../../data/repositories/root_repository.dart';
+
+/// Uygulama genelinde paylaşılan altyapı sağlayıcıları.
+
+final databaseProvider = Provider<AppDatabase>((ref) => AppDatabase.instance);
+
+final quranRepositoryProvider = Provider<QuranRepository>(
+  (ref) => QuranRepository(ref.watch(databaseProvider)),
+);
+
+final marksRepositoryProvider = Provider<MarksRepository>(
+  (ref) => MarksRepository(ref.watch(databaseProvider)),
+);
+
+final progressRepositoryProvider = Provider<ProgressRepository>(
+  (ref) => ProgressRepository(
+    ref.watch(databaseProvider),
+    ref.watch(sharedPreferencesProvider),
+  ),
+);
+
+/// Kelime kökü verisi. Asset'ten belleğe alınır; ilk kullanımda yüklenir.
+final rootRepositoryProvider = Provider<RootRepository>(
+  (ref) => RootRepository(),
+);
+
+/// Kök verisinin yüklenmesini bekler. Kök ekranları bunu izler.
+final rootDataProvider = FutureProvider<RootRepository>((ref) async {
+  final repo = ref.watch(rootRepositoryProvider);
+  await repo.ensureLoaded();
+  return repo;
+});
+
+/// SharedPreferences örneği. `main()` içinde çözülüp override edilir, böylece
+/// tercihleri okuyan widget'lar asenkron beklemek zorunda kalmaz.
+final sharedPreferencesProvider = Provider<SharedPreferences>(
+  (ref) => throw UnimplementedError(
+    'sharedPreferencesProvider main() içinde override edilmeli',
+  ),
+);
+
+/// Meal verisinin yüklü olup olmadığı. İçerik ekranları bunu bekler.
+final hasContentProvider = FutureProvider<bool>(
+  (ref) => ref.watch(databaseProvider).hasContent(),
+);

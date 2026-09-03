@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Araç paleti — açık tema.
+     Değerler lib/core/theme/app_colors.dart ile birebir aynı tutulur;
+     araç ana ekranda uygulamanın bir parçası gibi görünmeli. Palet
+     değişirse iki dosya birlikte güncellenmeli. -->
+<resources>
+    <color name="widget_background">#FFFEFB</color>
+    <color name="widget_background_sunken">#F1EFEA</color>
+    <color name="widget_ink">#1C1B18</color>
+    <color name="widget_ink_muted">#6B6862</color>
+    <color name="widget_ink_faint">#9C9891</color>
+    <color name="widget_divider">#E6E3DC</color>
+    <color name="widget_accent">#3F6B54</color>
+    <!-- İlerleme çubuğunun boş kısmı. Vurgu renginin çok soluk hali. -->
+    <color name="widget_track">#DFE7E1</color>
+</resources>

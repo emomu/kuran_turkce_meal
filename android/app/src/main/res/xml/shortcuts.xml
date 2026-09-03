@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Uygulama simgesine uzun basınca çıkan kısayollar.
+     Hedefler araçlarla aynı şemayı kullanır; Flutter tarafı ikisini de aynı
+     yerden karşılar (bkz. HomeWidgetService.routeFromUri).
+
+     "Günün ayeti" kısayolu bilerek yok: kısayollar statik tanımlıdır, oysa
+     günün ayetinin yolu her gün değişir. Statik kısayol dün gece yazılan
+     ayete giderdi. Bunun yerine ana sayfa, arama ve kayıtlar gibi sabit
+     hedefler verildi. -->
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <shortcut
+        android:shortcutId="continue_reading"
+        android:enabled="true"
+        android:icon="@drawable/ic_widget_book"
+        android:shortcutShortLabel="@string/shortcut_continue_short"
+        android:shortcutLongLabel="@string/shortcut_continue_long">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="com.emirhansoylu.kuranmeal"
+            android:targetClass="com.emirhansoylu.kuranmeal.MainActivity"
+            android:data="homeWidget://" />
+    </shortcut>
+
+    <shortcut
+        android:shortcutId="search"
+        android:enabled="true"
+        android:icon="@drawable/ic_widget_search"
+        android:shortcutShortLabel="@string/shortcut_search_short"
+        android:shortcutLongLabel="@string/shortcut_search_long">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="com.emirhansoylu.kuranmeal"
+            android:targetClass="com.emirhansoylu.kuranmeal.MainActivity"
+            android:data="homeWidget://ara" />
+    </shortcut>
+
+    <shortcut
+        android:shortcutId="bookmarks"
+        android:enabled="true"
+        android:icon="@drawable/ic_widget_bookmark"
+        android:shortcutShortLabel="@string/shortcut_bookmarks_short"
+        android:shortcutLongLabel="@string/shortcut_bookmarks_long">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="com.emirhansoylu.kuranmeal"
+            android:targetClass="com.emirhansoylu.kuranmeal.MainActivity"
+            android:data="homeWidget://kayitlar" />
+    </shortcut>
+</shortcuts>

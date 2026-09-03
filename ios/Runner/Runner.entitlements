@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!-- Uygulama ile ana ekran araçlarının ortak veri alanı.
+	     Araçlar uygulamanın belleğine erişemez; aralarındaki tek köprü bu
+	     grup üzerinden paylaşılan UserDefaults. Araç hedefinde de aynı grup
+	     tanımlı (bkz. KuranWidgets/KuranWidgets.entitlements). -->
+	<key>com.apple.security.application-groups</key>
+	<array>
+		<string>group.com.emirhansoylu.kuranmeal</string>
+	</array>
+</dict>
+</plist>

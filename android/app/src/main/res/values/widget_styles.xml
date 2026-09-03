@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Android 12+ araçlarında sistem, aracın köşelerini kendi şekline
+         göre kırpar ve dinamik renk uygular. Bu tema kırpmayı devralır ki
+         zeminimiz sistemin şekliyle hizalansın. -->
+    <style name="Theme.WidgetContainer" parent="@android:style/Theme.DeviceDefault">
+        <item name="android:colorBackground">@color/widget_background</item>
+    </style>
+</resources>

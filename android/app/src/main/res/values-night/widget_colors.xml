@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Araç paleti — koyu tema. AppColors'ın dark karşılıkları. -->
+<resources>
+    <color name="widget_background">#1D1C18</color>
+    <color name="widget_background_sunken">#262420</color>
+    <color name="widget_ink">#EDEAE3</color>
+    <color name="widget_ink_muted">#9A968D</color>
+    <color name="widget_ink_faint">#6A665E</color>
+    <color name="widget_divider">#2E2C27</color>
+    <color name="widget_accent">#7FB394</color>
+    <color name="widget_track">#33463C</color>
+</resources>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- "Devam et" aracı.
+     Kullanıcı aracı istediği boyuta çekebiliyor; bu yüzden düzen dar alana
+     da uymalı. Dolgu ve boşluklar bilerek küçük tutuldu, sure adı ile ayet
+     numarası arasında ayrı boşluk bırakılmadı — kırpılan bir etiket, sıkışık
+     ama tam görünen bir düzenden kötüdür. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widget_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/widget_background"
+    android:orientation="vertical"
+    android:gravity="center_vertical"
+    android:padding="14dp"
+    android:theme="@style/Theme.WidgetContainer">
+
+    <TextView
+        android:id="@+id/label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/widget_continue_label"
+        android:textColor="@color/widget_ink_faint"
+        android:textSize="10sp"
+        android:letterSpacing="0.10"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:includeFontPadding="false"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/surah_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="@string/widget_continue_empty"
+        android:textColor="@color/widget_ink"
+        android:textSize="17sp"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:includeFontPadding="false"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/ayah_label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
+        android:textColor="@color/widget_ink_muted"
+        android:textSize="12sp"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:includeFontPadding="false" />
+
+    <!-- İlerleme çubuğu. Kullanıcı hiç okumamışsa gizlenir; sıfır dolulukta
+         bir çubuk göstermek "başlanmış ama ilerlememiş" izlenimi verirdi. -->
+    <ProgressBar
+        android:id="@+id/progress"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        android:layout_marginTop="9dp"
+        android:max="100"
+        android:progressDrawable="@drawable/widget_progress_fill" />
+</LinearLayout>

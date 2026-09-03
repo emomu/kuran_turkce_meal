@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- "Devam et" aracı.
+     Yükseklik 2 hücre: tek hücre (~70dp) etiket, sure adı, ayet numarası ve
+     ilerleme çubuğunu almıyordu — içerik üstten taşıp kırpılıyor, çubuk ise
+     tamamen alanın dışında kalıyordu. Genişlik 3 hücrede kalır, sure adları
+     için yeterli. -->
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:minWidth="180dp"
+    android:minHeight="110dp"
+    android:targetCellWidth="3"
+    android:targetCellHeight="2"
+    android:minResizeWidth="140dp"
+    android:minResizeHeight="100dp"
+    android:resizeMode="horizontal|vertical"
+    android:widgetCategory="home_screen"
+    android:initialLayout="@layout/widget_continue_reading"
+    android:previewLayout="@layout/widget_continue_reading"
+    android:description="@string/widget_continue_description"
+    android:updatePeriodMillis="0" />

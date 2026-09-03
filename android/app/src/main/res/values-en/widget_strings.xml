@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Araç metinleri — İngilizce. -->
+<resources>
+    <string name="widget_daily_ayah_label">VERSE OF THE DAY</string>
+    <string name="widget_daily_ayah_name">Verse of the Day</string>
+    <string name="widget_daily_ayah_description">A new verse every day</string>
+
+    <string name="widget_continue_label">WHERE YOU LEFT OFF</string>
+    <string name="widget_continue_name">Continue</string>
+    <string name="widget_continue_description">Pick up where you left off</string>
+    <string name="widget_continue_empty">Start reading</string>
+
+    <string name="widget_streak_label">STREAK</string>
+    <string name="widget_streak_name">Reading Streak</string>
+    <string name="widget_streak_description">Track your plan streak</string>
+    <string name="widget_streak_empty">Choose a plan</string>
+    <string name="widget_streak_days">days</string>
+    <string name="widget_streak_best">Best: %1$d</string>
+    <string name="widget_streak_today_done">Done today</string>
+    <string name="widget_streak_today_pending">Pending today</string>
+
+    <string name="widget_empty">Open the app</string>
+    <string name="widget_refresh">Refresh</string>
+    <string name="widget_refresh_description">Show another verse</string>
+
+    <string name="tile_daily_ayah">Verse of the Day</string>
+
+    <string name="shortcut_bookmarks_short">Saved</string>
+    <string name="shortcut_bookmarks_long">Bookmarks and notes</string>
+    <string name="shortcut_continue_short">Continue</string>
+    <string name="shortcut_continue_long">Continue where you left off</string>
+    <string name="shortcut_search_short">Search</string>
+    <string name="shortcut_search_long">Search the translation</string>
+</resources>

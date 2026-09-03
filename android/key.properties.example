@@ -1,0 +1,15 @@
+# Yayın imzası anahtarı. Bu dosyayı `key.properties` adıyla kopyalayıp
+# kendi değerlerinizle doldurun. key.properties ve .jks dosyaları ASLA
+# sürüm kontrolüne girmemelidir.
+#
+# Anahtar üretmek için:
+#   keytool -genkey -v -keystore ~/kuranmeal-release.jks \
+#           -keyalg RSA -keysize 2048 -validity 10000 -alias kuranmeal
+#
+# Bu anahtarı KAYBETMEYİN. Play Store'a yüklenen bir uygulamanın sonraki
+# güncellemeleri aynı anahtarla imzalanmak zorundadır.
+
+storePassword=<anahtar deposu parolası>
+keyPassword=<anahtar parolası>
+keyAlias=kuranmeal
+storeFile=/Users/kullanici/kuranmeal-release.jks

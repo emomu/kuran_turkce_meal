@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Araç metinleri — Türkçe (varsayılan).
+     Araçlar Flutter çeviri katmanını göremez; kendi süreçlerinde çalışırlar.
+     Bu yüzden sabit etiketler Android kaynaklarında tutulur ve sistem dili
+     neyse o seçilir. Uygulamanın kendi dil ayarı ile ayrışabilir; ayrışma
+     kabul edildi çünkü araç sistemin bir parçası gibi davranmalı. -->
+<resources>
+    <string name="widget_daily_ayah_label">GÜNÜN AYETİ</string>
+    <string name="widget_daily_ayah_name">Günün Ayeti</string>
+    <string name="widget_daily_ayah_description">Her gün yeni bir ayet</string>
+
+    <string name="widget_continue_label">KALDIĞIN YER</string>
+    <string name="widget_continue_name">Devam Et</string>
+    <string name="widget_continue_description">Kaldığın yerden okumaya devam et</string>
+    <string name="widget_continue_empty">Okumaya başla</string>
+
+    <string name="widget_streak_label">SERİ</string>
+    <string name="widget_streak_name">Okuma Serisi</string>
+    <string name="widget_streak_description">Plan serini takip et</string>
+    <string name="widget_streak_empty">Bir plan seç</string>
+    <string name="widget_streak_days">gün</string>
+    <string name="widget_streak_best">En iyi: %1$d</string>
+    <string name="widget_streak_today_done">Bugün tamam</string>
+    <string name="widget_streak_today_pending">Bugün bekliyor</string>
+
+    <!-- Veri henüz yazılmamışken ya da bayatladığında gösterilir. -->
+    <string name="widget_empty">Uygulamayı açın</string>
+    <string name="widget_refresh">Yenile</string>
+    <string name="widget_refresh_description">Yeni bir ayet göster</string>
+
+    <!-- Hızlı ayarlar karesi. -->
+    <string name="tile_daily_ayah">Günün Ayeti</string>
+
+    <!-- Uygulama simgesine uzun basınca çıkan kısayollar. -->
+    <string name="shortcut_bookmarks_short">Kayıtlar</string>
+    <string name="shortcut_bookmarks_long">Yer imleri ve notlar</string>
+    <string name="shortcut_continue_short">Devam et</string>
+    <string name="shortcut_continue_long">Kaldığın yerden devam et</string>
+    <string name="shortcut_search_short">Ara</string>
+    <string name="shortcut_search_long">Mealde ara</string>
+</resources>

@@ -1,0 +1,157 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Günün ayeti hatırlatması için. Android 13+ çalışma anında sorar;
+         izin kullanıcı ayarlardan bildirimi açtığında istenir. -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <!-- Cihaz yeniden başlatıldığında planlanmış hatırlatma korunur. -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+
+    <application
+        android:label="Kur'an Meal"
+        android:name="${applicationName}"
+        android:icon="@mipmap/ic_launcher">
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:launchMode="singleTop"
+            android:taskAffinity=""
+            android:theme="@style/LaunchTheme"
+            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
+            android:hardwareAccelerated="true"
+            android:windowSoftInputMode="adjustResize">
+            <!-- Specifies an Android theme to apply to this Activity as soon as
+                 the Android process has started. This theme is visible to the user
+                 while the Flutter UI initializes. After that, this theme continues
+                 to determine the Window background behind the Flutter UI. -->
+            <meta-data
+              android:name="io.flutter.embedding.android.NormalTheme"
+              android:resource="@style/NormalTheme"
+              />
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+
+            <!-- Ana ekran araçları, hızlı ayarlar karesi ve kısayollar
+                 uygulamayı bu şemayla açar; taşınan yol Flutter tarafında
+                 yönlendiriciye devredilir. Şema uygulamaya özel olduğu için
+                 dışarıdan tetiklenmesi bir güvenlik sorunu doğurmaz —
+                 yalnızca uygulama içi bir ekrana gidilir. -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <data android:scheme="homeWidget"/>
+            </intent-filter>
+
+            <!-- Uygulama simgesine uzun basınca çıkan kısayollar. -->
+            <meta-data
+                android:name="android.app.shortcuts"
+                android:resource="@xml/shortcuts"/>
+        </activity>
+        <!-- Yeniden başlatmadan sonra planlanmış bildirimi geri kurar. -->
+        <receiver
+            android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationBootReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED"/>
+                <action android:name="android.intent.action.QUICKBOOT_POWERON"/>
+                <action android:name="com.htc.intent.action.QUICKBOOT_POWERON"/>
+            </intent-filter>
+        </receiver>
+
+        <receiver
+            android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationReceiver"
+            android:exported="false"/>
+
+        <!-- Ana ekran araçları.
+
+             Üç araç da aynı veri deposunu okur (bkz. WidgetData.kt) ve
+             Flutter motorunu çalıştırmaz; ana ekranda anında görünürler.
+
+             `updatePeriodMillis` künyelerde sıfır: sistemin kendiliğinden
+             yenilemesi kapalı. Tazeleme uygulama öne geldiğinde ve gün
+             dönümünde kurulan alarmla yapılır (bkz. WidgetMidnightRefresh).
+             Sistemin en kısa yenileme dönemi 30 dakika, oysa içerik günde
+             bir kez değişiyor — yarım saatte bir uyanmak boşuna pil yakardı.
+        -->
+        <receiver
+            android:name=".widgets.DailyAyahWidgetProvider"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_daily_ayah_info"/>
+        </receiver>
+
+        <receiver
+            android:name=".widgets.ContinueReadingWidgetProvider"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_continue_info"/>
+        </receiver>
+
+        <receiver
+            android:name=".widgets.StreakWidgetProvider"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_streak_info"/>
+        </receiver>
+
+        <!-- Araçları gün dönümünde tazeleyen alarm alıcısı. Yeniden başlatma
+             ve saat değişikliklerinde alarmı yeniden kurar. -->
+        <receiver
+            android:name=".widgets.WidgetMidnightRefreshReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED"/>
+                <action android:name="android.intent.action.TIMEZONE_CHANGED"/>
+                <action android:name="android.intent.action.TIME_SET"/>
+            </intent-filter>
+        </receiver>
+
+        <!-- Hızlı ayarlar karesi: bildirim panelinden günün ayetine gider.
+             Sistem hizmeti bağladığı için exported olmak zorunda; izinle
+             korunur, yalnızca sistem bağlayabilir. -->
+        <service
+            android:name=".widgets.DailyAyahTileService"
+            android:exported="true"
+            android:icon="@drawable/ic_widget_book"
+            android:label="@string/tile_daily_ayah"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE"/>
+            </intent-filter>
+            <meta-data
+                android:name="android.service.quicksettings.ACTIVE_TILE"
+                android:value="false"/>
+        </service>
+
+        <!-- Don't delete the meta-data below.
+             This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
+        <meta-data
+            android:name="flutterEmbedding"
+            android:value="2" />
+    </application>
+    <!-- Required to query activities that can process text, see:
+         https://developer.android.com/training/package-visibility and
+         https://developer.android.com/reference/android/content/Intent#ACTION_PROCESS_TEXT.
+
+         In particular, this is used by the Flutter engine in io.flutter.plugin.text.ProcessTextPlugin. -->
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.PROCESS_TEXT"/>
+            <data android:mimeType="text/plain"/>
+        </intent>
+    </queries>
+</manifest>
