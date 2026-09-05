@@ -1,8 +1,8 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 
+import '../../../core/router/app_router.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../../shared/widgets/responsive_layout.dart';
 import '../../../data/models/plan_schedule.dart';
@@ -42,72 +42,80 @@ class PlanDetailScreen extends ConsumerWidget {
         ref.watch(planCompletionsProvider(planId)).valueOrNull ??
         const <DateTime>[];
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(plan.titleKey.tr()),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 19),
-          onPressed: () => context.pop(),
+    // Araçtan doğrudan açıldığında geride yığın olmaz; sistem geri jesti
+    // uygulamayı kapatmak yerine ana sayfaya dönsün (bkz. [popOrHome]).
+    return PopScope(
+      canPop: canPopRoute(context),
+      onPopInvokedWithResult: (didPop, _) {
+        if (!didPop) popOrHome(context);
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(plan.titleKey.tr()),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 19),
+            onPressed: () => popOrHome(context),
+          ),
         ),
-      ),
-      body: SafeArea(
-        top: false,
-        bottom: false,
-        left: false,
-        right: false,
-        child: days.when(
-          loading: () => const Center(
-            child: SizedBox(
-              width: 20,
-              height: 20,
-              child: CircularProgressIndicator(strokeWidth: 2),
-            ),
-          ),
-          error: (error, _) => EmptyState(
-            icon: Icons.error_outline_rounded,
-            title: 'plans.loadFailed'.tr(),
-            message: '$error',
-          ),
-          data: (list) {
-            if (list.isEmpty) {
-              return EmptyState(
-                icon: Icons.menu_book_outlined,
-                title: 'home.noContent'.tr(),
-                message: 'plans.needsContent'.tr(),
-              );
-            }
-
-            return ListView.separated(
-              padding: centeredContentPadding(
-                context,
-                bottom: MediaQuery.paddingOf(context).bottom + Insets.lg,
+        body: SafeArea(
+          top: false,
+          bottom: false,
+          left: false,
+          right: false,
+          child: days.when(
+            loading: () => const Center(
+              child: SizedBox(
+                width: 20,
+                height: 20,
+                child: CircularProgressIndicator(strokeWidth: 2),
               ),
-              itemCount: list.length + 1,
-              separatorBuilder: (_, _) =>
-                  Divider(height: 1, color: theme.dividerColor),
-              itemBuilder: (context, index) {
-                if (index == 0) {
-                  return _PlanSummary(
-                    plan: plan,
-                    completedDays: completed,
-                    schedule: schedule,
-                    onRestart: () => _confirmRestart(context, ref),
-                    streak: streak,
-                    completions: completions,
-                  );
-                }
-
-                final day = list[index - 1];
-                return _DayRow(
-                  day: day,
-                  onToggle: () => ref
-                      .read(planActionsProvider)
-                      .toggleDay(planId, day.index, day.isCompleted),
-                  onOpen: () => _openDay(context, ref, day),
+            ),
+            error: (error, _) => EmptyState(
+              icon: Icons.error_outline_rounded,
+              title: 'plans.loadFailed'.tr(),
+              message: '$error',
+            ),
+            data: (list) {
+              if (list.isEmpty) {
+                return EmptyState(
+                  icon: Icons.menu_book_outlined,
+                  title: 'home.noContent'.tr(),
+                  message: 'plans.needsContent'.tr(),
                 );
-              },
-            );
-          },
+              }
+
+              return ListView.separated(
+                padding: centeredContentPadding(
+                  context,
+                  bottom: MediaQuery.paddingOf(context).bottom + Insets.lg,
+                ),
+                itemCount: list.length + 1,
+                separatorBuilder: (_, _) =>
+                    Divider(height: 1, color: theme.dividerColor),
+                itemBuilder: (context, index) {
+                  if (index == 0) {
+                    return _PlanSummary(
+                      plan: plan,
+                      completedDays: completed,
+                      schedule: schedule,
+                      onRestart: () => _confirmRestart(context, ref),
+                      streak: streak,
+                      completions: completions,
+                    );
+                  }
+
+                  final day = list[index - 1];
+                  return _DayRow(
+                    day: day,
+                    onToggle: () => ref
+                        .read(planActionsProvider)
+                        .toggleDay(planId, day.index, day.isCompleted),
+                    onOpen: () => _openDay(context, ref, day),
+                  );
+                },
+              );
+            },
+          ),
         ),
       ),
     );

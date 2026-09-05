@@ -153,6 +153,40 @@ final appRouter = GoRouter(
 /// Açılış ekranının yolu.
 const _splashPath = '/acilis';
 
+/// Geride kapatılabilir bir ekran var mı.
+///
+/// `PopScope.canPop` bunu bekler: yığın boşken sistem geri jesti uygulamayı
+/// kapatmak yerine [popOrHome] ile ana sayfaya dönebilsin.
+///
+/// Yönlendirici yoksa `true` döner. Ekranlar tek başlarına da (parça
+/// testlerinde, önizlemede) çizilebiliyor; orada geri davranışını kısıtlamak
+/// yerine olağan `Navigator` akışına bırakmak doğrusu.
+bool canPopRoute(BuildContext context) =>
+    GoRouter.maybeOf(context)?.canPop() ?? true;
+
+/// Kabuk dışı bir ekrandan geri döner.
+///
+/// Bu ekranlara (okuma, plan detayı) iki yoldan gelinir: uygulama içinden
+/// itilerek — geride bir yığın vardır ve olağan `pop` doğru davranır — ya da
+/// araçtan, bildirimden veya derin bağlantıdan doğrudan açılarak. İkinci
+/// durumda `go` yığını sıfırladığı için geride hiçbir şey kalmaz; düz bir
+/// `pop` ekranı boşaltıp kullanıcıyı çıkmaza sokuyordu.
+///
+/// Yığın boşsa ana sayfaya düşülür: araçtan gelen kullanıcı geri dediğinde
+/// uygulamadan atılmak yerine uygulamanın içinde kalır.
+void popOrHome(BuildContext context) {
+  final router = GoRouter.maybeOf(context);
+  if (router == null) {
+    Navigator.of(context).maybePop();
+    return;
+  }
+  if (router.canPop()) {
+    router.pop();
+  } else {
+    router.go('/');
+  }
+}
+
 /// Araç şemasıyla gelen bir bağlantıyı uygulama içi yola çevirir.
 ///
 /// Araç değilse `null` döner ve yönlendirici olağan akışına devam eder.

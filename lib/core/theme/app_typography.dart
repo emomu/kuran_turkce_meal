@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 /// Tipografik ölçek.
 ///
@@ -11,6 +10,12 @@ import 'package:google_fonts/google_fonts.dart';
 /// Ölçek 1.200 (minor third) oranına yakın tutulmuştur; bu oran ekranda
 /// hiyerarşiyi kurmaya yeter ama başlıkları abartmaz.
 abstract final class AppTypography {
+  /// Aile adları pubspec.yaml'daki `fonts:` tanımlarıyla birebir eşleşir.
+  /// Fontlar uygulamayla paketlendiği için çalışma anında indirilmez;
+  /// uygulama çevrimdışıyken de doğru yüzle açılır.
+  static const String _serif = 'SourceSerif4';
+  static const String _sans = 'Inter';
+
   /// Ayet metni için okuma yüzü.
   static TextStyle reading({
     required double fontSize,
@@ -18,7 +23,8 @@ abstract final class AppTypography {
     required double height,
     FontWeight weight = FontWeight.w400,
   }) {
-    return GoogleFonts.sourceSerif4(
+    return TextStyle(
+      fontFamily: _serif,
       fontSize: fontSize,
       color: color,
       height: height,
@@ -35,7 +41,8 @@ abstract final class AppTypography {
     double? height,
     double letterSpacing = 0,
   }) {
-    return GoogleFonts.inter(
+    return TextStyle(
+      fontFamily: _sans,
       fontSize: fontSize,
       color: color,
       fontWeight: weight,

@@ -16,7 +16,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 1.0.0+1
+version: 1.0.0+3
 
 environment:
   sdk: ^3.11.1
@@ -39,7 +39,6 @@ dependencies:
   sqflite: ^2.4.2+1
   path_provider: ^2.1.6
   shared_preferences: ^2.5.5
-  google_fonts: ^8.2.1
   share_plus: ^13.3.0
   path: ^1.9.1
   scrollable_positioned_list: ^0.3.8
@@ -82,6 +81,22 @@ flutter:
     - assets/data/
     - assets/translations/
     - assets/lottie/
+
+  # Fontlar uygulamayla birlikte paketlenir. Çalışma anında indirilmezler;
+  # uygulama hiçbir ağ isteği yapmaz ve ilk açılış çevrimdışı da doğru
+  # görünür. Her iki aile de değişken (variable) font: tek dosya bütün
+  # ağırlıkları taşır. Lisans: SIL Open Font License 1.1 (OFL-*.txt).
+  fonts:
+    - family: Inter
+      fonts:
+        - asset: assets/fonts/Inter.ttf
+        - asset: assets/fonts/Inter-Italic.ttf
+          style: italic
+    - family: SourceSerif4
+      fonts:
+        - asset: assets/fonts/SourceSerif4.ttf
+        - asset: assets/fonts/SourceSerif4-Italic.ttf
+          style: italic
 
   # To add assets to your application, add an assets section, like this:
   # assets:

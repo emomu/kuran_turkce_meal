@@ -3,7 +3,7 @@
 # eklentisi 13'te derlenmiyor. iOS 13 kullanan cihaz payı bugün ihmal
 # edilebilir düzeyde, araçlar ise uygulamanın günlük kullanımını taşıyan
 # bir özellik — bu yüzden taban yükseltildi.
-platform :ios, '14.0'
+platform :ios, '15.0'
 
 # CocoaPods analytics sends network stats synchronously affecting flutter build latency.
 ENV['COCOAPODS_DISABLE_STATS'] = 'true'

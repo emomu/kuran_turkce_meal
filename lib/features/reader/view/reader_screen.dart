@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
+import '../../../core/router/app_router.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../../shared/widgets/responsive_layout.dart';
 import '../../../data/models/ayah.dart';
@@ -28,11 +29,7 @@ import '../../onboarding/widgets/tour_host.dart';
 /// [initialAyah] verilirse (aramadan, yer iminden veya bildirimden gelindiğinde)
 /// liste o ayete konumlanır ve ayet kısa süre vurgulanır.
 class ReaderScreen extends ConsumerStatefulWidget {
-  const ReaderScreen({
-    super.key,
-    required this.surahNumber,
-    this.initialAyah,
-  });
+  const ReaderScreen({super.key, required this.surahNumber, this.initialAyah});
 
   final int surahNumber;
   final int? initialAyah;
@@ -135,7 +132,10 @@ class _ReaderScreenState extends ConsumerState<ReaderScreen> {
 
     _progressDebounce?.cancel();
     _progressDebounce = Timer(const Duration(milliseconds: 600), () {
-      final ayahs = ref.read(readerDataProvider(_surahNumber)).valueOrNull?.ayahs;
+      final ayahs = ref
+          .read(readerDataProvider(_surahNumber))
+          .valueOrNull
+          ?.ayahs;
       if (ayahs == null || ayahs.isEmpty) return;
 
       // 0. indeks sure başlığı, 1..n ayet blokları, sonuncusu bitiş kartı.
@@ -310,111 +310,120 @@ class _ReaderScreenState extends ConsumerState<ReaderScreen> {
     final prefs = ref.watch(preferencesProvider);
     final nextSurah = ref.watch(nextSurahProvider(_surahNumber)).valueOrNull;
 
-    return Scaffold(
-      body: asyncData.when(
-        loading: () => const Center(child: CupertinoStyleLoader()),
-        error: (error, _) => _ReaderError(message: '$error'),
-        data: (data) {
-          _scrollToInitialAyah(data.ayahs);
+    // Araçtan/bildirimden doğrudan açıldığında geride yığın olmaz; sistem
+    // geri jesti uygulamayı kapatmak yerine ana sayfaya dönsün (bkz.
+    // [popOrHome]).
+    return PopScope(
+      canPop: canPopRoute(context),
+      onPopInvokedWithResult: (didPop, _) {
+        if (!didPop) popOrHome(context);
+      },
+      child: Scaffold(
+        body: asyncData.when(
+          loading: () => const Center(child: CupertinoStyleLoader()),
+          error: (error, _) => _ReaderError(message: '$error'),
+          data: (data) {
+            _scrollToInitialAyah(data.ayahs);
 
-          // Tanıtım turu ancak ayetler çizildikten sonra başlayabilir;
-          // hedef karelerin ekrandaki yeri ondan önce ölçülemez.
-          return TourHost(
-            tour: TourId.reader,
-            enabled: data.ayahs.isNotEmpty,
-            steps: () => _tourSteps(context),
-            child: SafeArea(
-            bottom: false,
-            left: false,
-            right: false,
-            child: Column(
-              children: [
-                _ReaderAppBar(
-                  surah: data.surah,
-                  settingsKey: _settingsButtonKey,
-                  onSettings: () => _openReaderSettings(context),
-                ),
-                Expanded(
-                  child: NotificationListener<ScrollNotification>(
-                    onNotification: _onScrollNotification,
-                    child: ScrollablePositionedList.builder(
-                      // Sure değiştiğinde liste yeniden kurulur; aksi halde
-                      // önceki surenin kaydırma konumu taşınır ve kullanıcı
-                      // yeni surenin ortasında açılırdı.
-                      key: ValueKey(_surahNumber),
-                      itemScrollController: _itemScrollController,
-                      itemPositionsListener: _positionsListener,
-                      // Taşma kaydırmasının ölçülebilmesi için sınırda
-                      // yaylanan fizik gerekir; aksi halde liste sonunda
-                      // hiç bildirim üretilmez.
-                      physics: const BouncingScrollPhysics(
-                        parent: AlwaysScrollableScrollPhysics(),
-                      ),
-                      // 0 = sure başlığı, 1..n = ayetler, son = bitiş kartı.
-                      itemCount: data.ayahs.length + 2,
-                      // Yatayda ayet metni tüm genişliğe yayılmaz; ortada
-                      // konforlu bir satır genişliğinde kalır. Dolgu
-                      // üzerinden kurulduğu için kaydırma alanı yine tüm
-                      // ekranı kaplar ve kaydırma çubuğu kenarda durur.
-                      padding: centeredContentPadding(
-                        context,
-                        maxWidth: ContentWidth.reading,
-                        // Üst çubuk ile metin arasında nefes payı.
-                        top: Insets.xs,
-                        // Alt güvenli alan + nefes payı; son ayet çentiğin
-                        // altında kalmasın.
-                        bottom:
-                            MediaQuery.paddingOf(context).bottom + Insets.xl,
-                      ),
-                      itemBuilder: (context, index) {
-                        if (index == 0) {
-                          return _SurahHeader(surah: data.surah);
-                        }
-
-                        // Listenin sonu: sure bitti, sıradakine geçiş kartı.
-                        if (index == data.ayahs.length + 1) {
-                          return SurahEndCard(
-                            current: data.surah,
-                            nextSurah: nextSurah,
-                            showRevelationOrder: prefs.sortByRevelation,
-                            pullProgress: _overscroll / _pullThreshold,
-                            onTap: _advanceToNextSurah,
-                          );
-                        }
-
-                        final ayah = data.ayahs[index - 1];
-
-                        final tile = AyahTile(
-                          ayah: ayah,
-                          prefs: prefs,
-                          mark: marks[ayah.id],
-                          isFocused: _focusedAyahNumber == ayah.ayahNumber,
-                          onTap: () {
-                          },
-                          onLongPress: () =>
-                              _openActions(context, ayah, data.surah),
-                        );
-
-                        // Tanıtım turu ilk ayeti işaret eder. Anahtar
-                        // `AyahTile`'ın kendisine verilemez: o anahtar
-                        // widget kimliğidir ve liste öğeleri geri
-                        // dönüştürüp yeniden konumlandırdığı için ölçüm
-                        // yanlış kareye denk gelir. Ölçüm için ayrı bir
-                        // sarmalayıcı kullanılır.
-                        if (index != 1) return tile;
-                        return KeyedSubtree(
-                          key: _firstAyahKey,
-                          child: tile,
-                        );
-                      },
+            // Tanıtım turu ancak ayetler çizildikten sonra başlayabilir;
+            // hedef karelerin ekrandaki yeri ondan önce ölçülemez.
+            return TourHost(
+              tour: TourId.reader,
+              enabled: data.ayahs.isNotEmpty,
+              steps: () => _tourSteps(context),
+              child: SafeArea(
+                bottom: false,
+                left: false,
+                right: false,
+                child: Column(
+                  children: [
+                    _ReaderAppBar(
+                      surah: data.surah,
+                      settingsKey: _settingsButtonKey,
+                      onSettings: () => _openReaderSettings(context),
                     ),
-                  ),
+                    Expanded(
+                      child: NotificationListener<ScrollNotification>(
+                        onNotification: _onScrollNotification,
+                        child: ScrollablePositionedList.builder(
+                          // Sure değiştiğinde liste yeniden kurulur; aksi halde
+                          // önceki surenin kaydırma konumu taşınır ve kullanıcı
+                          // yeni surenin ortasında açılırdı.
+                          key: ValueKey(_surahNumber),
+                          itemScrollController: _itemScrollController,
+                          itemPositionsListener: _positionsListener,
+                          // Taşma kaydırmasının ölçülebilmesi için sınırda
+                          // yaylanan fizik gerekir; aksi halde liste sonunda
+                          // hiç bildirim üretilmez.
+                          physics: const BouncingScrollPhysics(
+                            parent: AlwaysScrollableScrollPhysics(),
+                          ),
+                          // 0 = sure başlığı, 1..n = ayetler, son = bitiş kartı.
+                          itemCount: data.ayahs.length + 2,
+                          // Yatayda ayet metni tüm genişliğe yayılmaz; ortada
+                          // konforlu bir satır genişliğinde kalır. Dolgu
+                          // üzerinden kurulduğu için kaydırma alanı yine tüm
+                          // ekranı kaplar ve kaydırma çubuğu kenarda durur.
+                          padding: centeredContentPadding(
+                            context,
+                            maxWidth: ContentWidth.reading,
+                            // Üst çubuk ile metin arasında nefes payı.
+                            top: Insets.xs,
+                            // Alt güvenli alan + nefes payı; son ayet çentiğin
+                            // altında kalmasın.
+                            bottom:
+                                MediaQuery.paddingOf(context).bottom +
+                                Insets.xl,
+                          ),
+                          itemBuilder: (context, index) {
+                            if (index == 0) {
+                              return _SurahHeader(surah: data.surah);
+                            }
+
+                            // Listenin sonu: sure bitti, sıradakine geçiş kartı.
+                            if (index == data.ayahs.length + 1) {
+                              return SurahEndCard(
+                                current: data.surah,
+                                nextSurah: nextSurah,
+                                showRevelationOrder: prefs.sortByRevelation,
+                                pullProgress: _overscroll / _pullThreshold,
+                                onTap: _advanceToNextSurah,
+                              );
+                            }
+
+                            final ayah = data.ayahs[index - 1];
+
+                            final tile = AyahTile(
+                              ayah: ayah,
+                              prefs: prefs,
+                              mark: marks[ayah.id],
+                              isFocused: _focusedAyahNumber == ayah.ayahNumber,
+                              onTap: () {},
+                              onLongPress: () =>
+                                  _openActions(context, ayah, data.surah),
+                            );
+
+                            // Tanıtım turu ilk ayeti işaret eder. Anahtar
+                            // `AyahTile`'ın kendisine verilemez: o anahtar
+                            // widget kimliğidir ve liste öğeleri geri
+                            // dönüştürüp yeniden konumlandırdığı için ölçüm
+                            // yanlış kareye denk gelir. Ölçüm için ayrı bir
+                            // sarmalayıcı kullanılır.
+                            if (index != 1) return tile;
+                            return KeyedSubtree(
+                              key: _firstAyahKey,
+                              child: tile,
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ],
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }
@@ -503,8 +512,7 @@ class _ReaderScreenState extends ConsumerState<ReaderScreen> {
 
   void _openNoteEditor(BuildContext context, Ayah ayah, String surahName) {
     final notifier = ref.read(surahMarksProvider(_surahNumber).notifier);
-    final existing =
-        ref.read(surahMarksProvider(_surahNumber))[ayah.id]?.note;
+    final existing = ref.read(surahMarksProvider(_surahNumber))[ayah.id]?.note;
 
     showModalBottomSheet<void>(
       context: context,
@@ -517,7 +525,6 @@ class _ReaderScreenState extends ConsumerState<ReaderScreen> {
       ),
     );
   }
-
 
   void _openReaderSettings(BuildContext context) {
     showModalBottomSheet<void>(
@@ -562,7 +569,7 @@ class _ReaderAppBar extends StatelessWidget {
         children: [
           IconButton(
             icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 19),
-            onPressed: () => Navigator.of(context).pop(),
+            onPressed: () => popOrHome(context),
             tooltip: 'common.back'.tr(),
           ),
           Expanded(
