@@ -53,6 +53,18 @@ dependencies:
   lottie: ^3.3.3
   home_widget: ^0.9.3
 
+  # Tilavet sesi. `just_audio` ayet dosyalarını tek kesintisiz akış gibi
+  # çalar; `just_audio_background` kilit ekranı ve bildirim kontrollerini
+  # verir; `audio_session` telefon geldiğinde susmayı, kulaklık çıkınca
+  # durmayı sistemle uyumlu yapar. `http` yalnızca ses indirmede kullanılır.
+  just_audio: ^0.9.42
+  just_audio_background: ^0.0.1-beta.15
+  audio_session: ^0.1.25
+  http: ^1.2.2
+  # İndirme onayında mobil veri uyarısı gösterebilmek için. Yalnızca
+  # bağlantı türü sorulur; ağ erişimi ya da konum izni gerektirmez.
+  connectivity_plus: ^6.1.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

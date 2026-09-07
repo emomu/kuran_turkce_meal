@@ -139,7 +139,7 @@ class QuranRepository {
     return rows.map(Ayah.fromMap).toList();
   }
 
-  /// Meal ve tefsir metninde tam metin araması yapar.
+  /// Meal metninde tam metin araması yapar.
   ///
   /// FTS5 sanal tablosu kullanılır; 6236 ayet üzerinde sonuç anında döner.
   /// [limit] arayüzün bir seferde göstereceğinden fazlasını çekmemek için.

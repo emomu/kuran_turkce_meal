@@ -6,10 +6,15 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
+import '../../../core/providers/app_providers.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../../data/models/ayah.dart';
 import '../../../shared/widgets/empty_state.dart';
 import '../../../shared/widgets/responsive_layout.dart';
+import '../../audio/providers/audio_provider.dart';
+import '../../audio/providers/download_provider.dart';
+import '../../audio/widgets/audio_player_bar.dart';
+import '../../audio/widgets/day_download_sheet.dart';
 import '../../reader/widgets/ayah_actions_sheet.dart';
 import '../../reader/widgets/ayah_tile.dart';
 import '../../reader/widgets/note_editor_sheet.dart';
@@ -217,6 +222,8 @@ class _PlanReaderScreenState extends ConsumerState<PlanReaderScreen> {
                 _PlanReaderAppBar(
                   reading: reading,
                   onSettings: () => _openReaderSettings(context),
+                  onListen: () => _startDayAudio(reading),
+                  isAudioActive: _isDayPlaying(reading),
                 ),
                 Expanded(
                   child: NotificationListener<ScrollNotification>(
@@ -224,6 +231,9 @@ class _PlanReaderScreenState extends ConsumerState<PlanReaderScreen> {
                     child: _buildList(context, reading, prefs),
                   ),
                 ),
+                // Tilavet çubuğu. Sure numarası verilmez: gün birden çok
+                // sureye yayılır ve çalan sure akış boyunca değişir.
+                const AudioPlayerBar(),
               ],
             ),
           );
@@ -239,6 +249,7 @@ class _PlanReaderScreenState extends ConsumerState<PlanReaderScreen> {
   ) {
     final ayahs = reading.ayahs;
     final marks = ref.watch(planDayMarksProvider((widget.planId, _dayIndex)));
+    final audio = ref.watch(audioProvider);
     // Rozet, bu oturumda işaretlenen günü hemen gösterir; veritabanı yazımını
     // ve sağlayıcı tazelemesini beklemez.
     final isCompleted =
@@ -294,11 +305,13 @@ class _PlanReaderScreenState extends ConsumerState<PlanReaderScreen> {
             if (showSurahHeader) _InlineSurahHeader(name: surahName),
             AyahTile(
               ayah: ayah,
+              isPlaying: audio.isBlockActive(ayah, ayah.surahNumber),
               prefs: prefs,
               mark: marks[ayah.id],
               onTap: () {
               },
-              onLongPress: () => _openActions(context, ayah, surahName),
+              onLongPress: () =>
+                  _openActions(context, ayah, surahName, reading),
             ),
           ],
         );
@@ -306,7 +319,12 @@ class _PlanReaderScreenState extends ConsumerState<PlanReaderScreen> {
     );
   }
 
-  void _openActions(BuildContext context, Ayah ayah, String surahName) {
+  void _openActions(
+    BuildContext context,
+    Ayah ayah,
+    String surahName,
+    PlanDayReading reading,
+  ) {
     final notifier =
         ref.read(planDayMarksProvider((widget.planId, _dayIndex)).notifier);
 
@@ -324,9 +342,108 @@ class _PlanReaderScreenState extends ConsumerState<PlanReaderScreen> {
           onSetHighlight: (color) => notifier.setHighlight(ayah.id, color),
           onEditNote: () => _openNoteEditor(context, ayah, surahName),
           onAnalyseRoots: () => _openWordPicker(context, ayah, surahName),
+          onListenFromHere: () => _startDayAudio(
+            reading,
+            fromSurah: ayah.surahNumber,
+            fromAyah: ayah.ayahNumber,
+          ),
         ),
       ),
     );
+  }
+
+  /// Çalan ses bu güne mi ait.
+  ///
+  /// Kuyruk sure sınırını aştığı için tek bir sure numarasıyla karşılaştırma
+  /// yapılamaz; çalan ayetin günün aralığında olup olmadığına bakılır.
+  bool _isDayPlaying(PlanDayReading reading) {
+    final audio = ref.read(audioProvider);
+    final surah = audio.surahNumber;
+    final ayah = audio.currentAyahNumber;
+    if (surah == null || ayah == null) return false;
+
+    for (final block in reading.ayahs) {
+      if (block.surahNumber != surah) continue;
+      if (ayah >= block.ayahNumber && ayah <= block.endAyahNumber) return true;
+    }
+    return false;
+  }
+
+  /// Günün ayetlerini ses kuyruğu biçimine çevirir.
+  ///
+  /// Blok listesi değil ayet numaraları kullanılır: birleşik meal bloklarında
+  /// (örn. Alak 9-10) her ayetin ayrı bir ses dosyası vardır ve ikisi de
+  /// sırayla çalınmalıdır.
+  List<({int surah, int ayah, String surahName})> _queueFor(
+    PlanDayReading reading, {
+    int? fromSurah,
+    int? fromAyah,
+  }) {
+    final entries = <({int surah, int ayah, String surahName})>[];
+    var started = fromAyah == null;
+
+    for (final block in reading.ayahs) {
+      final name = reading.surahsByNumber[block.surahNumber]?.name ?? '';
+      for (var n = block.ayahNumber; n <= block.endAyahNumber; n++) {
+        if (!started) {
+          if (block.surahNumber == fromSurah && n == fromAyah) {
+            started = true;
+          } else {
+            continue;
+          }
+        }
+        entries.add((surah: block.surahNumber, ayah: n, surahName: name));
+      }
+    }
+    return entries;
+  }
+
+  /// Günü baştan ya da belirli bir ayetten dinlemeye başlar.
+  ///
+  /// Ses gün boyunca akar ve sure sınırında durmaz: plan günü on altı sureye
+  /// yayılabilir ve kullanıcı o günü bir bütün olarak dinlemek ister. Gün
+  /// bitince ses durur, tıpkı sure sonundaki gibi.
+  Future<void> _startDayAudio(
+    PlanDayReading reading, {
+    int? fromSurah,
+    int? fromAyah,
+  }) async {
+    final entries = _queueFor(
+      reading,
+      fromSurah: fromSurah,
+      fromAyah: fromAyah,
+    );
+    if (entries.isEmpty) return;
+
+    // İndirme denetimi günün tamamı üzerinden yapılır, seçilen ayetten
+    // sonrası üzerinden değil: kullanıcı ortadan başlatsa da günün geri
+    // kalanını dinlemeye devam edecek.
+    final all = _queueFor(reading)
+        .map((e) => (surah: e.surah, ayah: e.ayah))
+        .toList();
+
+    final missing = await ref
+        .read(audioRepositoryProvider)
+        .missingAyahs(ref.read(selectedReciterProvider), all);
+
+    if (!mounted) return;
+
+    if (missing.isNotEmpty) {
+      final downloaded = await showModalBottomSheet<bool>(
+        context: context,
+        isScrollControlled: true,
+        isDismissible: false,
+        builder: (_) => DayDownloadSheet(
+          dayLabel: reading.day.label,
+          entries: all,
+          surahCount: reading.surahsByNumber.length,
+        ),
+      );
+
+      if (downloaded != true || !mounted) return;
+    }
+
+    await ref.read(audioProvider.notifier).playAyahs(entries: entries);
   }
 
   void _openNoteEditor(BuildContext context, Ayah ayah, String surahName) {
@@ -387,10 +504,21 @@ class _PlanReaderScreenState extends ConsumerState<PlanReaderScreen> {
 /// Sure adı yerine gün numarası ve aralık gösterilir: kullanıcı burada bir
 /// sure değil planın bir gününü okuyor.
 class _PlanReaderAppBar extends StatelessWidget {
-  const _PlanReaderAppBar({required this.reading, required this.onSettings});
+  const _PlanReaderAppBar({
+    required this.reading,
+    required this.onSettings,
+    required this.onListen,
+    required this.isAudioActive,
+  });
 
   final PlanDayReading reading;
   final VoidCallback onSettings;
+
+  /// Günü baştan dinlemeye başlar.
+  final VoidCallback onListen;
+
+  /// Bu günün tilaveti şu an çalıyor mu.
+  final bool isAudioActive;
 
   @override
   Widget build(BuildContext context) {
@@ -430,6 +558,17 @@ class _PlanReaderAppBar extends StatelessWidget {
                 ),
               ],
             ),
+          ),
+          IconButton(
+            icon: Icon(
+              isAudioActive
+                  ? Icons.headphones_rounded
+                  : Icons.headphones_outlined,
+              size: 21,
+              color: isAudioActive ? theme.colorScheme.primary : null,
+            ),
+            onPressed: onListen,
+            tooltip: 'audio.listen'.tr(),
           ),
           IconButton(
             icon: const Icon(Icons.text_fields_rounded, size: 21),

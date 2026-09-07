@@ -4,6 +4,14 @@
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
     <!-- Cihaz yeniden başlatıldığında planlanmış hatırlatma korunur. -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <!-- Yalnızca tilavet ses dosyalarını indirmek için. Uygulamanın metin
+         içeriği tamamen çevrimdışıdır ve ağ, kullanıcı bir sureyi dinlemeyi
+         seçip indirmeyi onayladığında kullanılır. -->
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <!-- Ekran kapalıyken tilavetin sürmesi için. -->
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK"/>
 
     <application
         android:label="Kur'an Meal"
@@ -136,6 +144,27 @@
                 android:name="android.service.quicksettings.ACTIVE_TILE"
                 android:value="false"/>
         </service>
+
+        <!-- Tilaveti arka planda sürdüren servis ve bildirim kontrolleri.
+             Ekran kapandığında sesin kesilmemesi ve kilit ekranından
+             durdurulabilmesi için gerekli. -->
+        <service
+            android:name="com.ryanheise.audioservice.AudioService"
+            android:foregroundServiceType="mediaPlayback"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.media.browse.MediaBrowserService"/>
+            </intent-filter>
+        </service>
+
+        <!-- Kulaklık düğmeleri ve medya tuşları. -->
+        <receiver
+            android:name="com.ryanheise.audioservice.MediaButtonReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MEDIA_BUTTON"/>
+            </intent-filter>
+        </receiver>
 
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->

@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../theme/app_typography.dart';
+import '../../features/audio/widgets/audio_player_bar.dart';
 import '../../shared/widgets/responsive_layout.dart';
 
 /// Alt sekme çubuğunu barındıran kabuk.
@@ -95,15 +96,54 @@ class AppShell extends ConsumerWidget {
     );
 
     return Scaffold(
-      body: navigationShell,
-      bottomNavigationBar: DecoratedBox(
-        decoration: BoxDecoration(
-          color: theme.colorScheme.surface,
-          border: Border(
-            top: BorderSide(color: theme.dividerColor, width: 0.5),
+      // Boşluğa dokununca klavye kapanır.
+      //
+      // iOS'ta klavyeyi kapatmanın yerleşik bir yolu yok: Android'in geri
+      // tuşu gibi bir çıkış bulunmadığı için kullanıcı arama alanına yazdıktan
+      // sonra klavyeyle baş başa kalır ve listenin yarısı örtülü kalırdı.
+      //
+      // `onTap` yerine `onTapDown` kullanılır: dokunma tamamlanmadan kapanır,
+      // böylece liste öğesine basıldığında klavye kapanışıyla gezinme aynı
+      // anda başlar ve arada bir kare gecikme hissedilmez.
+      //
+      // `HitTestBehavior.translucent`: alttaki widget'lar dokunuşu almaya
+      // devam eder. Opak olsaydı bu katman listenin dokunuşlarını yutar ve
+      // hiçbir sureye girilemezdi.
+      //
+      // `GestureDetector` yerine `TapRegion` kullanılır: `GestureDetector`
+      // widget ağacına bir katman ekliyor ve sekme çubuğunu ölçen testler
+      // (bkz. app_shell_test.dart) `GestureDetector.first` ile artık o
+      // katmanı buluyordu. `TapRegion` ayrıca doğru soruyu soruyor:
+      // "dokunuş odaklanmış alanın dışında mı" — kaydırma ve liste
+      // dokunuşlarını hiç engellemez.
+      body: TapRegion(
+        onTapOutside: (_) => FocusManager.instance.primaryFocus?.unfocus(),
+        child: navigationShell,
+      ),
+      // Tilavet çubuğu sekmelerin üstünde durur ve hangi sekmede olunursa
+      // olunsun görünür: ses çalarken kullanıcı ana sayfaya ya da ayarlara
+      // geçtiğinde onu durduramamak, kontrolü aramak için okuma ekranına
+      // dönmeyi gerektirirdi.
+      //
+      // Sekme çubuğunun içine değil üstüne konur: sekmeler gezinme, bu ise
+      // bir durum denetimi. İkisi tek şeritte birleşseydi hem yükseklik iki
+      // katına çıkar hem de dokunma hedefleri birbirine yaklaşırdı.
+      bottomNavigationBar: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // Kabuktaki çubuk sure numarası almaz: burada hangi sure çalıyorsa
+          // onu yönetir.
+          const AudioPlayerBar(applyBottomSafeArea: false),
+          DecoratedBox(
+            decoration: BoxDecoration(
+              color: theme.colorScheme.surface,
+              border: Border(
+                top: BorderSide(color: theme.dividerColor, width: 0.5),
+              ),
+            ),
+            child: bar,
           ),
-        ),
-        child: bar,
+        ],
       ),
     );
   }

@@ -8,6 +8,7 @@ import '../../features/legal/data/legal_texts.dart';
 import '../../features/legal/view/legal_document_screen.dart';
 import '../../features/plans/view/plan_detail_screen.dart';
 import '../../features/plans/view/plans_screen.dart';
+import '../../features/prophets/view/prophet_ayahs_screen.dart';
 import '../../features/reader/view/reader_screen.dart';
 import '../../features/search/view/search_screen.dart';
 import '../../features/settings/view/settings_screen.dart';
@@ -134,6 +135,22 @@ final appRouter = GoRouter(
       builder: (context, state) => LegalDocumentScreen(
         title: 'settings.sources'.tr(),
         body: LegalTexts.sources(context.locale.languageCode),
+      ),
+    ),
+
+    // Bir peygamberin anıldığı ayetler, iniş sırasına göre.
+    GoRoute(
+      path: '/kissa/:prophetId',
+      builder: (context, state) => ProphetAyahsScreen(
+        prophetId: state.pathParameters['prophetId']!,
+      ),
+    ),
+
+    GoRoute(
+      path: '/ses-hakkinda',
+      builder: (context, state) => LegalDocumentScreen(
+        title: 'audio.about'.tr(),
+        body: LegalTexts.audioInfo(context.locale.languageCode),
       ),
     ),
 

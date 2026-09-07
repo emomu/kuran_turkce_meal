@@ -27,6 +27,7 @@ class AyahTile extends StatelessWidget {
     required this.onTap,
     required this.onLongPress,
     this.isFocused = false,
+    this.isPlaying = false,
   });
 
   final Ayah ayah;
@@ -37,6 +38,13 @@ class AyahTile extends StatelessWidget {
 
   /// Aramadan veya bildirimden bu ayete gelindiğinde kısa süre vurgulanır.
   final bool isFocused;
+
+  /// Tilavette şu an bu ayet okunuyor.
+  ///
+  /// Zemine çok hafif bir renk verilir, başka hiçbir işaret konmaz: tilavet
+  /// boyunca her ayette sırayla belirecek bir gösterge, okuma akışının önüne
+  /// geçmemeli.
+  final bool isPlaying;
 
   @override
   Widget build(BuildContext context) {
@@ -56,8 +64,12 @@ class AyahTile extends StatelessWidget {
         duration: Motion.slow,
         curve: Motion.standard,
         decoration: BoxDecoration(
+          // Çalan ayetin zemini, arama vurgusundan daha hafif: tilavet
+          // boyunca ekranda kalıcı olarak duracak, bu yüzden göz yormamalı.
           color: isFocused
               ? theme.colorScheme.primary.withValues(alpha: 0.08)
+              : isPlaying
+              ? theme.colorScheme.primary.withValues(alpha: 0.05)
               : Colors.transparent,
           borderRadius: BorderRadius.circular(Radii.md),
         ),

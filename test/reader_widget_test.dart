@@ -26,7 +26,6 @@ const _ayah = Ayah(
   surahNumber: 96,
   ayahNumber: 1,
   translation: 'Yaratan Rabbinin adıyla oku.',
-  tafsir: 'Bu ayet ilk inen ayettir.',
 );
 
 void main() async {

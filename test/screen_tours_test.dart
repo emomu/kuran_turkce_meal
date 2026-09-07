@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kuran_turkce_meal/core/providers/app_providers.dart';
@@ -52,7 +55,7 @@ void main() async {
       await pumpScreen(tester, const SearchScreen());
 
       expect(find.byType(CoachMarkOverlay), findsOneWidget);
-      expect(find.text('Meal ve tefsirde arayın'), findsOneWidget);
+      expect(find.text('Mealde arayın'), findsOneWidget);
     });
 
     testWidgets('ikinci adım Türkçe karakterleri anlatır', (tester) async {
@@ -62,6 +65,17 @@ void main() async {
       await tester.pumpAndSettle();
 
       expect(find.text('Türkçe karakter derdi yok'), findsOneWidget);
+    });
+
+    testWidgets('son adım kıssa aramasını anlatır', (tester) async {
+      await pumpScreen(tester, const SearchScreen());
+
+      await tester.tap(find.text('Devam'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Devam'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Kıssaları takip edin'), findsOneWidget);
       expect(find.text('Anladım'), findsOneWidget);
     });
 
@@ -336,7 +350,7 @@ void main() async {
       expect(find.text('ayarlar'), findsOneWidget);
       expect(find.byType(CoachMarkOverlay), findsNothing,
           reason: 'gizli sekmenin turu öndeki ekranın üstünde belirdi');
-      expect(find.text('Meal ve tefsirde arayın'), findsNothing);
+      expect(find.text('Mealde arayın'), findsNothing);
     });
 
     testWidgets('sekme öne gelince turu açılır', (tester) async {
@@ -345,7 +359,65 @@ void main() async {
       await pumpTabs(tester, index: 0);
 
       expect(find.byType(CoachMarkOverlay), findsOneWidget);
-      expect(find.text('Meal ve tefsirde arayın'), findsOneWidget);
+      expect(find.text('Mealde arayın'), findsOneWidget);
     });
+  });
+
+  group('Tanıtım metinleri eksiksiz', () {
+    /// Turlar `.tr()` ile metin çeker; anahtar eksikse ekranda ham anahtar
+    /// ("tour.reader.listenTitle") görünür ve bu ancak o ekrana gidilince
+    /// fark edilir. Yeni bir adım eklenip çevirisi unutulursa burada yakalanır.
+    Map<String, dynamic> section(Map<String, dynamic> json, String path) {
+      var node = json;
+      for (final part in path.split('.')) {
+        node = node[part] as Map<String, dynamic>;
+      }
+      return node;
+    }
+
+    Future<Map<String, dynamic>> load(String locale) async {
+      final raw = await rootBundle.loadString(
+        'assets/translations/$locale.json',
+      );
+      return jsonDecode(raw) as Map<String, dynamic>;
+    }
+
+    const expected = {
+      'tour.home': [
+        'verseOfDayTitle', 'verseOfDayBody',
+        'lastReadTitle', 'lastReadBody',
+        'orderTitle', 'orderBody',
+        'searchTitle', 'searchBody',
+      ],
+      'tour.reader': [
+        'longPressTitle', 'longPressBody',
+        'listenTitle', 'listenBody',
+        'settingsTitle', 'settingsBody',
+        'endCardTitle', 'endCardBody',
+      ],
+      'tour.search': [
+        'fieldTitle', 'fieldBody',
+        'turkishTitle', 'turkishBody',
+        'prophetsTitle', 'prophetsBody',
+      ],
+    };
+
+    for (final locale in ['tr', 'en']) {
+      test('$locale çevirilerinde bütün adımlar var', () async {
+        final json = await load(locale);
+        for (final entry in expected.entries) {
+          final node = section(json, entry.key);
+          for (final key in entry.value) {
+            final value = node[key];
+            expect(value, isA<String>(), reason: '$locale ${entry.key}.$key');
+            expect(
+              (value as String).trim(),
+              isNotEmpty,
+              reason: '$locale ${entry.key}.$key boş',
+            );
+          }
+        }
+      });
+    }
   });
 }

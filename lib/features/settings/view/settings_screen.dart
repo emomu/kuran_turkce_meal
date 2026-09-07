@@ -5,8 +5,12 @@ import 'package:go_router/go_router.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 import '../../../core/notifications/daily_ayah_notifications.dart';
+import '../../../core/providers/app_providers.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../../data/models/reader_preferences.dart';
+import '../../../data/models/reciter.dart';
+import '../../audio/providers/download_provider.dart';
+import '../../audio/widgets/audio_download_sheet.dart';
 import '../../../shared/widgets/pressable.dart';
 import '../providers/preferences_provider.dart';
 import '../../onboarding/providers/tour_provider.dart';
@@ -100,6 +104,47 @@ class SettingsScreen extends ConsumerWidget {
                   subtitle: 'settings.sortByRevelationHint'.tr(),
                   value: prefs.sortByRevelation,
                   onChanged: notifier.setSortByRevelation,
+                ),
+              ],
+            ),
+
+            // Ses bölümü okuma ayarlarının hemen ardından: ikisi de okuma
+            // deneyimini biçimlendirir, bildirim ve yasal başlıklar ise
+            // uygulamanın çeperinde kalır.
+            _Section(
+              // Bölüm başlığı `audio.listen`'den ayrı bir anahtar: o metin
+              // okuma ekranındaki düğmenin ipucu ("Dinle") ve orada büyük
+              // harf yanlış olurdu. Buradaki başlıklar ise diğer bölümlerle
+              // aynı biçimde, büyük harfle yazılır.
+              title: 'settings.audioSection'.tr(),
+              children: [
+                _ReciterRow(
+                  selectedId: prefs.reciterId,
+                  onSelect: notifier.setReciter,
+                ),
+                _SliderTile(
+                  label: 'audio.playbackSpeed'.tr(),
+                  value: prefs.playbackSpeed,
+                  min: 0.5,
+                  max: 2.0,
+                  divisions: 6,
+                  displayValue: '${prefs.playbackSpeed.toStringAsFixed(2)}×',
+                  onChanged: notifier.setPlaybackSpeed,
+                ),
+                _SwitchTile(
+                  label: 'audio.autoScroll'.tr(),
+                  subtitle: 'audio.autoScrollDescription'.tr(),
+                  value: prefs.autoScrollWithAudio,
+                  onChanged: notifier.setAutoScrollWithAudio,
+                ),
+                const _DownloadedAudioTile(),
+                // Kaynak ve indirme koşulları. Ayarların içinde durur çünkü
+                // kullanıcı bu bilgiyi telif sayfasında değil, sesi yönettiği
+                // yerde arar.
+                _ActionTile(
+                  label: 'audio.about'.tr(),
+                  subtitle: 'audio.aboutHint'.tr(),
+                  onTap: () => context.push('/ses-hakkinda'),
                 ),
               ],
             ),
@@ -843,5 +888,174 @@ class _LanguageRow extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+/// Kari seçimi.
+///
+/// Liste açılır menü yerine satır olarak verilir: seçenek sayısı az ve her
+/// birinin adı uzun. Açılır menüde adlar kırpılır, satırda tamamı okunur.
+///
+/// Kari değiştirmek indirilmiş sesleri geçersiz kılmaz ama yeni kari için
+/// ses yeniden indirilmelidir; bu yüzden seçim altında kısa bir uyarı durur.
+class _ReciterRow extends StatelessWidget {
+  const _ReciterRow({required this.selectedId, required this.onSelect});
+
+  final String? selectedId;
+  final ValueChanged<String> onSelect;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final selected = Reciter.byId(selectedId);
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: Insets.md,
+        vertical: Insets.sm,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('audio.reciter'.tr(), style: theme.textTheme.bodyLarge),
+          const SizedBox(height: 2),
+          // "Kari" terimi herkese tanıdık değil; seçimin ne işe yaradığı
+          // başlığın altında bir cümleyle söylenir. Diğer ayar satırları da
+          // aynı desende (bkz. `_SwitchTile` alt yazısı).
+          Text(
+            'audio.reciterHint'.tr(),
+            style: theme.textTheme.bodySmall,
+          ),
+          const SizedBox(height: Insets.sm),
+          for (final reciter in Reciter.all)
+            Pressable(
+              onTap: () => onSelect(reciter.id),
+              scale: 0.99,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: Insets.xs),
+                child: Row(
+                  children: [
+                    Icon(
+                      reciter.id == selected.id
+                          ? Icons.radio_button_checked_rounded
+                          : Icons.radio_button_unchecked_rounded,
+                      size: 19,
+                      color: reciter.id == selected.id
+                          ? theme.colorScheme.primary
+                          : theme.colorScheme.onSurface.withValues(alpha: 0.3),
+                    ),
+                    const SizedBox(width: Insets.sm),
+                    Expanded(
+                      child: Text(
+                        reciter.name,
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: reciter.id == selected.id
+                              ? theme.colorScheme.primary
+                              : theme.colorScheme.onSurface,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+/// İndirilmiş seslerin toplamı ve toplu silme.
+///
+/// Yüzlerce megabaytlık ses, kullanıcının cihazında uygulamanın kapladığı
+/// yerin çoğunu oluşturabilir. Nereden silineceğinin bulunabilir olması bu
+/// yüzden önemli: aksi halde kullanıcı yer açmak için uygulamayı siler.
+class _DownloadedAudioTile extends ConsumerWidget {
+  const _DownloadedAudioTile();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final size = ref.watch(downloadedSizeProvider).valueOrNull ?? 0;
+    final surahs = ref.watch(downloadedSurahsProvider).valueOrNull ?? const {};
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: Insets.md,
+        vertical: Insets.sm,
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'audio.downloads'.tr(),
+                  style: theme.textTheme.bodyLarge,
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  surahs.isEmpty
+                      ? 'audio.noDownloads'.tr()
+                      : 'audio.downloadsSize'.tr(
+                          namedArgs: {'size': formatBytes(size)},
+                        ),
+                  style: theme.textTheme.bodySmall,
+                ),
+              ],
+            ),
+          ),
+          if (surahs.isNotEmpty)
+            Pressable(
+              onTap: () => _confirmDeleteAll(context, ref),
+              scale: 0.96,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: Insets.xs,
+                  vertical: Insets.xs,
+                ),
+                child: Text(
+                  'audio.deleteAll'.tr(),
+                  style: theme.textTheme.labelMedium?.copyWith(
+                    color: theme.colorScheme.error,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _confirmDeleteAll(BuildContext context, WidgetRef ref) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Text('audio.deleteAll'.tr()),
+        content: Text('audio.deleteAllConfirm'.tr()),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(false),
+            child: Text('common.cancel'.tr()),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(true),
+            child: Text('audio.delete'.tr()),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed != true) return;
+
+    final reciter = ref.read(selectedReciterProvider);
+    await ref.read(audioRepositoryProvider).deleteAll(reciter);
+
+    // Boyut ve liste yeniden okunur; silinen sesler ekranda kalmamalı.
+    ref
+      ..invalidate(downloadedSizeProvider)
+      ..invalidate(downloadedSurahsProvider);
   }
 }

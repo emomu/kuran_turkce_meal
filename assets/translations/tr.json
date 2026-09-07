@@ -33,7 +33,10 @@
     "nthRevelation": "{}. iniş",
     "surahsFailed": "Sureler yüklenemedi",
     "noContent": "Meal yüklenmedi",
-    "noContentHint": "Meal metni uygulamaya henüz eklenmemiş. assets/data/ayahs.json dosyasını ekleyin."
+    "noContentHint": "Meal metni uygulamaya henüz eklenmemiş. assets/data/ayahs.json dosyasını ekleyin.",
+    "searchSurah": "Sure ara",
+    "noSurahMatch": "Sure bulunamadı",
+    "noSurahMatchHint": "\"{query}\" ile eşleşen bir sure yok. Adını, anlamını ya da mushaf numarasını deneyin."
   },
   "reader": {
     "settings": "Okuma ayarları",
@@ -92,9 +95,12 @@
     "hint": "Mealde ara",
     "resultCount": "{} sonuç",
     "title": "Mealde ara",
-    "emptyHint": "Bir kelime yazın; meal ve tefsir metninde geçtiği yerler listelenir.",
+    "emptyHint": "Bir kelime yazın; meal metninde geçtiği yerler listelenir. \"2:255\" ya da \"bakara 255\" yazarak doğrudan bir ayete de gidebilirsiniz.",
     "noResults": "Sonuç bulunamadı",
-    "noResultsFor": "\"{}\" için eşleşen ayet yok."
+    "noResultsFor": "\"{}\" için eşleşen ayet yok.",
+    "goToAyah": "{surah} {verse}. ayete git",
+    "goToSurah": "{surah} suresini aç",
+    "goToHint": "Doğrudan bu konuma gider"
   },
   "saved": {
     "title": "Kaydedilenler",
@@ -188,14 +194,15 @@
     "version": "Sürüm",
     "notificationDenied": "Bildirim izni verilmedi. Ayarlar > Bildirimler bölümünden izin verebilirsiniz.",
     "dailyAyahTitle": "Günün ayeti",
-    "dailyAyahBody": "Bugünün ayeti seni bekliyor."
+    "dailyAyahBody": "Bugünün ayeti seni bekliyor.",
+    "audioSection": "DİNLE"
   },
   "tour": {
     "skip": "Atla",
     "next": "Devam",
     "done": "Anladım",
     "replay": "İpuçlarını tekrar göster",
-    "replayHint": "Okuma ve ana ekrandaki tanıtım ipuçları baştan gösterilir.",
+    "replayHint": "Ana ekran, okuma, arama, planlar ve kök analizi ekranlarındaki tanıtım ipuçları baştan gösterilir.",
     "replayDone": "İpuçları sıfırlandı",
     "home": {
       "verseOfDayTitle": "Her gün yeni bir ayet",
@@ -203,7 +210,9 @@
       "lastReadTitle": "Kaldığınız yerden devam",
       "lastReadBody": "Okuduğunuz son ayet hatırlanır. Bu kart, bıraktığınız yeri tek dokunuşla açar.",
       "orderTitle": "Sıralamayı değiştirin",
-      "orderBody": "Sureler iniş sırasına ya da mushaf sırasına göre listelenir. Bu düğme ikisi arasında geçiş yapar."
+      "orderBody": "Sureler iniş sırasına ya da mushaf sırasına göre listelenir. Bu düğme ikisi arasında geçiş yapar.",
+      "searchTitle": "Sureyi hızlıca bulun",
+      "searchBody": "114 sure arasında kaydırmak yerine adını yazın. \"yasin\", \"mulk\" ya da mushaf numarası (\"36\") yeterli; şapkasız yazsanız da bulunur."
     },
     "reader": {
       "longPressTitle": "Ayete basılı tutun",
@@ -211,13 +220,17 @@
       "settingsTitle": "Yazıyı kendinize göre ayarlayın",
       "settingsBody": "Punto, satır aralığı ve Arapça metnin görünürlüğü buradan ayarlanır. Değişiklik anında uygulanır.",
       "endCardTitle": "Sure bitince durmayın",
-      "endCardBody": "Sure sonunda kaydırmayı sürdürün ya da karta dokunun; sıradaki sure listeye dönmeden açılır."
+      "endCardBody": "Sure sonunda kaydırmayı sürdürün ya da karta dokunun; sıradaki sure listeye dönmeden açılır.",
+      "listenTitle": "Sureyi dinleyin",
+      "listenBody": "Arapça tilaveti buradan başlatırsınız. Okunan ayet vurgulanır ve sayfa kendiliğinden akar. Ses bir kez indirilir, sonrası çevrimdışı çalışır."
     },
     "search": {
-      "fieldTitle": "Meal ve tefsirde arayın",
-      "fieldBody": "Bir kelime yazmanız yeterli; hem meal hem tefsir metninde geçtiği bütün ayetler listelenir.",
+      "fieldTitle": "Mealde arayın",
+      "fieldBody": "Bir kelime yazmanız yeterli; o kelimenin geçtiği bütün ayetler listelenir. Ayet numarası biliyorsanız \"2:255\" gibi yazıp doğrudan oraya gidebilirsiniz.",
       "turkishTitle": "Türkçe karakter derdi yok",
-      "turkishBody": "\"adalet\" yazarsanız \"adâlet\" de bulunur. Büyük-küçük harf ve şapkalı harfler aramayı bozmaz."
+      "turkishBody": "\"adalet\" yazarsanız \"adâlet\" de bulunur. Büyük-küçük harf ve şapkalı harfler aramayı bozmaz.",
+      "prophetsTitle": "Kıssaları takip edin",
+      "prophetsBody": "Bir peygamber adı yazın — \"musa\", \"yusuf\" — o peygamberin anıldığı ayetler indikleri sıraya göre listelenir. Kıssanın nasıl geliştiğini baştan izlersiniz."
     },
     "plans": {
       "cardTitle": "Kendi temponuzu seçin",
@@ -242,5 +255,46 @@
   },
   "error": {
     "pageNotFound": "Sayfa bulunamadı: {}"
+  },
+  "audio": {
+    "listen": "Dinle",
+    "listenFromHere": "Buradan itibaren dinle",
+    "nowPlaying": "{verse}. ayet okunuyor",
+    "preparing": "Hazırlanıyor…",
+    "previous": "Önceki ayet",
+    "next": "Sonraki ayet",
+    "stop": "Sesi kapat",
+    "downloadTitle": "{surah} suresini dinle",
+    "downloadBody": "Tilaveti {reciter} okuyor. {count} ayetlik ses dosyası (yaklaşık {size}) cihazınıza indirilecek. İndirdikten sonra çevrimdışı dinleyebilirsiniz.",
+    "downloadAndPlay": "İndir ve dinle",
+    "notNow": "Şimdi değil",
+    "cancel": "Vazgeç",
+    "retry": "Yeniden dene",
+    "downloadProgress": "{done} / {total} ayet indirildi",
+    "downloadFailed": "Ses dosyaları indirilemedi. Bağlantınızı kontrol edip yeniden deneyin.",
+    "reciter": "Tilaveti okuyan",
+    "playbackSpeed": "Okuma hızı",
+    "autoScroll": "Okunan ayeti takip et",
+    "autoScrollDescription": "Tilavet ilerledikçe sayfa kendiliğinden kayar.",
+    "downloads": "İndirilen sesler",
+    "downloadsSize": "{size} yer kaplıyor",
+    "deleteAll": "Tümünü sil",
+    "deleteAllConfirm": "İndirilen tüm ses dosyaları silinecek. Dilediğiniz zaman yeniden indirebilirsiniz.",
+    "noDownloads": "Henüz ses indirilmedi.",
+    "delete": "Sil",
+    "reciterHint": "Arapça tilaveti kimin sesinden dinleyeceğinizi seçin.",
+    "about": "Ses hakkında",
+    "aboutHint": "Kayıtların kaynağı, indirme koşulları ve saklanması.",
+    "sourceNote": "Kayıtlar EveryAyah arşivinden indirilir.",
+    "mobileDataWarning": "Mobil veri kullanıyorsunuz. Bu indirme veri paketinizden düşecek.",
+    "dayDownloadTitle": "{day} — dinle",
+    "dayDownloadBody": "Tilaveti {reciter} okuyor. Bu gün {surahs} sureye yayılıyor; {count} ayetlik ses (yaklaşık {size}) indirilecek. İndirdikten sonra çevrimdışı dinleyebilirsiniz."
+  },
+  "prophets": {
+    "subtitle": "{count} ayette anılıyor",
+    "chronologicalNote": "Ayetler mushaf sırasına göre değil, indikleri sıraya göre dizildi.",
+    "loadFailed": "Ayetler yüklenemedi",
+    "searchCard": "{name} kıssası",
+    "searchCardHint": "{count} ayet · iniş sırasına göre"
   }
 }

@@ -9,7 +9,7 @@ import '../../../shared/widgets/pressable.dart';
 /// Bir ayete not yazma yaprağı.
 ///
 /// Düzen kararları:
-///  - Ayetin meali notun üstünde durur (tefsir yaprağındaki gibi): kullanıcı
+///  - Ayetin meali notun üstünde durur: kullanıcı
 ///    hangi ayete yazdığını görmeden not alamamalı.
 ///  - Yazma alanı çerçevesizdir. Temanın odak çerçevesi ince alanlar için
 ///    tasarlandı; altı satırlık bir kutuyu sarınca arayüzün en baskın öğesi

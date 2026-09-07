@@ -25,6 +25,7 @@ class AyahActionsSheet extends StatelessWidget {
     required this.onSetHighlight,
     required this.onEditNote,
     required this.onAnalyseRoots,
+    required this.onListenFromHere,
   });
 
   final Ayah ayah;
@@ -36,6 +37,9 @@ class AyahActionsSheet extends StatelessWidget {
 
   /// Ayetin kelimelerini kök çözümlemesiyle açar.
   final VoidCallback onAnalyseRoots;
+
+  /// Tilaveti bu ayetten başlatır.
+  final VoidCallback onListenFromHere;
 
   /// Kopyalama için biçimlenmiş metin.
   String _shareText(BuildContext context) => 'actions.shareFormat'.tr(
@@ -150,6 +154,16 @@ class AyahActionsSheet extends StatelessWidget {
                 onTap: () {
                   onToggleBookmark();
                   Navigator.of(context).pop();
+                },
+              ),
+              // Dinleme, not ve paylaşımdan önce geliyor: ayete uzun basan
+              // kullanıcının en sık istediği ikinci şey onu dinlemek.
+              _ActionRow(
+                icon: Icons.headphones_outlined,
+                label: 'audio.listenFromHere'.tr(),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  onListenFromHere();
                 },
               ),
               _ActionRow(

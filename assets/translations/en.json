@@ -33,7 +33,10 @@
     "nthRevelation": "revelation {}",
     "surahsFailed": "Couldn't load surahs",
     "noContent": "No translation loaded",
-    "noContentHint": "The translation text hasn't been added yet. Add the assets/data/ayahs.json file."
+    "noContentHint": "The translation text hasn't been added yet. Add the assets/data/ayahs.json file.",
+    "searchSurah": "Search surahs",
+    "noSurahMatch": "No surah found",
+    "noSurahMatchHint": "Nothing matches \"{query}\". Try the name, its meaning, or the mushaf number."
   },
   "reader": {
     "settings": "Reading settings",
@@ -92,9 +95,12 @@
     "hint": "Search the translation",
     "resultCount": "{} results",
     "title": "Search the translation",
-    "emptyHint": "Type a word to find where it appears in the translation and commentary.",
+    "emptyHint": "Type a word to see where it appears in the translation. You can also type \"2:255\" or \"al-baqarah 255\" to jump straight to a verse.",
     "noResults": "No results",
-    "noResultsFor": "No verses match \"{}\"."
+    "noResultsFor": "No verses match \"{}\".",
+    "goToAyah": "Go to {surah} {verse}",
+    "goToSurah": "Open Surah {surah}",
+    "goToHint": "Jump straight to this passage"
   },
   "saved": {
     "title": "Saved",
@@ -188,14 +194,15 @@
     "version": "Version",
     "notificationDenied": "Notification permission was not granted. You can enable it in Settings > Notifications.",
     "dailyAyahTitle": "Verse of the day",
-    "dailyAyahBody": "Today's verse is waiting for you."
+    "dailyAyahBody": "Today's verse is waiting for you.",
+    "audioSection": "LISTEN"
   },
   "tour": {
     "skip": "Skip",
     "next": "Next",
     "done": "Got it",
     "replay": "Show tips again",
-    "replayHint": "Replays the introduction tips on the home and reading screens.",
+    "replayHint": "Replays the introductory tips on the home, reading, search, plans and root analysis screens.",
     "replayDone": "Tips reset",
     "home": {
       "verseOfDayTitle": "A new verse each day",
@@ -203,7 +210,9 @@
       "lastReadTitle": "Pick up where you left off",
       "lastReadBody": "The last verse you read is remembered. This card reopens it with a single tap.",
       "orderTitle": "Change the order",
-      "orderBody": "Surahs are listed either by revelation order or mushaf order. This button switches between them."
+      "orderBody": "Surahs are listed either by revelation order or mushaf order. This button switches between them.",
+      "searchTitle": "Find a surah quickly",
+      "searchBody": "Instead of scrolling through 114 surahs, type its name. \"yasin\", \"mulk\" or the mushaf number (\"36\") all work."
     },
     "reader": {
       "longPressTitle": "Press and hold a verse",
@@ -211,13 +220,17 @@
       "settingsTitle": "Set the text to your liking",
       "settingsBody": "Font size, line spacing and Arabic visibility are set here. Changes apply instantly.",
       "endCardTitle": "Don't stop at the end",
-      "endCardBody": "Keep scrolling at the end of a surah, or tap the card; the next surah opens without going back to the list."
+      "endCardBody": "Keep scrolling at the end of a surah, or tap the card; the next surah opens without going back to the list.",
+      "listenTitle": "Listen to the surah",
+      "listenBody": "Start the Arabic recitation here. The verse being recited is highlighted and the page follows along. Audio downloads once, then plays offline."
     },
     "search": {
       "fieldTitle": "Search translation and commentary",
-      "fieldBody": "Just type a word; every verse where it appears in the translation or commentary is listed.",
+      "fieldBody": "Just type a word and every verse containing it is listed. If you know the reference, type something like \"2:255\" to go straight there.",
       "turkishTitle": "Accents don't matter",
-      "turkishBody": "Typing \"adalet\" also finds \"adâlet\". Case and accented letters won't break the search."
+      "turkishBody": "Typing \"adalet\" also finds \"adâlet\". Case and accented letters won't break the search.",
+      "prophetsTitle": "Follow the stories",
+      "prophetsBody": "Type a prophet's name — \"moses\", \"joseph\" — and every verse mentioning them is listed in the order it was revealed, so you can see how the story unfolds."
     },
     "plans": {
       "cardTitle": "Pick your own pace",
@@ -242,5 +255,46 @@
   },
   "error": {
     "pageNotFound": "Page not found: {}"
+  },
+  "audio": {
+    "listen": "Listen",
+    "listenFromHere": "Listen from here",
+    "nowPlaying": "Playing verse {verse}",
+    "preparing": "Preparing…",
+    "previous": "Previous verse",
+    "next": "Next verse",
+    "stop": "Stop audio",
+    "downloadTitle": "Listen to {surah}",
+    "downloadBody": "Recited by {reciter}. {count} verses (about {size}) will be downloaded to your device. Once downloaded, you can listen offline.",
+    "downloadAndPlay": "Download and listen",
+    "notNow": "Not now",
+    "cancel": "Cancel",
+    "retry": "Try again",
+    "downloadProgress": "{done} of {total} verses downloaded",
+    "downloadFailed": "Could not download the audio. Check your connection and try again.",
+    "reciter": "Recited by",
+    "playbackSpeed": "Playback speed",
+    "autoScroll": "Follow the recitation",
+    "autoScrollDescription": "The page scrolls along as the recitation moves forward.",
+    "downloads": "Downloaded audio",
+    "downloadsSize": "Using {size}",
+    "deleteAll": "Delete all",
+    "deleteAllConfirm": "All downloaded audio files will be deleted. You can download them again anytime.",
+    "noDownloads": "No audio downloaded yet.",
+    "delete": "Delete",
+    "reciterHint": "Choose whose voice you hear for the Arabic recitation.",
+    "about": "About audio",
+    "aboutHint": "Where recordings come from, when they download, and how they're stored.",
+    "sourceNote": "Recordings are downloaded from the EveryAyah archive.",
+    "mobileDataWarning": "You're on mobile data. This download will count against your data plan.",
+    "dayDownloadTitle": "Listen to {day}",
+    "dayDownloadBody": "Recited by {reciter}. This day spans {surahs} surahs; {count} verses (about {size}) will be downloaded. Once downloaded, you can listen offline."
+  },
+  "prophets": {
+    "subtitle": "Mentioned in {count} verses",
+    "chronologicalNote": "Verses are ordered by when they were revealed, not by their place in the mushaf.",
+    "loadFailed": "Could not load the verses",
+    "searchCard": "The story of {name}",
+    "searchCardHint": "{count} verses · in order of revelation"
   }
 }

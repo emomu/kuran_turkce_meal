@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../core/theme/app_typography.dart';
 import '../../../data/db/search_normalizer.dart';
+import '../../../data/models/prophet.dart';
 import '../../../data/repositories/quran_repository.dart';
 import '../../../shared/widgets/empty_state.dart';
 import '../../../shared/widgets/pressable.dart';
@@ -15,7 +16,7 @@ import '../../onboarding/providers/tour_provider.dart';
 import '../../onboarding/widgets/coach_mark.dart';
 import '../../onboarding/widgets/tour_host.dart';
 
-/// Meal ve tefsir metninde arama.
+/// Meal metninde arama.
 class SearchScreen extends ConsumerStatefulWidget {
   const SearchScreen({super.key});
 
@@ -140,6 +141,14 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
         title: 'tour.search.turkishTitle'.tr(),
         body: 'tour.search.turkishBody'.tr(),
       ),
+      // Kıssa araması alanın kendisini işaret eder: kart ancak bir peygamber
+      // adı yazıldığında beliriyor ve tur çalışırken ekranda olmuyor.
+      TourStep(
+        targetKey: _fieldKey,
+        icon: Icons.timeline_rounded,
+        title: 'tour.search.prophetsTitle'.tr(),
+        body: 'tour.search.prophetsBody'.tr(),
+      ),
     ];
   }
 
@@ -170,6 +179,15 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
       );
     }
 
+    final reference = state.reference;
+    final prophet = state.prophet;
+
+    // Kartlar listenin öğesi olarak değil, üstünde ayrı bloklar olarak durur:
+    // bunlar arama sonucu değil, doğrudan gidilecek yerler. Sonuçlarla aynı
+    // listede olsalardı ayırıcı çizgiler ikisini eşitler ve kullanıcı aradaki
+    // farkı görmezdi.
+    final cardCount = (reference == null ? 0 : 1) + (prophet == null ? 0 : 1);
+
     return ListView.separated(
       padding: centeredContentPadding(
         context,
@@ -178,13 +196,39 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
       // Klavye, listeye dokunulunca kapansın; kullanıcı sonucu okurken
       // ekranın yarısı klavye olmasın.
       keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-      itemCount: state.results.length,
-      separatorBuilder: (_, _) => Divider(
-        height: 1,
-        color: Theme.of(context).dividerColor,
-      ),
+      itemCount: state.results.length + cardCount,
+      separatorBuilder: (_, index) {
+        // Kartların arasına ve kart ile ilk sonuç arasına çizgi konmaz;
+        // kartlar kendi yüzeylerinde duruyor ve çizgi onları listeye
+        // yapıştırırdı.
+        if (index < cardCount) return const SizedBox(height: Insets.xs);
+        return Divider(height: 1, color: Theme.of(context).dividerColor);
+      },
       itemBuilder: (context, index) {
-        final hit = state.results[index];
+        if (index < cardCount) {
+          // Referans kartı önce gelir: "2:255" yazan kullanıcının niyeti
+          // bir peygamber adı yazandan daha kesindir.
+          final isReferenceSlot = reference != null && index == 0;
+
+          if (isReferenceSlot) {
+            return _ReferenceCard(
+              reference: reference,
+              onTap: () => context.push(
+                reference.ayahNumber == null
+                    ? '/sure/${reference.surah.number}'
+                    : '/sure/${reference.surah.number}'
+                          '?ayet=${reference.ayahNumber}',
+              ),
+            );
+          }
+
+          return _ProphetCard(
+            prophet: prophet!,
+            onTap: () => context.push('/kissa/${prophet.id}'),
+          );
+        }
+
+        final hit = state.results[index - cardCount];
         return _SearchResultRow(
           hit: hit,
           query: state.query,
@@ -193,6 +237,148 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
           ),
         );
       },
+    );
+  }
+}
+
+/// Sorgunun çözüldüğü ayete/sureye doğrudan giden kart.
+///
+/// "2:255" ya da "bakara 255" yazan kullanıcı arama yapmıyor, bir yere
+/// gitmek istiyor. Bu kart o niyeti karşılar ve arama sonuçlarının önünde
+/// durur; tam metin sonuçları altında kalmaya devam eder, çünkü "nur" gibi
+/// sorgularda kullanıcı ikisini de kastediyor olabilir.
+class _ReferenceCard extends StatelessWidget {
+  const _ReferenceCard({required this.reference, required this.onTap});
+
+  final ReferenceHit reference;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final lang = context.locale.languageCode;
+
+    return Pressable(
+      onTap: onTap,
+      child: Container(
+        margin: const EdgeInsets.only(bottom: Insets.xs),
+        padding: const EdgeInsets.all(Insets.sm + 2),
+        decoration: BoxDecoration(
+          color: theme.colorScheme.primary.withValues(alpha: 0.10),
+          borderRadius: BorderRadius.circular(Radii.md),
+        ),
+        child: Row(
+          children: [
+            Icon(
+              Icons.my_location_rounded,
+              size: 19,
+              color: theme.colorScheme.primary,
+            ),
+            const SizedBox(width: Insets.sm),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    reference.ayahNumber == null
+                        ? 'search.goToSurah'.tr(
+                            namedArgs: {
+                              'surah': reference.surah.nameFor(lang),
+                            },
+                          )
+                        : 'search.goToAyah'.tr(
+                            namedArgs: {
+                              'surah': reference.surah.nameFor(lang),
+                              'verse': '${reference.ayahNumber}',
+                            },
+                          ),
+                    style: theme.textTheme.titleSmall?.copyWith(
+                      color: theme.colorScheme.primary,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    'search.goToHint'.tr(),
+                    style: theme.textTheme.bodySmall,
+                  ),
+                ],
+              ),
+            ),
+            Icon(
+              Icons.arrow_forward_ios_rounded,
+              size: 13,
+              color: theme.colorScheme.primary.withValues(alpha: 0.6),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Bir peygamberin anıldığı ayetlere götüren kart.
+///
+/// "mûsâ" yazan kullanıcı çoğunlukla kelimenin geçtiği ayetleri değil,
+/// kıssayı arıyor. Kart o niyeti karşılar; tam metin sonuçları altında
+/// durmaya devam eder.
+class _ProphetCard extends StatelessWidget {
+  const _ProphetCard({required this.prophet, required this.onTap});
+
+  final Prophet prophet;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final lang = context.locale.languageCode;
+
+    return Pressable(
+      onTap: onTap,
+      child: Container(
+        margin: const EdgeInsets.only(bottom: Insets.xs),
+        padding: const EdgeInsets.all(Insets.sm + 2),
+        decoration: BoxDecoration(
+          color: theme.colorScheme.surfaceContainer,
+          borderRadius: BorderRadius.circular(Radii.md),
+        ),
+        child: Row(
+          children: [
+            Icon(
+              Icons.timeline_rounded,
+              size: 19,
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+            ),
+            const SizedBox(width: Insets.sm),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'prophets.searchCard'.tr(
+                      namedArgs: {'name': prophet.nameFor(lang)},
+                    ),
+                    style: theme.textTheme.titleSmall,
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    'prophets.searchCardHint'.tr(
+                      namedArgs: {'count': '${prophet.ayahCount}'},
+                    ),
+                    style: theme.textTheme.bodySmall,
+                  ),
+                ],
+              ),
+            ),
+            Icon(
+              Icons.arrow_forward_ios_rounded,
+              size: 13,
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.35),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

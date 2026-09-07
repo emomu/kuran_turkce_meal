@@ -6,8 +6,8 @@ import '../../../core/theme/app_typography.dart';
 import '../../../shared/widgets/responsive_layout.dart';
 import '../../settings/providers/preferences_provider.dart';
 
-/// Okuma sırasında açılan hızlı ayarlar: punto, satır aralığı, Arapça metin,
-/// tefsir gösterimi ve tema.
+/// Okuma sırasında açılan hızlı ayarlar: punto, satır aralığı, Arapça metin
+/// ve tema.
 ///
 /// Ayarlar ekranındaki tam listeyi tekrar etmez — burada yalnızca okurken
 /// değiştirilmek istenen şeyler var. Değişiklikler anında uygulanır, "kaydet"

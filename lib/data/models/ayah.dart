@@ -1,4 +1,4 @@
-/// Tek bir ayet: Türkçe meal, opsiyonel Arapça metin ve opsiyonel tefsir.
+/// Tek bir ayet: Türkçe meal ve opsiyonel Arapça metin.
 class Ayah {
   const Ayah({
     required this.id,
@@ -8,8 +8,6 @@ class Ayah {
     int? endAyahNumber,
     this.translationEn,
     this.arabic,
-    this.tafsir,
-    this.tafsirEn,
   }) : endAyahNumber = endAyahNumber ?? ayahNumber;
 
   /// Global ayet kimliği. Mushaf sırasına göre 1'den başlar (toplam 6236).
@@ -33,12 +31,6 @@ class Ayah {
   /// Arapça orijinal metin. Ayarlardan gösterimi açılabilir.
   final String? arabic;
 
-  /// Ayetin Türkçe tefsiri. Her ayette bulunmayabilir.
-  final String? tafsir;
-
-  /// Ayetin İngilizce tefsiri.
-  final String? tafsirEn;
-
   /// Seçili dildeki meal metni.
   ///
   /// İngilizce istenip veri yoksa Türkçeye düşer: ekranda boş satır
@@ -46,24 +38,12 @@ class Ayah {
   String translationFor(String languageCode) =>
       languageCode == 'en' ? (translationEn ?? translation) : translation;
 
-  /// Seçili dildeki tefsir metni.
-  String? tafsirFor(String languageCode) =>
-      languageCode == 'en' ? (tafsirEn ?? tafsir) : tafsir;
-
-  /// Seçili dilde tefsir var mı.
-  bool hasTafsirFor(String languageCode) {
-    final text = tafsirFor(languageCode);
-    return text != null && text.trim().isNotEmpty;
-  }
-
   /// Birleşik meal bloğunun son ayet numarası.
   ///
   /// Bazı meallerde çevirmen ardışık ayetleri tek cümlede karşılar (örn.
   /// Alak 9-10, Yâsîn 2-3). Bu durumda ayetler tek blokta gösterilir ve
   /// rozet aralığı belirtir. Tekil ayetlerde [ayahNumber] ile aynıdır.
   final int endAyahNumber;
-
-  bool get hasTafsir => tafsir != null && tafsir!.trim().isNotEmpty;
 
   /// Bu blok birden fazla ayeti kapsıyor mu.
   bool get isRange => endAyahNumber > ayahNumber;
@@ -83,8 +63,6 @@ class Ayah {
     translation: map['translation']! as String,
     translationEn: map['translation_en'] as String?,
     arabic: map['arabic'] as String?,
-    tafsir: map['tafsir'] as String?,
-    tafsirEn: map['tafsir_en'] as String?,
   );
 
   Map<String, Object?> toMap() => {
@@ -95,7 +73,5 @@ class Ayah {
     'translation': translation,
     'translation_en': translationEn,
     'arabic': arabic,
-    'tafsir': tafsir,
-    'tafsir_en': tafsirEn,
   };
 }

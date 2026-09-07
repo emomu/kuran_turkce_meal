@@ -10,11 +10,14 @@ class ReaderPreferences {
     this.themeMode = ThemeMode.system,
     this.fontScale = 1.0,
     this.lineHeight = 1.7,
-    this.showArabic = false,
+    this.showArabic = true,
     this.sortByRevelation = true,
     this.dailyAyahEnabled = true,
     this.dailyAyahHour = 8,
     this.dailyAyahMinute = 0,
+    this.reciterId,
+    this.playbackSpeed = 1.0,
+    this.autoScrollWithAudio = true,
   });
 
   final ThemeMode themeMode;
@@ -26,6 +29,10 @@ class ReaderPreferences {
   final double lineHeight;
 
   /// Arapça orijinal metnin mealle birlikte gösterilip gösterilmeyeceği.
+  ///
+  /// Varsayılan açık: uygulama bir Kur'an uygulaması ve kullanıcıların çoğu
+  /// orijinal metni görmeyi bekliyor. Kapalı başlatmak, özelliğin varlığını
+  /// ayarlara girmeden fark edilemez kılıyordu.
   final bool showArabic;
 
   /// Sure listesinin iniş sırasına göre sıralanıp sıralanmayacağı.
@@ -36,6 +43,23 @@ class ReaderPreferences {
   final bool dailyAyahEnabled;
   final int dailyAyahHour;
   final int dailyAyahMinute;
+
+  /// Seçili karinin kimliği. Hiç seçilmemişse null; varsayılan kari kullanılır.
+  ///
+  /// Kari nesnesi değil kimliği saklanır: nesne uygulama sürümüyle değişebilir
+  /// (adres güncellenir, kalite değişir) ama kimlik sabit kalır ve kullanıcının
+  /// tercihi güncellemeden sağ çıkar.
+  final String? reciterId;
+
+  /// Tilavet oynatma hızı. 0.5–2.0 arası.
+  ///
+  /// Ezber çalışanlar yavaşlatır, tekrar dinleyenler hızlandırır. Varsayılan 1.0
+  /// bırakıldı: tilavetin kendi tartımı vardır ve varsayılanı bozmak doğru
+  /// değil.
+  final double playbackSpeed;
+
+  /// Ses çalarken listenin çalan ayeti takip edip etmeyeceği.
+  final bool autoScrollWithAudio;
 
   /// Meal metninin hesaplanmış punto değeri.
   double get translationFontSize => 17 * fontScale;
@@ -56,6 +80,9 @@ class ReaderPreferences {
     bool? dailyAyahEnabled,
     int? dailyAyahHour,
     int? dailyAyahMinute,
+    String? reciterId,
+    double? playbackSpeed,
+    bool? autoScrollWithAudio,
   }) => ReaderPreferences(
     themeMode: themeMode ?? this.themeMode,
     fontScale: fontScale ?? this.fontScale,
@@ -65,5 +92,8 @@ class ReaderPreferences {
     dailyAyahEnabled: dailyAyahEnabled ?? this.dailyAyahEnabled,
     dailyAyahHour: dailyAyahHour ?? this.dailyAyahHour,
     dailyAyahMinute: dailyAyahMinute ?? this.dailyAyahMinute,
+    reciterId: reciterId ?? this.reciterId,
+    playbackSpeed: playbackSpeed ?? this.playbackSpeed,
+    autoScrollWithAudio: autoScrollWithAudio ?? this.autoScrollWithAudio,
   );
 }

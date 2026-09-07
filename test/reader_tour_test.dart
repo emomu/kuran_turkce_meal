@@ -139,10 +139,16 @@ void main() async {
       expect(target.right, lessThanOrEqualTo(screen.width));
     });
 
-    testWidgets('üç adım sırayla gezilir', (tester) async {
+    testWidgets('adımlar sırayla gezilir', (tester) async {
       await pumpReader(tester);
 
+      // Sıra bilinçli: en çok kaçırılan jest önce, sonra dinleme, sonra
+      // okuma konforu, en sonda sure geçişi.
       expect(find.text('Ayete basılı tutun'), findsOneWidget);
+
+      await tester.tap(find.text('Devam'));
+      await tester.pumpAndSettle();
+      expect(find.text('Sureyi dinleyin'), findsOneWidget);
 
       await tester.tap(find.text('Devam'));
       await tester.pumpAndSettle();
@@ -221,7 +227,7 @@ void main() async {
       // Ve gerçekten basılabilmeli.
       await tester.tap(find.text('Devam'));
       await tester.pumpAndSettle();
-      expect(find.text('Yazıyı kendinize göre ayarlayın'), findsOneWidget);
+      expect(find.text('Sureyi dinleyin'), findsOneWidget);
     });
 
     testWidgets('tur kapandıktan sonra ayet uzun basmaya yanıt verir',

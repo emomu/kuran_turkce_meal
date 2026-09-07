@@ -1,10 +1,8 @@
-// Meal, tefsir ve Arapça metni uygulamanın asset biçimine dönüştürür.
+// Meal ve Arapça metni uygulamanın asset biçimine dönüştürür.
 //
 // Kullanım:
 //   dart run tool/import_meal.dart --meal <dosya.json> [--meal-en <dosya.json>]
 //                                  [--arapca <dosya.json>]
-//                                  [--tefsir <dosya.json>]
-//                                  [--tefsir-en <dosya.json>]
 //
 // Girdi biçimleri (ikisi de kabul edilir):
 //   {"quran": [{"chapter": 1, "verse": 1, "text": "..."}, ...]}
@@ -12,12 +10,12 @@
 //
 // Çıktı: assets/data/ayahs.json — uygulamanın beklediği düz biçim:
 //   [{"id": 1, "surah_number": 1, "ayah_number": 1,
-//     "translation": "...", "arabic": "...", "tafsir": "..."}, ...]
+//     "translation": "...", "arabic": "..."}, ...]
 //
 // TELİF UYARISI
 // -------------
 // Bu araç metnin kullanım hakkını denetlemez, yalnızca biçim dönüştürür.
-// Meal ve tefsir metinleri telif korumasına tabi olabilir:
+// Meal metinleri telif korumasına tabi olabilir:
 //
 //   * Elmalılı Hamdi Yazır'ın ORİJİNAL 1935 metni kamu malıdır (vefat 1942).
 //     Ancak yaygın dolaşan "Elmalılı" dosyalarının çoğu SADELEŞTİRİLMİŞTİR;
@@ -49,12 +47,6 @@ void main(List<String> args) async {
   final arabic = options.arabicPath == null
       ? null
       : await _loadVerses(options.arabicPath!, 'Arapça metin');
-  final tafsir = options.tafsirPath == null
-      ? null
-      : await _loadVerses(options.tafsirPath!, 'tefsir');
-  final tafsirEn = options.tafsirEnPath == null
-      ? null
-      : await _loadVerses(options.tafsirEnPath!, 'İngilizce tefsir');
 
   _validate(translation, surahs, label: 'Meal');
   if (translationEn != null) {
@@ -67,8 +59,6 @@ void main(List<String> args) async {
     translation,
     translationEn,
     arabic,
-    tafsir,
-    tafsirEn,
   );
 
   final file = File('assets/data/ayahs.json');
@@ -81,11 +71,6 @@ void main(List<String> args) async {
     ..writeln('  Boyut: ${sizeMb.toStringAsFixed(1)} MB')
     ..writeln('  İngilizce meal: ${translationEn == null ? 'yok' : 'var'}')
     ..writeln('  Arapça metin: ${arabic == null ? 'yok' : 'var'}')
-    ..writeln('  Tefsir: ${tafsir == null ? 'yok' : '${tafsir.length} ayette'}')
-    ..writeln(
-      '  İngilizce tefsir: '
-      '${tafsirEn == null ? 'yok' : '${tafsirEn.length} ayette'}',
-    )
     ..writeln('')
     ..writeln('Uygulamayı yeniden kurun; veritabanı ilk açılışta yeniden')
     ..writeln('oluşturulur (eski kurulumda silip yeniden yükleyin).');
@@ -102,23 +87,17 @@ class _Options {
     required this.mealPath,
     this.mealEnPath,
     this.arabicPath,
-    this.tafsirPath,
-    this.tafsirEnPath,
   });
 
   final String mealPath;
   final String? mealEnPath;
   final String? arabicPath;
-  final String? tafsirPath;
-  final String? tafsirEnPath;
 }
 
 _Options? _parseArgs(List<String> args) {
   String? meal;
   String? mealEn;
   String? arabic;
-  String? tafsir;
-  String? tafsirEn;
 
   for (var i = 0; i < args.length; i++) {
     final next = i + 1 < args.length ? args[i + 1] : null;
@@ -132,12 +111,6 @@ _Options? _parseArgs(List<String> args) {
       case '--arapca' || '--arabic':
         arabic = next;
         i++;
-      case '--tefsir' || '--tafsir':
-        tafsir = next;
-        i++;
-      case '--tefsir-en' || '--tafsir-en':
-        tafsirEn = next;
-        i++;
     }
   }
 
@@ -146,8 +119,6 @@ _Options? _parseArgs(List<String> args) {
     mealPath: meal,
     mealEnPath: mealEn,
     arabicPath: arabic,
-    tafsirPath: tafsir,
-    tafsirEnPath: tafsirEn,
   );
 }
 
@@ -160,8 +131,6 @@ Seçenekler:
   --meal       <dosya>   Türkçe meal (zorunlu)
   --meal-en    <dosya>   İngilizce meal
   --arapca     <dosya>   Arapça orijinal metin
-  --tefsir     <dosya>   Türkçe tefsir (her ayette olmak zorunda değil)
-  --tefsir-en  <dosya>   İngilizce tefsir
 
 Girdi biçimi:
   {"quran": [{"chapter": 1, "verse": 1, "text": "..."}]}
@@ -271,8 +240,6 @@ List<Map<String, Object?>> _build(
   Map<VerseKey, String> translation,
   Map<VerseKey, String>? translationEn,
   Map<VerseKey, String>? arabic,
-  Map<VerseKey, String>? tafsir,
-  Map<VerseKey, String>? tafsirEn,
 ) {
   final output = <Map<String, Object?>>[];
   var id = 1;
@@ -305,7 +272,6 @@ List<Map<String, Object?>> _build(
                 if (arabic[(surah.number, a)] case final t?) t,
             ];
 
-      // Tefsir aralıktaki ilk bulunandan alınır.
       String? firstIn(Map<VerseKey, String>? source) {
         if (source == null) return null;
         for (var a = ayah; a <= last; a++) {
@@ -315,8 +281,6 @@ List<Map<String, Object?>> _build(
         return null;
       }
 
-      final tafsirText = firstIn(tafsir);
-      final tafsirEnText = firstIn(tafsirEn);
 
       // İngilizce meal, Türkçe birleştirmenin aynı aralığına uydurulur.
       // Aralıktaki parçalar farklıysa birleştirilir; aynıysa tek kopya
@@ -340,8 +304,6 @@ List<Map<String, Object?>> _build(
         if (translationEnText != null) 'translation_en': translationEnText,
         if (arabicParts != null && arabicParts.isNotEmpty)
           'arabic': arabicParts.join('\n'),
-        if (tafsirText != null) 'tafsir': tafsirText,
-        if (tafsirEnText != null) 'tafsir_en': tafsirEnText,
       });
 
       ayah = last + 1;

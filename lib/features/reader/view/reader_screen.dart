@@ -11,6 +11,10 @@ import '../../../core/theme/app_typography.dart';
 import '../../../shared/widgets/responsive_layout.dart';
 import '../../../data/models/ayah.dart';
 import '../../../data/models/surah.dart';
+import '../../audio/providers/audio_provider.dart';
+import '../../audio/providers/download_provider.dart';
+import '../../audio/widgets/audio_download_sheet.dart';
+import '../../audio/widgets/audio_player_bar.dart';
 import '../../roots/view/root_detail_screen.dart';
 import '../../roots/widgets/word_picker_sheet.dart';
 import '../../settings/providers/preferences_provider.dart';
@@ -80,12 +84,35 @@ class _ReaderScreenState extends ConsumerState<ReaderScreen> {
   /// Geçiş sırasında tekrar tetiklenmeyi engeller.
   bool _isAdvancing = false;
 
+  /// Ses çalarken kullanıcı listeyi kendisi kaydırdı mı.
+  ///
+  /// Kaydırdıysa otomatik takip geçici olarak durur: kullanıcı başka bir ayete
+  /// bakmak istemiştir ve liste onu zorla çalan ayete geri çekmemelidir.
+  /// Takip, kullanıcı çubuktan yeni bir ayete geçtiğinde ya da çalan ayet
+  /// yeniden görünür olduğunda kendiliğinden geri gelir.
+  bool _userScrolledDuringAudio = false;
+
+  /// Otomatik olarak kaydırılan son ayet. Aynı ayet için tekrar kaydırma
+  /// isteği gönderilmesin diye tutulur.
+  int? _lastAutoScrolledAyah;
+
+  /// Şu an takip için kaydırma yapılıyor.
+  ///
+  /// `scrollTo` da sürükleme bildirimi üretir; bu bayrak olmasaydı otomatik
+  /// kaydırma "kullanıcı kaydırdı" sayılır ve takip kendini ilk ayette
+  /// kapatırdı.
+  bool _isAutoScrolling = false;
+
+  /// Kullanıcı kaydırmasından sonra takibi geri açan zamanlayıcı.
+  Timer? _resumeFollowTimer;
+
   /// Tanıtım turunun işaret ettiği öğeler.
   ///
   /// İlk ayet karesi ve ayar düğmesi; turun delikleri bunların ekrandaki
   /// yerine göre açılır.
   final _firstAyahKey = GlobalKey();
   final _settingsButtonKey = GlobalKey();
+  final _listenButtonKey = GlobalKey();
 
   @override
   void initState() {
@@ -108,6 +135,7 @@ class _ReaderScreenState extends ConsumerState<ReaderScreen> {
     _positionsListener.itemPositions.removeListener(_onScroll);
     _focusTimer?.cancel();
     _progressDebounce?.cancel();
+    _resumeFollowTimer?.cancel();
     super.dispose();
   }
 
@@ -173,6 +201,21 @@ class _ReaderScreenState extends ConsumerState<ReaderScreen> {
         // atalet (fling) kaydırmasıdır.
         _isDragging = dragDetails != null;
 
+        // Kullanıcı ses çalarken kendisi kaydırdıysa otomatik takip durur:
+        // başka bir ayete bakmak istemiştir ve liste onu zorla çalan ayete
+        // geri çekmemelidir.
+        //
+        // Takip kalıcı olarak kapanmaz — kullanıcı biraz sonra dinlemeye
+        // döndüğünde metnin yine kendiliğinden akmasını bekler. Bu yüzden
+        // parmak kaldırıldıktan bir süre sonra takip geri açılır
+        // (bkz. [_resumeFollowTimer]).
+        if (dragDetails != null &&
+            !_isAutoScrolling &&
+            ref.read(audioProvider).isActive) {
+          _userScrolledDuringAudio = true;
+          _resumeFollowTimer?.cancel();
+        }
+
       // Taşma yalnızca parmak ekrandayken sayılır: hızlı kaydırmanın ataleti
       // de sınırı aşar ve sayılsaydı kullanıcı istemeden sure atlardı.
       case ScrollUpdateNotification(:final metrics, :final dragDetails):
@@ -186,6 +229,26 @@ class _ReaderScreenState extends ConsumerState<ReaderScreen> {
       case ScrollEndNotification():
         final shouldAdvance = _isDragging && _overscroll >= _pullThreshold;
         _isDragging = false;
+
+        // Kullanıcı kaydırmayı bıraktı: takip bir süre sonra geri gelir.
+        // Süre, "baktım ve döndüm" ile "burayı okuyorum" arasını ayıracak
+        // kadar uzun, kullanıcıyı bekletmeyecek kadar kısa seçildi.
+        if (_userScrolledDuringAudio) {
+          _resumeFollowTimer?.cancel();
+          _resumeFollowTimer = Timer(const Duration(seconds: 6), () {
+            if (!mounted) return;
+            _userScrolledDuringAudio = false;
+            // Takip yeniden açıldığında çalan ayete dönülür; aksi halde
+            // kullanıcı sıradaki ayet gelene kadar eski yerde kalırdı.
+            _lastAutoScrolledAyah = null;
+            final audio = ref.read(audioProvider);
+            if (audio.surahNumber != _surahNumber) return;
+            final ayahs =
+                ref.read(readerDataProvider(_surahNumber)).valueOrNull?.ayahs;
+            if (ayahs == null) return;
+            _followPlayingAyah(ayahs, audio.currentAyahNumber);
+          });
+        }
         if (shouldAdvance) {
           _advanceToNextSurah();
         } else if (_overscroll > 0) {
@@ -309,6 +372,24 @@ class _ReaderScreenState extends ConsumerState<ReaderScreen> {
     final marks = ref.watch(surahMarksProvider(_surahNumber));
     final prefs = ref.watch(preferencesProvider);
     final nextSurah = ref.watch(nextSurahProvider(_surahNumber)).valueOrNull;
+    final audio = ref.watch(audioProvider);
+
+    // Çalan ayet değiştikçe liste onu takip eder.
+    //
+    // Dinleme `build` içinden değil buradan kurulur: takip listeyi
+    // kaydırmak için `setState`e yakın bir iş yapar ve çizim sırasında
+    // tetiklenirse aynı kare içinde ikinci bir düzen geçişi başlar. O
+    // durumda `ScrollablePositionedList` iki liste birden canlı tutar ve
+    // tur anahtarı (`_firstAyahKey`) aynı anda iki karede görünüp
+    // "Multiple widgets used the same GlobalKey" hatası verir.
+    ref.listen(audioProvider.select((a) => (a.surahNumber, a.currentAyahNumber)),
+        (previous, next) {
+      final (surahNumber, ayahNumber) = next;
+      if (surahNumber != _surahNumber) return;
+      final ayahs = ref.read(readerDataProvider(_surahNumber)).valueOrNull?.ayahs;
+      if (ayahs == null) return;
+      _followPlayingAyah(ayahs, ayahNumber);
+    });
 
     // Araçtan/bildirimden doğrudan açıldığında geride yığın olmaz; sistem
     // geri jesti uygulamayı kapatmak yerine ana sayfaya dönsün (bkz.
@@ -340,7 +421,10 @@ class _ReaderScreenState extends ConsumerState<ReaderScreen> {
                     _ReaderAppBar(
                       surah: data.surah,
                       settingsKey: _settingsButtonKey,
+                      listenKey: _listenButtonKey,
                       onSettings: () => _openReaderSettings(context),
+                      isAudioActive: audio.surahNumber == _surahNumber,
+                      onListen: () => _startAudio(data.surah),
                     ),
                     Expanded(
                       child: NotificationListener<ScrollNotification>(
@@ -398,6 +482,10 @@ class _ReaderScreenState extends ConsumerState<ReaderScreen> {
                               prefs: prefs,
                               mark: marks[ayah.id],
                               isFocused: _focusedAyahNumber == ayah.ayahNumber,
+                              isPlaying: audio.isBlockActive(
+                                ayah,
+                                _surahNumber,
+                              ),
                               onTap: () {},
                               onLongPress: () =>
                                   _openActions(context, ayah, data.surah),
@@ -418,6 +506,11 @@ class _ReaderScreenState extends ConsumerState<ReaderScreen> {
                         ),
                       ),
                     ),
+                    // Tilavet çubuğu listenin altında, güvenli alanın
+                    // üstünde durur. Listenin üzerine bindirilmedi: metnin
+                    // son satırını kapatmasın, kullanıcı okuduğu yeri
+                    // görebilsin.
+                    AudioPlayerBar(surahNumber: _surahNumber),
                   ],
                 ),
               ),
@@ -443,6 +536,13 @@ class _ReaderScreenState extends ConsumerState<ReaderScreen> {
         body: 'tour.reader.longPressBody'.tr(),
       ),
       TourStep(
+        targetKey: _listenButtonKey,
+        shape: SpotlightShape.circle,
+        icon: Icons.headphones_rounded,
+        title: 'tour.reader.listenTitle'.tr(),
+        body: 'tour.reader.listenBody'.tr(),
+      ),
+      TourStep(
         targetKey: _settingsButtonKey,
         shape: SpotlightShape.circle,
         icon: Icons.text_fields_rounded,
@@ -457,6 +557,106 @@ class _ReaderScreenState extends ConsumerState<ReaderScreen> {
         body: 'tour.reader.endCardBody'.tr(),
       ),
     ];
+  }
+
+  /// Çalan ayeti ekranda tutar.
+  ///
+  /// Holy Bible tarzı takibin özü bu: kullanıcı hiçbir şeye dokunmadan
+  /// okuduğu satır ekranda kalır.
+  ///
+  /// Kaydırma her ayette değil, çalan ayet ekranın rahat okuma alanından
+  /// çıkmak üzereyken yapılır. Her ayette kaydırılsaydı metin sürekli
+  /// kımıldar ve göz satırı takip edemezdi; hiç kaydırılmasaydı ses ekranın
+  /// dışına taşardı.
+  void _followPlayingAyah(List<Ayah> ayahs, int? playingAyah) {
+    if (playingAyah == null) return;
+    if (!ref.read(preferencesProvider).autoScrollWithAudio) return;
+    if (_userScrolledDuringAudio) return;
+    if (_lastAutoScrolledAyah == playingAyah) return;
+
+    final index = _indexOfAyah(ayahs, playingAyah);
+    if (index == null) return;
+
+    _lastAutoScrolledAyah = playingAyah;
+
+    // Ayet, ekranın rahat okuma kuşağında duruyorsa liste kımıldamaz.
+    //
+    // Kuşak üstten %10, alttan %65 ile sınırlı: ayet bu aralıktayken göz onu
+    // zaten görüyor. Alt sınır ekranın dibi değil, çünkü ayet oraya
+    // vardığında kaydırma başlamalı — dibe değene kadar beklenirse tilavet
+    // görünmeyen bir satırdan devam eder.
+    final positions = _positionsListener.itemPositions.value;
+    final comfortable = positions.any(
+      (p) =>
+          p.index == index &&
+          p.itemLeadingEdge >= 0.10 &&
+          p.itemLeadingEdge <= 0.65,
+    );
+    if (comfortable) return;
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted || !_itemScrollController.isAttached) return;
+
+      // Kaydırma başlarken kullanıcı kaydırma tespiti geçici olarak
+      // susturulur: `scrollTo` da kaydırma bildirimi üretir ve o bildirim
+      // kullanıcı hareketi sayılsaydı takip ilk ayette kendini kapatırdı.
+      _isAutoScrolling = true;
+
+      _itemScrollController
+          .scrollTo(
+            index: index,
+            duration: Motion.slow,
+            curve: Motion.standard,
+            // Ayet ekranın üst üçte birine oturur: altında okunacak metin
+            // kalır, kullanıcı sıradakini önceden görür.
+            alignment: 0.25,
+          )
+          .whenComplete(() {
+            if (mounted) _isAutoScrolling = false;
+          });
+    });
+  }
+
+  /// Sureyi baştan ya da belirli bir ayetten dinlemeye başlar.
+  ///
+  /// Ses dosyaları cihazda yoksa önce indirme onayı istenir. Sessizce
+  /// indirilmez: indirme kullanıcının verisini harcar ve uygulamanın ağa
+  /// çıktığı tek an burasıdır.
+  Future<void> _startAudio(Surah surah, {int? fromAyah}) async {
+    // Dosya kontrolü diskten okunur ve ekran açılır açılmaz bitmiş olmayabilir.
+    // Beklenmeseydi indirilmiş bir surede bile indirme yaprağı açılırdı.
+    final download = await ref
+        .read(surahDownloadProvider(surah.number).notifier)
+        .ensureLoaded();
+
+    if (!mounted) return;
+
+    if (!download.isReady) {
+      // Yaprak indirmeyi kendi içinde yürütür ve ancak tamamlandığında
+      // `true` döner. İndirme burada tekrarlanmaz; kullanıcı vazgeçtiyse
+      // ya da indirme başarısız olduysa yaprak zaten durumu göstermiştir.
+      final downloaded = await showModalBottomSheet<bool>(
+        context: context,
+        isScrollControlled: true,
+        // İndirme sürerken yaprağın kazara kapanmaması için dışarı dokunuşla
+        // kapanmaz; vazgeçmek için açık bir "Vazgeç" düğmesi var.
+        isDismissible: false,
+        builder: (_) => AudioDownloadSheet(surah: surah),
+      );
+
+      if (downloaded != true || !mounted) return;
+    }
+
+    if (!mounted) return;
+
+    // Yeni bir dinleme başlıyor: takip durumu sıfırlanır, aksi halde önceki
+    // dinlemede kullanıcının yaptığı kaydırma takibi kapalı bırakırdı.
+    setState(() {
+      _userScrolledDuringAudio = false;
+      _lastAutoScrolledAyah = null;
+    });
+
+    await ref.read(playSurahProvider)(surah.number, fromAyah: fromAyah);
   }
 
   void _openActions(BuildContext context, Ayah ayah, Surah surah) {
@@ -476,6 +676,8 @@ class _ReaderScreenState extends ConsumerState<ReaderScreen> {
           onSetHighlight: (color) => notifier.setHighlight(ayah.id, color),
           onEditNote: () => _openNoteEditor(context, ayah, surah.name),
           onAnalyseRoots: () => _openWordPicker(context, ayah, surah.name),
+          onListenFromHere: () =>
+              _startAudio(surah, fromAyah: ayah.ayahNumber),
         ),
       ),
     );
@@ -540,14 +742,27 @@ class _ReaderAppBar extends StatelessWidget {
   const _ReaderAppBar({
     required this.surah,
     required this.onSettings,
+    required this.onListen,
+    required this.isAudioActive,
     this.settingsKey,
+    this.listenKey,
   });
 
   final Surah surah;
   final VoidCallback onSettings;
 
+  /// Sureyi baştan dinlemeye başlar.
+  final VoidCallback onListen;
+
+  /// Bu surenin tilaveti şu an çalıyor mu. Çalıyorsa düğme vurgulanır ve
+  /// kullanıcı sesin nereden geldiğini görür.
+  final bool isAudioActive;
+
   /// Tanıtım turunun ayar düğmesini işaret edebilmesi için.
   final GlobalKey? settingsKey;
+
+  /// Tanıtım turunun dinleme düğmesini işaret edebilmesi için.
+  final GlobalKey? listenKey;
 
   @override
   Widget build(BuildContext context) {
@@ -578,6 +793,18 @@ class _ReaderAppBar extends StatelessWidget {
               textAlign: TextAlign.center,
               style: theme.textTheme.titleSmall,
             ),
+          ),
+          IconButton(
+            key: listenKey,
+            icon: Icon(
+              isAudioActive
+                  ? Icons.headphones_rounded
+                  : Icons.headphones_outlined,
+              size: 21,
+              color: isAudioActive ? theme.colorScheme.primary : null,
+            ),
+            onPressed: onListen,
+            tooltip: 'audio.listen'.tr(),
           ),
           IconButton(
             key: settingsKey,

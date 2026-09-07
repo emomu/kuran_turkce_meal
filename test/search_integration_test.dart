@@ -24,8 +24,7 @@ void main() {
         id INTEGER PRIMARY KEY,
         surah_number INTEGER NOT NULL,
         ayah_number INTEGER NOT NULL,
-        translation TEXT NOT NULL,
-        tafsir TEXT
+        translation TEXT NOT NULL
       )
     ''');
     await db.execute('''
@@ -36,26 +35,23 @@ void main() {
       )
     ''');
 
-    Future<void> insert(int id, String translation, [String? tafsir]) async {
+    Future<void> insert(int id, String translation) async {
       await db.insert('ayahs', {
         'id': id,
         'surah_number': 1,
         'ayah_number': id,
         'translation': translation,
-        'tafsir': tafsir,
       });
       await db.insert('ayahs_fts', {
         'rowid': id,
-        'search_text': SearchNormalizer.normalize(
-          tafsir == null ? translation : '$translation $tafsir',
-        ),
+        'search_text': SearchNormalizer.normalize(translation),
       });
     }
 
     await insert(1, 'Allah âdil olandır ve adâleti emreder.');
     await insert(2, 'Rahmet ve merhamet sahibidir.');
     await insert(3, 'Işık karanlığı giderir.');
-    await insert(4, 'Sabredenlere müjde vardır.', 'Tefsir: sabır anlatılır.');
+    await insert(4, 'Sabredenlere müjde ve sabır vardır.');
   });
 
   tearDown(() async => db.close());
@@ -98,7 +94,7 @@ void main() {
       expect(await search('rahmet ışık'), isEmpty);
     });
 
-    test('tefsir metni de aranır', () async {
+    test('meal metninde geçen kelime bulunur', () async {
       expect(await search('sabır'), contains(4));
     });
 

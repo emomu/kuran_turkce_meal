@@ -14,7 +14,6 @@ const _ayah = Ayah(
   surahNumber: 96,
   ayahNumber: 1,
   translation: 'Yaratan Rabbinin adıyla oku.',
-  tafsir: 'İlk inen ayet.',
 );
 
 /// Widget'ı çeviri bağlamıyla çizer ve yüklenmesini bekler.
@@ -38,6 +37,7 @@ void main() async {
         onSetHighlight: (_) {},
         onEditNote: () {},
         onAnalyseRoots: () {},
+        onListenFromHere: () {},
       ));
       expect(find.text('Yer imi ekle'), findsOneWidget);
 
@@ -53,6 +53,7 @@ void main() async {
         onSetHighlight: (_) {},
         onEditNote: () {},
         onAnalyseRoots: () {},
+        onListenFromHere: () {},
       ));
       expect(find.text('Yer imini kaldır'), findsOneWidget);
     });
@@ -66,6 +67,7 @@ void main() async {
         onSetHighlight: (_) {},
         onEditNote: () {},
         onAnalyseRoots: () {},
+        onListenFromHere: () {},
       ));
       expect(find.text('Notu düzenle'), findsOneWidget);
     });
@@ -86,6 +88,7 @@ void main() async {
               },
               onEditNote: () {},
         onAnalyseRoots: () {},
+        onListenFromHere: () {},
             ));
 
       // İlk renk noktasına dokun.
@@ -113,6 +116,7 @@ void main() async {
         onSetHighlight: (c) => picked = c,
         onEditNote: () {},
         onAnalyseRoots: () {},
+        onListenFromHere: () {},
       ));
 
       await tester.tap(find.byType(GestureDetector).at(0), warnIfMissed: false);

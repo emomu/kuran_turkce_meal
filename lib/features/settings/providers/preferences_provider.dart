@@ -23,6 +23,9 @@ class PreferencesNotifier extends StateNotifier<ReaderPreferences> {
   static const _kDailyAyahEnabled = 'daily_ayah_enabled';
   static const _kDailyAyahHour = 'daily_ayah_hour';
   static const _kDailyAyahMinute = 'daily_ayah_minute';
+  static const _kReciterId = 'reciter_id';
+  static const _kPlaybackSpeed = 'playback_speed';
+  static const _kAutoScrollWithAudio = 'auto_scroll_with_audio';
 
   static ReaderPreferences _read(SharedPreferences prefs) {
     return ReaderPreferences(
@@ -30,11 +33,14 @@ class PreferencesNotifier extends StateNotifier<ReaderPreferences> {
           prefs.getInt(_kThemeMode) ?? ThemeMode.system.index],
       fontScale: prefs.getDouble(_kFontScale) ?? 1.0,
       lineHeight: prefs.getDouble(_kLineHeight) ?? 1.7,
-      showArabic: prefs.getBool(_kShowArabic) ?? false,
+      showArabic: prefs.getBool(_kShowArabic) ?? true,
       sortByRevelation: prefs.getBool(_kSortByRevelation) ?? true,
       dailyAyahEnabled: prefs.getBool(_kDailyAyahEnabled) ?? true,
       dailyAyahHour: prefs.getInt(_kDailyAyahHour) ?? 8,
       dailyAyahMinute: prefs.getInt(_kDailyAyahMinute) ?? 0,
+      reciterId: prefs.getString(_kReciterId),
+      playbackSpeed: prefs.getDouble(_kPlaybackSpeed) ?? 1.0,
+      autoScrollWithAudio: prefs.getBool(_kAutoScrollWithAudio) ?? true,
     );
   }
 
@@ -80,13 +86,35 @@ class PreferencesNotifier extends StateNotifier<ReaderPreferences> {
       ..setInt(_kDailyAyahMinute, time.minute);
   }
 
+  /// Tilaveti okuyan kariyi değiştirir.
+  ///
+  /// Kari başına ayrı indirme yapıldığı için bu, indirilmiş seslerin
+  /// kullanılabilirliğini de değiştirir: yeni karide daha önce indirilmiş sure
+  /// yoksa kullanıcıdan yeniden indirmesi istenir. Eski karinin dosyaları
+  /// silinmez — kullanıcı geri dönebilir.
+  void setReciter(String reciterId) {
+    state = state.copyWith(reciterId: reciterId);
+    _prefs.setString(_kReciterId, reciterId);
+  }
+
+  void setPlaybackSpeed(double speed) {
+    final clamped = speed.clamp(0.5, 2.0);
+    state = state.copyWith(playbackSpeed: clamped);
+    _prefs.setDouble(_kPlaybackSpeed, clamped);
+  }
+
+  void setAutoScrollWithAudio(bool value) {
+    state = state.copyWith(autoScrollWithAudio: value);
+    _prefs.setBool(_kAutoScrollWithAudio, value);
+  }
+
   /// Okuma ayarlarını varsayılana döndürür. Tema ve bildirim tercihleri
   /// korunur — kullanıcı "yazıyı sıfırla" derken temasını kaybetmeyi beklemez.
   void resetReadingDefaults() {
     state = state.copyWith(
       fontScale: 1.0,
       lineHeight: 1.7,
-      showArabic: false,
+      showArabic: true,
     );
     _prefs
       ..remove(_kFontScale)

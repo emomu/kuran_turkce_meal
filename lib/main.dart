@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:just_audio_background/just_audio_background.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'core/notifications/daily_ayah_notifications.dart';
@@ -18,6 +19,17 @@ Future<void> main() async {
   // Çeviri dosyaları ilk kareden önce yüklenir; aksi halde uygulama bir an
   // çeviri anahtarlarını ham haliyle gösterirdi.
   await EasyLocalization.ensureInitialized();
+
+  // Tilavetin arka planda sürmesi ve kilit ekranından yönetilebilmesi için
+  // ses servisi kurulur. Kurulum ses çalınmasa da yapılır: servis ancak
+  // uygulama açılışında tanıtılabilir, ilk çalma anında kurulamaz.
+  await JustAudioBackground.init(
+    androidNotificationChannelId: 'com.kuran.meal.audio',
+    androidNotificationChannelName: 'Tilavet',
+    // Bildirim, ses duraklatıldığında da durur: kullanıcı okumaya döndüğünde
+    // bildirim çubuğunda asılı kalan bir denetim istemez.
+    androidStopForegroundOnPause: true,
+  );
 
   // Tercihler açılışta okunur ve sağlayıcıya enjekte edilir; böylece ilk kare
   // doğru tema ile çizilir ve uygulama açılırken tema atlaması olmaz.

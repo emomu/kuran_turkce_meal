@@ -28,7 +28,7 @@ class AppDatabase {
   /// kullanıcı güncellemeden sonra eski veriyi görmeye devam eder.
   ///
   /// 2: İngilizce meal ve sure adları eklendi.
-  static const _schemaVersion = 2;
+  static const _schemaVersion = 3;
 
   Database? _db;
 
@@ -174,8 +174,6 @@ class AppDatabase {
         translation     TEXT    NOT NULL,
         translation_en  TEXT,
         arabic          TEXT,
-        tafsir          TEXT,
-        tafsir_en       TEXT,
         UNIQUE (surah_number, ayah_number)
       )
     ''');
@@ -279,8 +277,6 @@ class AppDatabase {
         final id = a['id']! as int;
         final translation = a['translation']! as String;
         final translationEn = a['translation_en'] as String?;
-        final tafsir = a['tafsir'] as String?;
-        final tafsirEn = a['tafsir_en'] as String?;
 
         batch.insert('ayahs', {
           'id': id,
@@ -290,25 +286,19 @@ class AppDatabase {
           'translation': translation,
           'translation_en': translationEn,
           'arabic': a['arabic'],
-          'tafsir': tafsir,
-          'tafsir_en': tafsirEn,
         });
 
         // FTS satırı ayet id'siyle hizalanır (rowid = ayah id), böylece
         // arama sonucundan doğrudan ayete gidilir.
         batch.insert('ayahs_fts', {
           'rowid': id,
-          'search_text': SearchNormalizer.normalize(
-            tafsir == null ? translation : '$translation $tafsir',
-          ),
+          'search_text': SearchNormalizer.normalize(translation),
         });
 
         if (translationEn != null) {
           batch.insert('ayahs_fts_en', {
             'rowid': id,
-            'search_text': SearchNormalizer.normalize(
-              tafsirEn == null ? translationEn : '$translationEn $tafsirEn',
-            ),
+            'search_text': SearchNormalizer.normalize(translationEn),
           });
         }
 

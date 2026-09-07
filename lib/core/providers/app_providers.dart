@@ -2,7 +2,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../data/db/app_database.dart';
+import '../../data/repositories/audio_repository.dart';
 import '../../data/repositories/marks_repository.dart';
+import '../../data/repositories/prophet_repository.dart';
 import '../../data/repositories/progress_repository.dart';
 import '../../data/repositories/quran_repository.dart';
 import '../../data/repositories/root_repository.dart';
@@ -25,6 +27,28 @@ final progressRepositoryProvider = Provider<ProgressRepository>(
     ref.watch(sharedPreferencesProvider),
   ),
 );
+
+/// Tilavet ses dosyalarının deposu.
+///
+/// Uygulama ömrü boyunca tektir; içindeki HTTP istemcisi bağlantıyı yeniden
+/// kullanır ve her ayet için yeni bir istemci kurulmaz.
+final audioRepositoryProvider = Provider<AudioRepository>((ref) {
+  final repository = AudioRepository();
+  ref.onDispose(repository.dispose);
+  return repository;
+});
+
+/// Peygamber-ayet eşleştirmesi. Asset'ten belleğe alınır (~8 KB).
+final prophetRepositoryProvider = Provider<ProphetRepository>(
+  (ref) => ProphetRepository(),
+);
+
+/// Peygamber verisinin yüklenmesini bekler.
+final prophetDataProvider = FutureProvider<ProphetRepository>((ref) async {
+  final repo = ref.watch(prophetRepositoryProvider);
+  await repo.ensureLoaded();
+  return repo;
+});
 
 /// Kelime kökü verisi. Asset'ten belleğe alınır; ilk kullanımda yüklenir.
 final rootRepositoryProvider = Provider<RootRepository>(

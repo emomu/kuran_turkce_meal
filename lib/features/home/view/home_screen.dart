@@ -9,6 +9,7 @@ import '../../settings/providers/preferences_provider.dart';
 import '../providers/home_provider.dart';
 import '../widgets/home_cards.dart';
 import '../widgets/surah_row.dart';
+import '../widgets/surah_search_field.dart';
 import '../../../shared/widgets/tab_bar_inset.dart';
 import '../../../shared/widgets/responsive_layout.dart';
 import '../../onboarding/providers/tour_provider.dart';
@@ -26,6 +27,7 @@ import '../../onboarding/widgets/tour_host.dart';
 /// `ConsumerWidget`; anahtarlar bu yüzden dosya düzeyinde tutulur.
 final _ayahOfDayKey = GlobalKey();
 final _orderToggleKey = GlobalKey();
+final _surahSearchKey = GlobalKey();
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
@@ -33,7 +35,8 @@ class HomeScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final surahs = ref.watch(surahListProvider);
+    final surahs = ref.watch(filteredSurahListProvider);
+    final query = ref.watch(surahQueryProvider);
     final lastRead = ref.watch(lastReadProvider);
     final ayahOfDay = ref.watch(ayahOfTheDayProvider);
     final progress = ref.watch(surahProgressProvider);
@@ -60,6 +63,12 @@ class HomeScreen extends ConsumerWidget {
             ref.invalidate(surahProgressProvider);
           },
           child: CustomScrollView(
+            // Kaydırmaya başlayınca klavye kapanır. Sure arama alanı listenin
+            // içinde olduğu için kullanıcı yazdıktan sonra sonuçlara bakmak
+            // istediğinde ilk hareketi kaydırmak oluyor; klavye açık kalsaydı
+            // listenin yarısını örterdi. "Ara" sekmesi de aynı davranışta.
+            keyboardDismissBehavior:
+                ScrollViewKeyboardDismissBehavior.onDrag,
             slivers: [
               SliverPadding(
                 // Geniş/yatay ekranda içerik ortalanır; listeyle başlık
@@ -126,6 +135,11 @@ class HomeScreen extends ConsumerWidget {
                         ),
                       ],
                     ),
+                    const SizedBox(height: Insets.sm),
+
+                    // Sure süzme alanı. Başlığın hemen altında: kullanıcı
+                    // listeye bakarken aradığını bulamazsa gözü buraya düşer.
+                    SurahSearchField(key: _surahSearchKey),
                     const SizedBox(height: Insets.xs),
                   ],
                 ),
@@ -152,12 +166,26 @@ class HomeScreen extends ConsumerWidget {
                 ),
                 data: (list) {
                   if (list.isEmpty) {
+                    // Arama sonuçsuz kaldıysa mesaj farklı: veri eksik değil,
+                    // yalnızca bu ada uyan sure yok. İkisi aynı metni
+                    // gösterseydi kullanıcı meal verisinin yüklenmediğini
+                    // sanırdı.
+                    final isSearching = query.trim().isNotEmpty;
+
                     return SliverFillRemaining(
                       hasScrollBody: false,
                       child: EmptyState(
-                        icon: Icons.menu_book_outlined,
-                        title: 'home.noContent'.tr(),
-                        message: 'home.noContentHint'.tr(),
+                        icon: isSearching
+                            ? Icons.search_off_rounded
+                            : Icons.menu_book_outlined,
+                        title: isSearching
+                            ? 'home.noSurahMatch'.tr()
+                            : 'home.noContent'.tr(),
+                        message: isSearching
+                            ? 'home.noSurahMatchHint'.tr(
+                                namedArgs: {'query': query.trim()},
+                              )
+                            : 'home.noContentHint'.tr(),
                       ),
                     );
                   }
@@ -217,6 +245,12 @@ class HomeScreen extends ConsumerWidget {
         icon: Icons.swap_vert_rounded,
         title: 'tour.home.orderTitle'.tr(),
         body: 'tour.home.orderBody'.tr(),
+      ),
+      TourStep(
+        targetKey: _surahSearchKey,
+        icon: Icons.search_rounded,
+        title: 'tour.home.searchTitle'.tr(),
+        body: 'tour.home.searchBody'.tr(),
       ),
     ];
   }

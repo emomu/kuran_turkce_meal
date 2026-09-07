@@ -108,4 +108,35 @@ void main() {
       expect(tester.takeException(), isNull);
     });
   });
+
+  group('Ses hakkında metni', () {
+    test('iki dilde de dolu', () {
+      // Metin boş kalırsa ayarlardaki satır boş bir sayfa açar; mağaza
+      // incelemesinde de kaynak belirtilmemiş sayılır.
+      expect(LegalTexts.audioInfo('tr').trim(), isNotEmpty);
+      expect(LegalTexts.audioInfo('en').trim(), isNotEmpty);
+    });
+
+    test('ses kaynağını adıyla belirtir', () {
+      // Kayıtların nereden geldiğini söylemek telif açısından gerekli.
+      expect(LegalTexts.audioInfo('tr'), contains('EveryAyah'));
+      expect(LegalTexts.audioInfo('en'), contains('EveryAyah'));
+    });
+
+    test('çevrimdışı vaadinin sınırını açıkça söyler', () {
+      // Uygulamanın "tamamen çevrimdışı" iddiası var; sesin bu kuralın tek
+      // istisnası olduğu kullanıcıdan gizlenmemeli.
+      expect(LegalTexts.audioInfo('tr'), contains('tek yerdir'));
+      expect(LegalTexts.audioInfo('en'), contains('only place'));
+    });
+
+    test('dosyaların nasıl silineceğini anlatır', () {
+      expect(LegalTexts.audioInfo('tr').toLowerCase(), contains('sil'));
+      expect(LegalTexts.audioInfo('en').toLowerCase(), contains('delete'));
+    });
+
+    test('bilinmeyen dil Türkçeye düşer', () {
+      expect(LegalTexts.audioInfo('de'), LegalTexts.audioInfo('tr'));
+    });
+  });
 }

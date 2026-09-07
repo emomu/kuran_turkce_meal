@@ -27,44 +27,80 @@ class ContinueReadingCard extends StatelessWidget {
     return Pressable(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.all(Insets.md),
+        padding: const EdgeInsets.all(Insets.sm + 2),
         decoration: BoxDecoration(
           color: theme.colorScheme.primary,
           borderRadius: BorderRadius.circular(Radii.lg),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
           children: [
+            // Künye ile oynatma düğmesi tek satırda.
+            //
+            // Önceki düzende etiket, sure adı ve ayet bilgisi alt alta üç
+            // satır tutuyor ve kart ekranın üçte birini yiyordu. Bilgi aynı,
+            // yalnızca yatay eksene yayıldı: "KALDIĞIN YER" etiketi sure
+            // adının üstünde küçük bir üst satır, ilerleme sayısı da onun
+            // yanında. Sağdaki yuvarlak düğme kartın ne işe yaradığını
+            // etiketten daha hızlı anlatıyor.
             Row(
               children: [
-                Icon(
-                  Icons.play_arrow_rounded,
-                  size: 17,
-                  color: theme.colorScheme.onPrimary.withValues(alpha: 0.75),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        'home.lastRead'.tr(),
+                        style: theme.textTheme.labelSmall?.copyWith(
+                          color: theme.colorScheme.onPrimary.withValues(
+                            alpha: 0.7,
+                          ),
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: 0.8,
+                        ),
+                      ),
+                      const SizedBox(height: 3),
+                      Text(
+                        lastRead.surah.name,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          color: theme.colorScheme.onPrimary,
+                        ),
+                      ),
+                      Text(
+                        '${lastRead.ayahNumber}. ayet · '
+                        '${lastRead.surah.ayahCount} ayetten',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: theme.colorScheme.onPrimary.withValues(
+                            alpha: 0.75,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-                const SizedBox(width: 4),
-                Text(
-                  'home.lastRead'.tr(),
-                  style: theme.textTheme.labelSmall?.copyWith(
-                    color: theme.colorScheme.onPrimary.withValues(alpha: 0.75),
-                    fontWeight: FontWeight.w600,
-                    letterSpacing: 0.8,
+                const SizedBox(width: Insets.sm),
+                // Devam etme eylemi. Kartın tamamı zaten dokunulabilir;
+                // düğme görsel bir işaret, ayrı bir hedef değil.
+                Container(
+                  width: 38,
+                  height: 38,
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.onPrimary.withValues(alpha: 0.18),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    Icons.play_arrow_rounded,
+                    size: 22,
+                    color: theme.colorScheme.onPrimary,
                   ),
                 ),
               ],
-            ),
-            const SizedBox(height: Insets.xs),
-            Text(
-              lastRead.surah.name,
-              style: theme.textTheme.headlineSmall?.copyWith(
-                color: theme.colorScheme.onPrimary,
-              ),
-            ),
-            Text(
-              '${lastRead.ayahNumber}. ayet · ${lastRead.surah.ayahCount} ayetten',
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: theme.colorScheme.onPrimary.withValues(alpha: 0.75),
-              ),
             ),
             const SizedBox(height: Insets.sm),
             ClipRRect(

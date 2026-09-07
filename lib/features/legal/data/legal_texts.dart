@@ -29,6 +29,15 @@ class LegalTexts {
   static String sources(String languageCode) =>
       languageCode == 'en' ? _sourcesEn : _sourcesTr;
 
+  /// Tilavet sesinin kaynağı, indirme koşulları ve saklanması.
+  ///
+  /// Ayrı bir metin olarak tutuldu: kullanıcı bu bilgiyi telif sayfasında
+  /// değil, ses ayarlarının yanında arar. İçeriğin bir bölümü telifle
+  /// ilgili (kayıtların kaynağı), bir bölümü ise tamamen pratik (veri
+  /// kullanımı, cihazda kapladığı yer, nasıl silineceği).
+  static String audioInfo(String languageCode) =>
+      languageCode == 'en' ? _audioInfoEn : _audioInfoTr;
+
   static const _privacyTr = '''
 # Gizlilik Politikası
 
@@ -406,5 +415,108 @@ The typefaces used for the interface and reading text (Inter, Source Serif
 
 The app is built with Flutter and uses open source packages. License texts
 for all components are listed under Settings > Open Source Licenses.
+''';
+
+  static const _audioInfoTr = '''
+# Ses Hakkında
+
+## Kayıtlar nereden geliyor
+
+Tilavet kayıtları **EveryAyah** arşivinden (everyayah.com) indirilir. Bu
+arşiv, tanınmış karilerin ayet ayet bölünmüş stüdyo kayıtlarını ücretsiz
+olarak sunar ve Kur'an uygulamalarında yaygın biçimde kullanılır.
+
+Kayıtlar uygulamayla birlikte gelmez. Her kari için tam Kur'an yüzlerce
+megabayt tutar; hepsi pakete konsaydı uygulama hiçbir mağazanın kabul
+etmeyeceği bir boyuta ulaşırdı.
+
+## İndirme ne zaman yapılır
+
+Ses **yalnızca siz bir sureyi dinlemeyi seçtiğinizde** indirilir. İndirme
+başlamadan önce hangi karinin okuduğu ve yaklaşık kaç megabayt yer
+tutacağı size sorulur; onaylamazsanız hiçbir şey indirilmez.
+
+Uygulamanın geri kalanı tamamen çevrimdışı çalışır. Meal metinleri, kök
+analizi ve arama verisi uygulamayla birlikte gelir; bunlar için hiçbir
+zaman internete bağlanılmaz. **Ses indirmesi, uygulamanın ağ kullandığı
+tek yerdir.**
+
+## Veri kullanımı
+
+İndirme mobil veri bağlantınız üzerinden yapılıyorsa bu, veri paketinizden
+düşer. Mobil veri kullandığınız algılandığında indirme onayında ayrıca
+uyarılırsınız.
+
+Bir sureyi bir kez indirdikten sonra tekrar indirilmez; sonraki
+dinlemeleriniz tamamen çevrimdışıdır.
+
+## Dosyalar nerede saklanır
+
+İndirilen ses dosyaları cihazınızın uygulama destek dizininde tutulur.
+Bunlar yeniden indirilebilir dosyalar olduğu için **iCloud veya cihaz
+yedeklemesine dahil edilmez** — yüzlerce megabaytlık ses, yedeğinizi
+gereksiz yere şişirmemelidir.
+
+Her kari için ayrı bir klasör tutulur. Kariyi değiştirirseniz eski
+kayıtlar silinmez; istediğiniz zaman geri dönebilirsiniz.
+
+## Nasıl silinir
+
+Ayarlar > Dinle bölümündeki **İndirilen sesler** satırından toplam boyutu
+görebilir ve tümünü silebilirsiniz. Sildikten sonra dilediğiniz zaman
+yeniden indirebilirsiniz.
+
+Uygulamayı kaldırdığınızda indirilen tüm sesler de silinir.
+''';
+
+  static const _audioInfoEn = '''
+# About Audio
+
+## Where the recordings come from
+
+Recitation audio is downloaded from the **EveryAyah** archive
+(everyayah.com). It offers verse-by-verse studio recordings by
+well-known reciters, free of charge, and is widely used by Qur'an
+applications.
+
+The recordings do not ship with the app. A full Qur'an runs to hundreds
+of megabytes per reciter; bundling them all would push the app past a
+size any store would accept.
+
+## When downloads happen
+
+Audio is downloaded **only when you choose to listen to a surah**. Before
+a download starts you are told who recites it and roughly how many
+megabytes it will take; nothing is downloaded unless you confirm.
+
+The rest of the app works entirely offline. Translations, root analysis
+and search data ship with the app and never require a connection.
+**Downloading audio is the only place this app uses the network.**
+
+## Data usage
+
+If the download runs over your mobile connection it counts against your
+data plan. When mobile data is detected, the download prompt warns you.
+
+Once a surah is downloaded it is never fetched again; later listening is
+fully offline.
+
+## Where files are stored
+
+Downloaded audio lives in your device's application support directory.
+Because these files can always be downloaded again, they are **excluded
+from iCloud and device backups** — hundreds of megabytes of audio should
+not inflate your backup.
+
+Each reciter has its own folder. Switching reciters does not delete what
+you already have; you can switch back at any time.
+
+## How to remove them
+
+Settings > Listen shows the total size under **Downloaded audio**, where
+you can delete everything at once. You can download again whenever you
+like.
+
+Uninstalling the app removes all downloaded audio as well.
 ''';
 }

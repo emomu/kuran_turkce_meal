@@ -4,6 +4,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:kuran_turkce_meal/core/providers/app_providers.dart';
 import 'package:kuran_turkce_meal/core/theme/app_typography.dart';
 import 'package:kuran_turkce_meal/features/settings/view/settings_screen.dart';
+import 'package:kuran_turkce_meal/data/models/reader_preferences.dart';
+import 'package:kuran_turkce_meal/features/settings/providers/preferences_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'helpers/localized_app.dart';
@@ -123,5 +125,46 @@ void main() async {
       expect(gap, greaterThanOrEqualTo(Insets.sm),
           reason: 'ayırıcı ($line) örnek kutusuna ($box) yapışık');
     }
+  });
+
+  group('varsayılan tercihler', () {
+    /// Varsayılanlar üç yerde tanımlı: model sabiti, ilk okuma
+    /// (`SharedPreferences` boşken) ve "okuma ayarlarını sıfırla". Üçü
+    /// ayrışırsa kullanıcı sıfırladığında ilk açılıştakinden farklı bir
+    /// duruma düşer.
+    test('Arapça metin varsayılan olarak açık', () {
+      // Uygulama bir Kur'an uygulaması; kullanıcıların çoğu orijinal metni
+      // görmeyi bekliyor ve kapalı başlarsa özelliğin varlığı ayarlara
+      // girmeden fark edilmiyor.
+      expect(const ReaderPreferences().showArabic, isTrue);
+    });
+
+    test('depo boşken de Arapça açık gelir', () async {
+      SharedPreferences.setMockInitialValues({});
+      final prefs = await SharedPreferences.getInstance();
+      final notifier = PreferencesNotifier(prefs);
+
+      expect(notifier.state.showArabic, isTrue);
+    });
+
+    test('kapatılan tercih korunur', () async {
+      // Varsayılanın açık olması, kullanıcının kapatma kararını ezmemeli.
+      SharedPreferences.setMockInitialValues({'show_arabic': false});
+      final prefs = await SharedPreferences.getInstance();
+      final notifier = PreferencesNotifier(prefs);
+
+      expect(notifier.state.showArabic, isFalse);
+    });
+
+    test('sıfırlama model varsayılanıyla aynı sonucu verir', () async {
+      SharedPreferences.setMockInitialValues({'show_arabic': false});
+      final prefs = await SharedPreferences.getInstance();
+      final notifier = PreferencesNotifier(prefs)..resetReadingDefaults();
+
+      const defaults = ReaderPreferences();
+      expect(notifier.state.showArabic, defaults.showArabic);
+      expect(notifier.state.fontScale, defaults.fontScale);
+      expect(notifier.state.lineHeight, defaults.lineHeight);
+    });
   });
 }

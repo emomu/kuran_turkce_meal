@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/providers/app_providers.dart';
+import '../../../data/db/search_normalizer.dart';
 import '../../../data/models/ayah.dart';
 import '../../../data/models/surah.dart';
 import '../../settings/providers/preferences_provider.dart';
@@ -16,6 +17,49 @@ final surahListProvider = FutureProvider<List<Surah>>((ref) {
   return ref.watch(quranRepositoryProvider).surahs(
         byRevelation: sortByRevelation,
       );
+});
+
+/// Sure listesindeki arama metni.
+///
+/// Ekranda değil sağlayıcıda tutulur: ana ekran durumsuz bir `ConsumerWidget`
+/// ve sekmeler arasında geçilirken yeniden kurulur. Metin widget durumunda
+/// tutulsaydı kullanıcı Ayarlar'a gidip döndüğünde araması silinirdi.
+final surahQueryProvider = StateProvider<String>((ref) => '');
+
+/// Arama metnine göre süzülmüş sure listesi.
+///
+/// Süzme cihazda, bellekteki 114 kayıt üzerinde yapılır; veritabanına
+/// gidilmez. Liste bu kadar kısayken sorgu başına disk okuması yapmak her
+/// harfte gereksiz bir gecikme demekti.
+///
+/// Eşleşme sure adında, ad anlamında ve mushaf numarasında aranır: kullanıcı
+/// "Bakara" da yazabilir, "İnek" de, "2" de.
+final filteredSurahListProvider = Provider<AsyncValue<List<Surah>>>((ref) {
+  final surahs = ref.watch(surahListProvider);
+  final query = ref.watch(surahQueryProvider);
+
+  return surahs.whenData((list) {
+    final normalized = SearchNormalizer.normalize(query).trim();
+    if (normalized.isEmpty) return list;
+
+    // Sayı yazıldıysa mushaf numarası da aranır; "36" yazan kullanıcı Yâsîn'i
+    // arıyordur.
+    final asNumber = int.tryParse(normalized);
+
+    return list.where((surah) {
+      if (asNumber != null && surah.number == asNumber) return true;
+
+      final name = SearchNormalizer.normalize(surah.name);
+      final nameEn = SearchNormalizer.normalize(surah.nameEn ?? '');
+      final meaning = SearchNormalizer.normalize(surah.meaning);
+      final meaningEn = SearchNormalizer.normalize(surah.meaningEn ?? '');
+
+      return name.contains(normalized) ||
+          nameEn.contains(normalized) ||
+          meaning.contains(normalized) ||
+          meaningEn.contains(normalized);
+    }).toList();
+  });
 });
 
 /// Günün ayeti. Tarih değiştiğinde yeniden hesaplanır.
