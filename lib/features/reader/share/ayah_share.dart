@@ -72,18 +72,41 @@ abstract final class AyahShare {
     // Görsel geçici dizine yazılır. Paylaşım yaprağı dosya yolu ister;
     // baytları doğrudan veremiyoruz. Geçici dizin seçildi çünkü dosya
     // paylaşımdan sonra tutulmaz — sistem kendi zamanında temizler.
+    //
+    // Dosya adına zaman damgası eklenir. Sabit adla yazıldığında iOS'un
+    // paylaşım yaprağı aynı yolu daha önce gördüyse önbellekteki eski
+    // görseli gösterebiliyor; kullanıcı temayı değiştirip yeniden
+    // paylaştığında ya da Arapça metni açıp kapattığında eski kartı
+    // görürdü.
     final directory = await getTemporaryDirectory();
+    final stamp = DateTime.now().millisecondsSinceEpoch;
     final file = File(
-      p.join(directory.path, 'ayet-${ayah.surahNumber}-${ayah.ayahNumber}.png'),
+      p.join(
+        directory.path,
+        'ayet-${ayah.surahNumber}-${ayah.ayahNumber}-$stamp.png',
+      ),
     );
     await file.writeAsBytes(bytes);
 
     await SharePlus.instance.share(
       ShareParams(
         files: [XFile(file.path, mimeType: 'image/png')],
-        // Metin de eklenir: görseli açamayan ya da metin arayan
-        // uygulamalarda ayet yine de okunabilir kalır.
-        text: _format(ayah, surahName, languageCode),
+        // Yalnızca görsel gönderilir; metin bilinçli olarak eklenmez.
+        //
+        // Görsel ve metin birlikte verildiğinde iOS'ta pek çok hedef
+        // uygulama (WhatsApp, Signal, Mesajlar) ikisinden birini seçip
+        // diğerini düşürüyor ve düşen genellikle görsel oluyor — kullanıcı
+        // "kart paylaş" dediği hâlde karşı tarafa düz metin gidiyordu.
+        // Bilinen bir eşleşme sorunu, share_plus tarafında değil hedef
+        // uygulamaların paylaşım eklentilerinde:
+        // https://github.com/fluttercommunity/plus_plugins/issues/261
+        //
+        // Metni isteyen kullanıcı için eylem yaprağında ayrı bir "Paylaş"
+        // satırı zaten var; kart paylaşımının işi görseli teslim etmek.
+        //
+        // Konu satırı e-posta gibi hedeflerde başlık olur; görselin ne
+        // olduğunu orada da söylüyor.
+        subject: _format(ayah, surahName, languageCode),
         sharePositionOrigin: origin,
       ),
     );
