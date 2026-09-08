@@ -8,6 +8,11 @@
 	<array>
 		<string>audio</string>
 	</array>
+	<!-- Uygulama mikrofon kaydı yapmaz. Bu anahtar yalnızca tilavet oynatıcısının
+	     kullandığı AVAudioSession API'si kayıt kategorilerine de erişebildiği için
+	     Apple tarafından zorunlu tutulur (App Store doğrulama kodu 90683). -->
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Bu uygulama mikrofonu kullanmaz. Bu izin, tilavet sesinin telefon görüşmesi ve kulaklık durumlarıyla uyumlu çalması için gereken sistem ses ayarları nedeniyle istenir.</string>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 	<key>CFBundleDevelopmentRegion</key>
