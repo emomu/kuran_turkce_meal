@@ -20,7 +20,7 @@ export const content = {
     hero: {
       badge: 'Ücretsiz · Reklamsız · Açık kaynak',
       title: "Kur'an'ı indiği sırayla okuyun",
-      lede: "Sureleri iniş sırasına dizen, her kelimenin Arapça kökünü açan ve tamamen çevrimdışı çalışan bir Türkçe meal uygulaması. Hesap yok, reklam yok, veri toplanmıyor.",
+      lede: "Sureleri iniş sırasına dizen, her kelimenin Arapça kökünü açan ve çevrimdışı çalışan bir Kur'an uygulaması. Türkçe ve İngilizce meal. Hesap yok, reklam yok, veri toplanmıyor.",
       primary: 'App Store',
       secondary: 'Google Play',
       note: 'iOS 13+ ve Android 8+ · 6.236 ayet cihazınızda',
@@ -108,7 +108,7 @@ export const content = {
       },
       {
         q: 'Hangi meal kullanılıyor?',
-        a: 'Türkçe meal ve tefsir metinleri uygulamayla birlikte paketlenir. Kaynak kod MIT lisanslıdır; meal ve tefsir metinleri bu lisansın kapsamı dışındadır.',
+        a: 'Türkçe ve İngilizce meal ile tefsir metinleri uygulamayla birlikte paketlenir; 6.179 ayetin tamamı iki dilde de mevcuttur ve dil değiştirildiğinde meal de değişir. Kaynak kod MIT lisanslıdır; meal ve tefsir metinleri bu lisansın kapsamı dışındadır.',
       },
     ],
 
@@ -140,7 +140,7 @@ export const content = {
     ctaTitle: 'Okumaya başlayın',
     ctaLede: 'Ücretsiz, reklamsız, hesapsız. İndirin ve açın.',
 
-    footerTagline: "Kur'an-ı Kerim Türkçe meali · iniş sırası, kök analizi, çevrimdışı",
+    footerTagline: "Kur'an-ı Kerim Türkçe ve İngilizce meali · iniş sırası, kök analizi, çevrimdışı",
     footerRights: 'Kaynak kod MIT lisansıyla açıktır.',
   },
 
@@ -157,7 +157,7 @@ export const content = {
     hero: {
       badge: 'Free · No ads · Open source',
       title: 'Read the Qur’an in the order it was revealed',
-      lede: 'A Turkish translation app that orders surahs chronologically, opens up the Arabic root of every word, and works fully offline. No account, no ads, no data collection.',
+      lede: 'A Qur’an app that orders surahs chronologically, opens up the Arabic root of every word, and works offline. English and Turkish translations. No account, no ads, no data collection.',
       primary: 'App Store',
       secondary: 'Google Play',
       note: 'iOS 13+ and Android 8+ · 6,236 verses on your device',
@@ -240,7 +240,7 @@ export const content = {
       },
       {
         q: 'Which translation is used?',
-        a: 'The Turkish translation and commentary are bundled with the app. The source code is MIT licensed; the translation and commentary texts fall outside that licence.',
+        a: 'Both the English and Turkish translations, along with the commentary, are bundled with the app — all 6,179 verses are available in both languages, and switching the language switches the translation too. The source code is MIT licensed; the translation and commentary texts fall outside that licence.',
       },
     ],
 
@@ -272,7 +272,7 @@ export const content = {
     ctaTitle: 'Start reading',
     ctaLede: 'Free, ad-free, account-free. Download and open.',
 
-    footerTagline: 'Turkish translation of the Qur’an · chronological order, root analysis, offline',
+    footerTagline: 'The Qur’an in English and Turkish · chronological order, root analysis, offline',
     footerRights: 'Source code is open under the MIT licence.',
   },
 }

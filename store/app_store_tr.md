@@ -2,13 +2,14 @@
 
 ## Promotional Text (170)
 
-Kur'an-ı Kerim Türkçe meali: sureler iniş sırasına dizili, kelimelerin Arapça
-kökleri açık, arama Türkçe'ye göre çalışıyor. Reklam ve hesap yok.
+Kur'an-ı Kerim Türkçe ve İngilizce meali: sureler iniş sırasına dizili,
+kelimelerin Arapça kökleri açık, arama Türkçe'ye göre çalışıyor. Reklam yok.
 
 ## Description (4.000)
 
-Kur'an-ı Kerim'in Türkçe meali. Sureleri mushaf sırasının yanı sıra iniş
-sırasına göre de okuyabildiğiniz, her kelimenin Arapça kökünü ve o kökün
+Kur'an-ı Kerim'in Türkçe ve İngilizce meali. 6.179 ayetin tamamı iki dilde
+de mevcut; uygulama dilini değiştirdiğinizde meal de o dile geçiyor.
+Sureleri mushaf sırasının yanı sıra iniş sırasına göre de okuyabildiğiniz, her kelimenin Arapça kökünü ve o kökün
 metnin başka yerlerinde nasıl kullanıldığını gösteren bir uygulama.
 
 Mushaf sırası kabaca sure uzunluğuna göre düzenlendiği için metnin hangi
@@ -50,7 +51,8 @@ değişmez ve ertesi gün yenilenir. İsteğe bağlı günlük hatırlatma bildi
 tamamen cihazda planlanır. Ana ekrana eklenebilen üç araçla günün ayetini,
 kaldığınız yeri ve okuma serinizi uygulamayı açmadan görebilirsiniz.
 
-Arayüz tarafında açık ve koyu tema, Türkçe ve İngilizce dil seçeneği, isteğe
+Arayüz tarafında açık ve koyu tema, Türkçe ve İngilizce dil seçeneği (meal
+de bu seçimle birlikte değişir), isteğe
 bağlı Arapça metin ile okuma sırasında canlı olarak değişen punto ve satır
 aralığı ayarları bulunuyor. Renk kontrastları ve dokunma hedefleri
 erişilebilirlik ölçütlerine göre düzenlendi.

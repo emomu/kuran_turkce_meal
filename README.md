@@ -1,6 +1,6 @@
 # Kur'an — Türkçe Meal
 
-**Kur'an'ı iniş sırasına göre okumak için tasarlanmış, çevrimdışı çalışan bir Flutter uygulaması.**
+**Kur'an'ı iniş sırasına göre okumak için tasarlanmış, çevrimdışı çalışan bir Flutter uygulaması. Türkçe ve İngilizce meal.**
 
 Giriş yok. Hesap yok. Reklam yok. Analitik yok. Arka planda hiçbir istek yok.
 Uygulama açılır ve okumaya başlanır — meal, tefsir, arama ve kök verisi
@@ -126,7 +126,9 @@ dönebilirsiniz.
 ### Arayüz
 
 - **Açık / koyu tema** — Sistem tercihine uyar ya da elle seçilir.
-- **İki dil** — Türkçe ve İngilizce arayüz.
+- **İki dil** — Arayüz ve **meal** Türkçe ile İngilizce arasında geçer;
+  6.179 ayetin tamamı iki dilde de mevcut. Arama her iki mealde de çalışır,
+  dil değişince sonuçlar o dile göre gelir.
 - **Erişilebilirlik** — Kontrastlar WCAG AA (4.5:1) üzerinde, testlerle
   doğrulanır. Dokunma hedefleri en az 44pt.
 

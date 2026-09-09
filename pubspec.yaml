@@ -1,5 +1,5 @@
 name: kuran_turkce_meal
-description: "Kur'an-ı Kerim Türkçe meali — iniş sırasına göre okuma, tam metin arama, kök analizi, peygamber kıssaları, tilavet ve okuma planları. Metin çevrimdışı."
+description: "Kur'an-ı Kerim Türkçe ve İngilizce meali — iniş sırasına göre okuma, tam metin arama, kök analizi, peygamber kıssaları, tilavet ve okuma planları. Metin çevrimdışı."
 publish_to: 'none' 
 
 
