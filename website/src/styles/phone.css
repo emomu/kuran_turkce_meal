@@ -1,0 +1,995 @@
+/* Telefon mockup'ı ve içindeki uygulama ekranları.
+ *
+ * Ekranlar ekran görüntüsü değil, yeniden çizilmiş arayüz: renkler, boşluk
+ * ölçeği, köşe yarıçapları ve tipografi doğrudan uygulamanın tema
+ * dosyalarından geliyor. Böylece mockup site temasıyla birlikte değişiyor
+ * ve ziyaretçi sekmelere gerçekten basabiliyor.
+ */
+
+.phone {
+  position: relative;
+  width: 320px;
+  height: 660px;
+  flex: none;
+  border-radius: 46px;
+  padding: 11px;
+  background: linear-gradient(160deg, #3a3833, #1b1a17 55%, #2c2a26);
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.16),
+    0 24px 60px rgba(0, 0, 0, 0.24),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.07);
+}
+
+.phone__screen {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 36px;
+  overflow: hidden;
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+  transition: background-color var(--t-normal) var(--ease);
+}
+
+/* Dinamik ada. */
+/* Dinamik ada. iPhone 15/16'da yaklaşık 125×37pt; ekranın üstünden
+   11pt aşağıda durur. Telefon kasası 320px geniş çizildiği için
+   ölçüler aynı oranda küçültüldü. */
+.phone__island {
+  position: absolute;
+  /* Ada ekranın üst kenarına yapışmamalı: gerçek cihazda üstünde
+     gözle görülür bir nefes payı var, yoksa çerçeveyle çarpışıyor.
+     Konum ekrana göre ölçülür (.phone__screen position: relative),
+     kasanın 11px dolgusu bu değere dahil değildir. */
+  top: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 92px;
+  height: 28px;
+  border-radius: var(--r-pill);
+  /* Tam siyah: koyu temada ekran zemini (#14130F) da koyu olduğu için
+     ada bir tık daha koyu olmazsa kaybolup düz bir leke gibi duruyor. */
+  background: #000;
+  z-index: 6;
+}
+
+/* Durum çubuğu, adanın dikey merkezine hizalanır: iOS'ta saat ve
+   ikonlar adanın solunda ve sağında, onunla aynı hizada durur. */
+.phone__status {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  /* Ada ekranın 14..42 aralığında, merkezi 28. Saat ve ikonlar aynı
+     merkeze otursun diye çubuk 56px yüksek ve dolgusuz: içeriği
+     ortalanınca merkez tam 28'e denk gelir. */
+  height: 56px;
+  padding: 0 var(--gutter);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: -0.1px;
+  color: var(--ink);
+  flex: none;
+}
+
+.phone__status-icons {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  opacity: 0.75;
+}
+
+/* Kaydırılabilir gövde. Uygulamadaki CustomScrollView'ın karşılığı. */
+.screen {
+  /* centeredContentPadding: yatay gutter Insets.screenGutter (20),
+     üst Insets.md, alt Insets.lg (bottomInsetFor + Insets.lg). */
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: var(--md) var(--gutter) var(--lg);
+  scrollbar-width: none;
+}
+
+.screen::-webkit-scrollbar { display: none; }
+
+.screen__title {
+  /* displaySmall — app_typography.dart */
+  font-size: 32px;
+  font-weight: 700;
+  letter-spacing: -0.6px;
+  line-height: 1.15;
+}
+
+.screen__subtitle {
+  /* bodyMedium, home_screen.dart'ta %50 alfa ile */
+  font-size: 15px;
+  line-height: 1.45;
+  color: color-mix(in srgb, var(--ink) 50%, transparent);
+}
+
+/* --------------------------------------------------- Kaldığın yer kartı */
+
+.card-continue {
+  /* home_screen.dart: kartlar Insets.lg boşluktan sonra başlar.
+     Kart dolgusu Insets.sm + 2. */
+  /* Kart tıklanabilir olduğu için <button>; buton içeriğine göre
+     daralır, uygulamadaki kart ise satırı tam kaplar. */
+  display: block;
+  width: 100%;
+  text-align: left;
+  margin-top: var(--lg);
+  padding: 14px;
+  border-radius: var(--r-lg);
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+.card-continue__row {
+  display: flex;
+  align-items: center;
+  gap: var(--sm);
+}
+
+.card-continue__label {
+  /* labelSmall, home_cards.dart'ta w600 ve letterSpacing 0.8 ile */
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+  opacity: 0.7;
+}
+
+.card-continue__name {
+  /* titleMedium */
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.2px;
+  line-height: 1.3;
+  margin-top: 3px;
+}
+
+.card-continue__meta {
+  /* bodySmall */
+  font-size: 13px;
+  line-height: 1.4;
+  opacity: 0.75;
+}
+
+.card-continue__play {
+  width: 38px;
+  height: 38px;
+  flex: none;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.card-continue__bar {
+  height: 3px;
+  margin-top: var(--sm);
+  border-radius: var(--r-pill);
+  background: rgba(255, 255, 255, 0.2);
+  overflow: hidden;
+}
+
+.card-continue__bar > i {
+  display: block;
+  height: 100%;
+  border-radius: var(--r-pill);
+  background: rgba(255, 255, 255, 0.9);
+}
+
+/* ------------------------------------------------------ Günün ayeti kartı */
+
+.card-verse {
+  margin-top: var(--sm);
+  padding: var(--md);
+  border-radius: var(--r-lg);
+  background: var(--surface);
+  border: 0.5px solid var(--divider);
+}
+
+.card-verse__label {
+  /* labelSmall, w600 + letterSpacing 0.8 */
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+  color: var(--ink-muted);
+}
+
+.card-verse__text {
+  /* AppTypography.reading(fontSize: 16, height: 1.55) */
+  font-family: var(--font-reading);
+  font-size: 16px;
+  line-height: 1.55;
+  margin-top: var(--xs);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.card-verse__source {
+  /* labelMedium */
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink-muted);
+  margin-top: var(--xs);
+}
+
+/* ------------------------------------------------------ Liste başlığı */
+
+.list-head {
+  display: flex;
+  align-items: center;
+  gap: var(--xs);
+  margin-top: var(--lg);
+}
+
+.list-head__title {
+  /* headlineSmall */
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.3px;
+  line-height: 1.25;
+  margin-right: auto;
+}
+
+.order-toggle {
+  /* home_cards.dart: EdgeInsets.symmetric(horizontal: Insets.sm, vertical: 6),
+     labelMedium w600, ikon 15px, aralık 4. */
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px var(--sm);
+  border-radius: var(--r-pill);
+  background: var(--surface-sunken);
+  font-size: 13px;
+  font-weight: 600;
+  color: color-mix(in srgb, var(--ink) 70%, transparent);
+  transition: background-color var(--t-fast) var(--ease);
+}
+
+.order-toggle:active { transform: scale(0.95); }
+
+.search-field {
+  display: flex;
+  align-items: center;
+  gap: var(--xs);
+  margin-top: var(--sm);
+  /* inputDecorationTheme.contentPadding — her yönden Insets.sm */
+  padding: var(--sm);
+  border-radius: var(--r-md);
+  background: var(--surface-sunken);
+  color: var(--ink-faint);
+  font-size: 15px;
+}
+
+.search-field input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: none;
+  font: inherit;
+  color: var(--ink);
+}
+
+.search-field input::placeholder { color: var(--ink-faint); }
+
+/* ------------------------------------------------------ Sure satırı */
+
+.surah-row {
+  display: flex;
+  align-items: center;
+  gap: var(--sm);
+  width: 100%;
+  padding: var(--sm) 0;
+  text-align: left;
+  /* Ayırıcı, SliverList.separated'daki Divider(height: 1, indent: 46) —
+     sayı sütununun altından değil, sure adının hizasından başlar. */
+  position: relative;
+}
+
+.surah-row + .surah-row::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 46px;
+  right: 0;
+  height: 1px;
+  background: var(--divider);
+}
+
+.surah-row:active { transform: scale(0.985); }
+
+.surah-row__no {
+  /* SizedBox(width: 34) + labelLarge */
+  width: 34px;
+  flex: none;
+  text-align: center;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.1px;
+  font-variant-numeric: tabular-nums;
+  color: color-mix(in srgb, var(--ink) 40%, transparent);
+}
+
+.surah-row__body {
+  flex: 1;
+  min-width: 0;
+  /* İç span'ler varsayılan olarak satır içi; blok yapılmazsa sure adı ile
+     alt bilgi aynı satıra yapışıyor. */
+  display: block;
+}
+
+.surah-row__body > span { display: block; }
+
+.surah-row__name {
+  /* titleSmall */
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.1px;
+  line-height: 1.3;
+}
+
+.surah-row__meta {
+  /* bodySmall */
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--ink-muted);
+  margin-top: 1px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.surah-row__bar {
+  height: 2px;
+  margin-top: 6px;
+  border-radius: var(--r-pill);
+  background: var(--surface-sunken);
+  overflow: hidden;
+}
+
+.surah-row__bar > i {
+  display: block;
+  height: 100%;
+  background: color-mix(in srgb, var(--accent) 60%, transparent);
+}
+
+.surah-row__chevron {
+  flex: none;
+  color: color-mix(in srgb, var(--ink) 20%, transparent);
+}
+
+/* ------------------------------------------------------ Okuma ekranı */
+
+.reader-bar {
+  /* _ReaderAppBar: height 48, yatay dolgu Insets.xs, opak zemin.
+     Ayırıcı çizgisi yok — künye listenin başında kendi Divider'ını
+     taşıyor, çubukta ikinci bir çizgi olsaydı çift görünürdü. */
+  display: flex;
+  align-items: center;
+  height: 48px;
+  padding-inline: var(--xs);
+  background: var(--bg);
+  flex: none;
+}
+
+.reader-bar__title {
+  /* titleSmall, Expanded içinde ortalı */
+  flex: 1;
+  min-width: 0;
+  text-align: center;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.1px;
+  line-height: 1.3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.reader-bar__btn {
+  /* IconButton'ın varsayılan dokunma alanı */
+  width: 40px;
+  height: 40px;
+  flex: none;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: var(--ink);
+}
+
+.reader-bar__btn--muted { color: var(--ink-muted); }
+
+.ayah {
+  /* ayah_tile.dart: EdgeInsets.symmetric(horizontal: Insets.xs,
+     vertical: showsArabic ? Insets.lg : Insets.md) */
+  padding: var(--lg) var(--xs);
+  border-radius: var(--r-md);
+  transition: background-color var(--t-fast) var(--ease);
+}
+
+/* Arapça metin kapalıyken bloklar birbirine daha yakın durur. */
+.ayah--no-arabic { padding-block: var(--md); }
+
+.ayah--highlight {
+  background: color-mix(in srgb, var(--hl-yellow) 26%, transparent);
+}
+
+.ayah__no {
+  /* _AyahHeader: minWidth 24, height 24, labelSmall w600.
+     Aralık rozetleri ("9-10") için yatay dolgu 7. */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 24px;
+  height: 24px;
+  padding-inline: 7px;
+  border-radius: var(--r-pill);
+  background: var(--surface-sunken);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0;
+  color: var(--ink-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.ayah__arabic {
+  /* Rozetten sonra SizedBox(height: Insets.xs); height 1.9 */
+  margin-top: var(--xs);
+  font-size: 19px;
+  line-height: 1.9;
+  text-align: right;
+}
+
+.ayah__tr {
+  /* Arapça bloğundan sonra SizedBox(height: Insets.sm) */
+  margin-top: var(--sm);
+  font-family: var(--font-reading);
+  line-height: 1.62;
+}
+
+/* Arapça kapalıyken meal doğrudan rozetin altına gelir: Insets.xs. */
+.ayah--no-arabic .ayah__tr { margin-top: var(--xs); }
+
+.ayah__word {
+  border-radius: 3px;
+  padding: 0 1px;
+  transition: background-color var(--t-fast) var(--ease);
+}
+
+.ayah__word:hover,
+.ayah__word--active {
+  background: color-mix(in srgb, var(--accent) 18%, transparent);
+}
+
+/* Kök analizi paneli — okuma ekranının altından açılan sayfa. */
+.root-sheet {
+  margin: var(--sm) 0 0;
+  padding: var(--sm);
+  border-radius: var(--r-lg);
+  background: var(--surface);
+  border: 0.5px solid var(--divider);
+}
+
+.root-sheet__head {
+  display: flex;
+  align-items: baseline;
+  gap: var(--xs);
+  /* Kök harfleri ve geçiş sayısı sarmamalı: üçlü kök iki satıra
+     bölündüğünde okunamaz hâle geliyor. */
+  flex-wrap: nowrap;
+  padding-bottom: var(--xs);
+}
+
+.root-sheet__root {
+  flex: none;
+  font-family: 'Scheherazade New', 'Geeza Pro', serif;
+  font-size: 19px;
+  color: var(--accent);
+  direction: rtl;
+  white-space: nowrap;
+}
+
+/* Anlam açıklaması dar alanda kısalır; kök ve sayı sabit kalır. */
+.root-sheet__gloss {
+  flex: 1;
+  min-width: 0;
+  font-size: 11.5px;
+  color: var(--ink-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.root-sheet__count {
+  flex: none;
+  font-size: 11px;
+  color: var(--ink-muted);
+  white-space: nowrap;
+}
+
+.root-sheet__item {
+  padding: var(--xs) 0;
+  border-top: 0.5px solid var(--divider);
+  font-family: var(--font-reading);
+  font-size: 12.5px;
+  line-height: 1.5;
+}
+
+.root-sheet__item span {
+  display: block;
+  font-family: var(--font-ui);
+  font-size: 10.5px;
+  color: var(--ink-muted);
+  margin-bottom: 2px;
+}
+
+/* ------------------------------------------------------ Arama ekranı */
+
+/* _SearchResultRow: dikey Insets.sm, ayırıcı yok. */
+.search-result { padding: var(--sm) 0; }
+
+.search-result__src {
+  /* labelMedium, accent renkte w600 */
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.search-result__text {
+  /* AppTypography.reading(15, alfa .85, height 1.5); üstünde 3px */
+  margin-top: 3px;
+  font-family: var(--font-reading);
+  font-size: 15px;
+  line-height: 1.5;
+  color: color-mix(in srgb, var(--ink) 85%, transparent);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* _HighlightedText eşleşmeyi zeminle değil kalın harfle işaretler. */
+.search-result__text mark {
+  background: none;
+  color: var(--ink);
+  font-weight: 700;
+}
+
+/* ------------------------------------------------------ Planlar ekranı */
+
+/* _PlanCard: EdgeInsets.all(Insets.md), Radii.lg, 0.5 kenarlık. */
+.plan-card {
+  padding: var(--md);
+  border-radius: var(--r-lg);
+  background: var(--surface);
+  border: 0.5px solid var(--divider);
+  margin-bottom: var(--sm);
+}
+
+.plan-card__row {
+  display: flex;
+  align-items: center;
+  gap: var(--xs);
+}
+
+.plan-card__name {
+  /* titleMedium */
+  flex: 1;
+  min-width: 0;
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.2px;
+  line-height: 1.3;
+}
+
+/* _OrderBadge: yatay Insets.xs, dikey 3, Radii.sm, labelSmall w600.
+   İniş sıralı planlar accent'li, mushaf sıralı olanlar nötr. */
+.plan-card__badge {
+  flex: none;
+  padding: 3px var(--xs);
+  border-radius: var(--r-sm);
+  background: var(--surface-sunken);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0;
+  color: color-mix(in srgb, var(--ink) 60%, transparent);
+}
+
+.plan-card__badge--revelation {
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  color: var(--accent);
+}
+
+.plan-card__desc {
+  /* bodySmall, height 1.45; başlıktan sonra Insets.xxs */
+  margin-top: var(--xxs);
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--ink-muted);
+}
+
+/* Gün sayısı / günlük ayet satırı — açıklamadan sonra Insets.sm. */
+.plan-card__stats {
+  display: flex;
+  align-items: center;
+  gap: var(--xs);
+  margin-top: var(--sm);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink-muted);
+}
+
+.plan-card__days { font-weight: 600; }
+
+.plan-card__progress {
+  margin-left: auto;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.plan-card__bar {
+  /* minHeight 3; istatistik satırından sonra Insets.xs */
+  height: 3px;
+  margin-top: var(--xs);
+  border-radius: var(--r-pill);
+  background: var(--surface-sunken);
+  overflow: hidden;
+}
+
+.plan-card__bar > i {
+  display: block;
+  height: 100%;
+  background: var(--accent);
+}
+
+/* ------------------------------------------------------ Ayarlar ekranı */
+
+/* Ayarlar grubu — settings_screen.dart'taki bölüm kutusu.
+   Her grubun üstünde küçük bir başlık var ve gruplar arası Insets.lg. */
+.settings-section { padding-bottom: var(--lg); }
+
+.settings-section__title {
+  /* labelSmall, w600, letterSpacing 0.8; sol dolgu Insets.xs */
+  padding-left: var(--xs);
+  padding-bottom: var(--xs);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+  color: var(--ink-muted);
+}
+
+.settings-group {
+  border-radius: var(--r-lg);
+  background: var(--surface);
+  border: 0.5px solid var(--divider);
+}
+
+.settings-row {
+  /* _SwitchTile: EdgeInsets.symmetric(horizontal: Insets.md,
+     vertical: Insets.sm) */
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--sm);
+  width: 100%;
+  padding: var(--sm) var(--md);
+  text-align: left;
+}
+
+/* Divider(height: 1, indent: Insets.md) — soldan 16 içeriden başlar. */
+.settings-row + .settings-row::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: var(--md);
+  right: 0;
+  height: 1px;
+  background: var(--divider);
+}
+
+.settings-row__label {
+  /* bodyLarge */
+  flex: 1;
+  min-width: 0;
+  font-size: 17px;
+  line-height: 1.45;
+}
+
+.settings-row__value {
+  /* bodySmall */
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--ink-muted);
+}
+
+/* Anahtar satırlarının alt açıklaması — bodySmall, etiketin 1px altında. */
+.settings-row__hint {
+  display: block;
+  margin-top: 1px;
+  font-size: 13px;
+  line-height: 1.4;
+  font-weight: 400;
+  color: var(--ink-muted);
+}
+
+/* Kaydırıcı satırı: etiket + değer rozeti üstte, ray altta. */
+.settings-slider {
+  padding: var(--sm) var(--md);
+}
+
+.settings-slider__head {
+  display: flex;
+  align-items: center;
+  gap: var(--xs);
+}
+
+.settings-slider__label {
+  flex: 1;
+  font-size: 17px;
+  line-height: 1.45;
+}
+
+.settings-slider__value {
+  /* Değer rozeti: yatay Insets.xs, dikey 2, Radii.sm, labelMedium w600 */
+  padding: 2px var(--xs);
+  border-radius: var(--r-sm);
+  background: var(--surface-sunken);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.settings-slider .slider {
+  width: 100%;
+  margin-top: var(--xxs);
+}
+
+/* ÖRNEK önizlemesi — gömülü kutu, Insets.sm dolgu, Radii.md. */
+.settings-preview {
+  margin: var(--sm) var(--md);
+  padding: var(--sm);
+  border-radius: var(--r-md);
+  background: var(--surface-sunken);
+}
+
+.settings-preview__label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+  color: var(--ink-muted);
+}
+
+.settings-preview__text {
+  margin-top: var(--xs);
+  font-family: var(--font-reading);
+  transition: font-size var(--t-fast) var(--ease);
+}
+
+.settings-caption {
+  /* bodySmall, grup kutusunun sol hizasından biraz içeride */
+  padding: var(--xs) var(--xs) 0;
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--ink-muted);
+}
+
+.switch {
+  width: 42px;
+  height: 25px;
+  flex: none;
+  border-radius: var(--r-pill);
+  background: var(--surface-sunken);
+  padding: 2px;
+  transition: background-color var(--t-normal) var(--ease);
+}
+
+.switch--on { background: var(--accent); }
+
+.switch > i {
+  display: block;
+  width: 21px;
+  height: 21px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+  transition: transform var(--t-normal) var(--ease);
+}
+
+.switch--on > i { transform: translateX(17px); }
+
+/* Punto kaydırıcısı — okuma sırasında canlı değişen ayar. */
+.slider { accent-color: var(--accent); }
+
+/* ------------------------------------------------------ Sekme çubuğu */
+
+/* İçerik sekme çubuğunun altına doğru soluklaşarak biter; liste
+   ortasından kesilmiş gibi görünmesin. */
+.tabbar::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -26px;
+  height: 26px;
+  pointer-events: none;
+  background: linear-gradient(to top, var(--bg), transparent);
+}
+
+.tabbar {
+  position: relative;
+  display: flex;
+  flex: none;
+  height: 62px;
+  padding-bottom: 6px;
+  border-top: 0.5px solid var(--divider);
+  background: color-mix(in srgb, var(--surface) 88%, transparent);
+  backdrop-filter: blur(18px);
+}
+
+.tabbar__item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--ink-faint);
+  transition: color var(--t-fast) var(--ease);
+}
+
+.tabbar__item--active {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.tabbar__item:active { transform: scale(0.94); }
+
+/* Kayıtlar ekranı */
+
+/* _TabBar: segmented control. Gömülü kutu (padding 3, Radii.md), seçili
+   segment yüzey renginde bir dikdörtgen (Radii.sm, yükseklik 30). */
+.segmented {
+  display: flex;
+  margin-top: var(--md);
+  padding: 3px;
+  border-radius: var(--r-md);
+  background: var(--surface-sunken);
+}
+
+.segmented__item {
+  flex: 1;
+  height: 30px;
+  border-radius: var(--r-sm);
+  /* labelMedium w600 */
+  font-size: 13px;
+  font-weight: 600;
+  color: color-mix(in srgb, var(--ink) 50%, transparent);
+  transition: background-color var(--t-normal) var(--ease),
+              color var(--t-normal) var(--ease);
+}
+
+.segmented__item--active {
+  background: var(--surface);
+  color: var(--ink);
+}
+
+/* _SavedRow: dikey Insets.sm, ayırıcı yok. */
+.saved-item {
+  display: flex;
+  gap: var(--sm);
+  padding: var(--sm) 0;
+  align-items: flex-start;
+}
+
+.saved-item__swatch {
+  /* width 3, height 38, top marjı 2 */
+  width: 3px;
+  height: 38px;
+  margin-top: 2px;
+  flex: none;
+  border-radius: var(--r-pill);
+}
+
+.saved-item__src {
+  /* labelMedium, accent renkte w600 */
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.saved-item__text {
+  /* reading(15, alfa .85, height 1.5); üstünde 3px */
+  margin-top: 3px;
+  font-family: var(--font-reading);
+  font-size: 15px;
+  line-height: 1.5;
+  color: color-mix(in srgb, var(--ink) 85%, transparent);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Not: zemin yok — solda 2px vurgu çizgisi ve italik bodySmall. */
+.saved-item__note {
+  margin-top: var(--xs);
+  padding-left: var(--xs);
+  border-left: 2px solid var(--accent);
+  font-size: 13px;
+  font-style: italic;
+  line-height: 1.4;
+  color: var(--ink-muted);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+
+/* Dar ekranda telefon kasası kenarlara yapışmasın; içerideki ölçüler
+   sabit kaldığı için ölçekleyerek küçültmek yeniden düzenlemekten daha
+   sadık bir görüntü veriyor. */
+@media (max-width: 400px) {
+  .phone {
+    transform: scale(0.88);
+    transform-origin: top center;
+    margin-bottom: -76px;
+  }
+}
+
+
+/* Sure künyesi — _SurahHeader.
+   Listenin başında durur: büyük başlık, anlam, üç rozet ve ayırıcı. */
+.surah-header {
+  padding-top: var(--md);
+  padding-bottom: var(--lg);
+}
+
+.surah-header__name {
+  /* displaySmall */
+  font-size: 32px;
+  font-weight: 700;
+  letter-spacing: -0.6px;
+  line-height: 1.15;
+}
+
+.surah-header__meaning {
+  /* bodyMedium, %55 alfa; başlıktan sonra SizedBox(height: Insets.xxs) */
+  margin-top: var(--xxs);
+  font-size: 15px;
+  line-height: 1.45;
+  color: color-mix(in srgb, var(--ink) 55%, transparent);
+}
+
+.surah-header__chips {
+  /* Wrap(spacing: Insets.xs, runSpacing: Insets.xs) */
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--xs);
+  margin-top: var(--sm);
+}
+
+.surah-header__chip {
+  /* _MetaChip: yatay Insets.xs, dikey Insets.xxs, Radii.sm, labelSmall */
+  padding: var(--xxs) var(--xs);
+  border-radius: var(--r-sm);
+  background: var(--surface-sunken);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.4px;
+  color: var(--ink-muted);
+}
+
+.surah-header__rule {
+  height: 1px;
+  margin-top: var(--lg);
+  background: var(--divider);
+}

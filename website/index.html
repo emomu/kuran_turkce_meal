@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="tr" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Kur'an Meal — Kur'an'ı indiği sırayla okuyun</title>
+    <meta
+      name="description"
+      content="Sureleri iniş sırasına dizen, her kelimenin Arapça kökünü açan ve tamamen çevrimdışı çalışan Türkçe meal uygulaması. Reklam yok, hesap yok, veri toplanmıyor."
+    />
+    <meta name="theme-color" content="#FAF9F6" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#14130F" media="(prefers-color-scheme: dark)" />
+
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+    <!-- Paylaşım kartı -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Kur'an Meal — Kur'an'ı indiği sırayla okuyun" />
+    <meta
+      property="og:description"
+      content="İniş sırasına göre okuma, kök analizi ve tamamen çevrimdışı Türkçe meal. Reklamsız, hesapsız, açık kaynak."
+    />
+    <meta property="og:image" content="/logo.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <!-- Yazı yüzleri erken bağlanır; ilk boyamada FOUT kısalır. -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <script>
+      // Tema, React yüklenmeden önce uygulanır. Aksi hâlde koyu tema
+      // seçmiş bir ziyaretçi ilk karede açık zemin görüp göz kırpıyor.
+      try {
+        var saved = JSON.parse(localStorage.getItem('kuran-meal-site') || '{}')
+        var theme = saved && saved.state && saved.state.theme
+        if (theme) document.documentElement.dataset.theme = theme
+        var lang = saved && saved.state && saved.state.lang
+        if (lang) document.documentElement.lang = lang
+      } catch (e) {}
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

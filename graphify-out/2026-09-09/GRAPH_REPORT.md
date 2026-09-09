@@ -1,7 +1,7 @@
 # Graph Report - kuran_turkce_meal  (2026-09-09)
 
 ## Corpus Check
-- 213 files · ~718,693 words
+- 213 files · ~702,501 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary

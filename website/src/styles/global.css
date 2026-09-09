@@ -1,0 +1,163 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap');
+@import './tokens.css';
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-ui);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* Tema geçişi ani olmasın; uygulamadaki 250ms ile aynı süre. */
+  transition: background-color var(--t-normal) var(--ease),
+              color var(--t-normal) var(--ease);
+}
+
+h1, h2, h3, h4 {
+  margin: 0;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  font-weight: 600;
+}
+
+p { margin: 0; }
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: var(--r-sm);
+}
+
+/* ------------------------------------------------------------ Düzen */
+
+.shell {
+  width: 100%;
+  max-width: var(--page-max);
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+}
+
+.section {
+  padding: clamp(64px, 9vw, 112px) 0;
+}
+
+.section--sunken {
+  background: var(--surface-sunken);
+  transition: background-color var(--t-normal) var(--ease);
+}
+
+.section-head {
+  max-width: 620px;
+  margin-bottom: clamp(32px, 5vw, 56px);
+}
+
+.section-title {
+  font-size: clamp(28px, 4vw, 40px);
+}
+
+.section-lede {
+  margin-top: var(--sm);
+  color: var(--ink-muted);
+  font-size: 17px;
+}
+
+.eyebrow {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+/* ------------------------------------------------------------ Düğmeler */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--xs);
+  /* 44px minimum dokunma hedefi — uygulamadaki WCAG ölçütüyle aynı. */
+  min-height: 44px;
+  padding: 0 var(--lg);
+  border-radius: var(--r-pill);
+  font-size: 15px;
+  font-weight: 600;
+  transition: transform var(--t-fast) var(--ease),
+              background-color var(--t-fast) var(--ease),
+              border-color var(--t-fast) var(--ease);
+}
+
+.btn:active { transform: scale(0.97); }
+
+.btn--primary {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+.btn--ghost {
+  border: 1px solid var(--divider);
+  background: var(--surface);
+  color: var(--ink);
+}
+
+.btn--ghost:hover { border-color: var(--ink-faint); }
+
+/* ------------------------------------------------------------ Yardımcı */
+
+.reading {
+  font-family: var(--font-reading);
+}
+
+.arabic {
+  font-family: 'Scheherazade New', 'Geeza Pro', 'Al Bayan', serif;
+  direction: rtl;
+  line-height: 1.9;
+}
+
+/* Bölümler görünüme girerken hafif yükselir. Süre uygulamadaki
+   Motion.normal ile aynı; dikkat çekmez, ritim verir. */
+.reveal {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity var(--t-slow) var(--ease),
+              transform var(--t-slow) var(--ease);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}

@@ -1368,9 +1368,9 @@
     "semantic_hash": ""
   },
   "website/src/components/Logo.jsx": {
-    "mtime": 1788959681.0859041,
-    "seen": 1788960027.537941,
-    "ast_hash": "a0af447eda223382885d0b2283c21653",
+    "mtime": 1788957567.6283739,
+    "seen": 1788958595.219504,
+    "ast_hash": "315632f5086a46a630c81d1e2fa65f7a",
     "semantic_hash": ""
   },
   "website/src/components/Reveal.jsx": {
@@ -1392,8 +1392,8 @@
     "semantic_hash": ""
   },
   "website/src/data/quran.json": {
-    "mtime": 1788959947.9274511,
-    "seen": 1788960027.538027,
+    "mtime": 1788958420.2862039,
+    "seen": 1788958595.219507,
     "ast_hash": "c60b6bc93140095a7f1364631eaaedbd",
     "semantic_hash": ""
   },
@@ -1458,9 +1458,9 @@
     "semantic_hash": ""
   },
   "website/src/sections/Cta.jsx": {
-    "mtime": 1788959995.690066,
-    "seen": 1788960027.5382998,
-    "ast_hash": "eef8994f620a81ea67b1cfb4ba0649f5",
+    "mtime": 1788958809.2273715,
+    "seen": 1788959582.768796,
+    "ast_hash": "49ee9844f51530fe1494371f7a7bd28c",
     "semantic_hash": ""
   },
   "website/src/sections/Faq.jsx": {
@@ -1494,9 +1494,9 @@
     "semantic_hash": ""
   },
   "website/src/sections/TopBar.jsx": {
-    "mtime": 1788959995.6898556,
-    "seen": 1788960027.538421,
-    "ast_hash": "610259feab8a046b6fa9bf0f54008b69",
+    "mtime": 1788958237.6142402,
+    "seen": 1788958595.219519,
+    "ast_hash": "61e05ccfb6b8725b59f0a3c421dc3890",
     "semantic_hash": ""
   },
   "website/src/store/useAppStore.js": {
@@ -1530,9 +1530,9 @@
     "semantic_hash": ""
   },
   "website/index.html": {
-    "mtime": 1788959690.413744,
-    "seen": 1788960027.538692,
-    "ast_hash": "88ea4c1185366b11f4a6111923c15529",
+    "mtime": 1788958078.9619884,
+    "seen": 1788958595.219676,
+    "ast_hash": "01fe57e1c645792b92a1c885abba4886",
     "semantic_hash": ""
   },
   "website/public/privacy-policy.html": {
@@ -1545,6 +1545,12 @@
     "mtime": 1788958078.9702914,
     "seen": 1788958595.219677,
     "ast_hash": "b44d5485bce5d78ff1966dea8c5107d0",
+    "semantic_hash": ""
+  },
+  "website/public/logo.svg": {
+    "mtime": 1788958078.9638991,
+    "seen": 1788958595.220501,
+    "ast_hash": "7efe296c92b2c70f65c16114f931fbf9",
     "semantic_hash": ""
   },
   "website/src/assets/hero.png": {
@@ -1563,24 +1569,6 @@
     "mtime": 1788958799.1076314,
     "seen": 1788959582.768655,
     "ast_hash": "370e42347b80dcee635a8f15c68be3c6",
-    "semantic_hash": ""
-  },
-  "website/public/apple-touch-icon.png": {
-    "mtime": 1788959664.519652,
-    "seen": 1788960027.539903,
-    "ast_hash": "097b3ef3d1eb82467d6f14c267d1b9bd",
-    "semantic_hash": ""
-  },
-  "website/public/favicon.png": {
-    "mtime": 1788959664.5470603,
-    "seen": 1788960027.539905,
-    "ast_hash": "672238f266109e2685f0b2656a137833",
-    "semantic_hash": ""
-  },
-  "website/public/logo.png": {
-    "mtime": 1788959664.4877648,
-    "seen": 1788960027.539906,
-    "ast_hash": "639dfda3409a7bd12f1bc3b131b5fdfd",
     "semantic_hash": ""
   }
 }

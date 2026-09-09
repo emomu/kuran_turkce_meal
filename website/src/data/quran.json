@@ -1,0 +1,228 @@
+{
+  "surahs": [
+    {
+      "number": 96,
+      "name": "Alak",
+      "nameEn": "Al-'Alaq",
+      "meaning": "Kan Pıhtısı",
+      "meaningEn": "The Clot",
+      "revelationOrder": 1,
+      "place": "mekke",
+      "ayahCount": 19
+    },
+    {
+      "number": 68,
+      "name": "Kalem",
+      "nameEn": "Al-Qalam",
+      "meaning": "Kalem",
+      "meaningEn": "The Pen",
+      "revelationOrder": 2,
+      "place": "mekke",
+      "ayahCount": 52
+    },
+    {
+      "number": 73,
+      "name": "Müzzemmil",
+      "nameEn": "Al-Muzzammil",
+      "meaning": "Örtünen",
+      "meaningEn": "The Enshrouded One",
+      "revelationOrder": 3,
+      "place": "mekke",
+      "ayahCount": 20
+    },
+    {
+      "number": 74,
+      "name": "Müddessir",
+      "nameEn": "Al-Muddaththir",
+      "meaning": "Bürünen",
+      "meaningEn": "The Cloaked One",
+      "revelationOrder": 4,
+      "place": "mekke",
+      "ayahCount": 56
+    },
+    {
+      "number": 1,
+      "name": "Fâtiha",
+      "nameEn": "Al-Fatihah",
+      "meaning": "Açılış",
+      "meaningEn": "The Opening",
+      "revelationOrder": 5,
+      "place": "mekke",
+      "ayahCount": 7
+    },
+    {
+      "number": 111,
+      "name": "Tebbet",
+      "nameEn": "Al-Masad",
+      "meaning": "Kurusun",
+      "meaningEn": "The Palm Fibre",
+      "revelationOrder": 6,
+      "place": "mekke",
+      "ayahCount": 5
+    },
+    {
+      "number": 81,
+      "name": "Tekvîr",
+      "nameEn": "At-Takwir",
+      "meaning": "Dürülme",
+      "meaningEn": "The Overthrowing",
+      "revelationOrder": 7,
+      "place": "mekke",
+      "ayahCount": 29
+    },
+    {
+      "number": 87,
+      "name": "A'lâ",
+      "nameEn": "Al-A'la",
+      "meaning": "En Yüce",
+      "meaningEn": "The Most High",
+      "revelationOrder": 8,
+      "place": "mekke",
+      "ayahCount": 19
+    },
+    {
+      "number": 92,
+      "name": "Leyl",
+      "nameEn": "Al-Layl",
+      "meaning": "Gece",
+      "meaningEn": "The Night",
+      "revelationOrder": 9,
+      "place": "mekke",
+      "ayahCount": 21
+    },
+    {
+      "number": 89,
+      "name": "Fecr",
+      "nameEn": "Al-Fajr",
+      "meaning": "Şafak",
+      "meaningEn": "The Dawn",
+      "revelationOrder": 10,
+      "place": "mekke",
+      "ayahCount": 30
+    },
+    {
+      "number": 93,
+      "name": "Duhâ",
+      "nameEn": "Ad-Duha",
+      "meaning": "Kuşluk",
+      "meaningEn": "The Morning Hours",
+      "revelationOrder": 11,
+      "place": "mekke",
+      "ayahCount": 11
+    },
+    {
+      "number": 94,
+      "name": "İnşirâh",
+      "nameEn": "Ash-Sharh",
+      "meaning": "Ferahlama",
+      "meaningEn": "The Relief",
+      "revelationOrder": 12,
+      "place": "mekke",
+      "ayahCount": 8
+    },
+    {
+      "number": 103,
+      "name": "Asr",
+      "nameEn": "Al-'Asr",
+      "meaning": "Zaman",
+      "meaningEn": "The Declining Day",
+      "revelationOrder": 13,
+      "place": "mekke",
+      "ayahCount": 3
+    },
+    {
+      "number": 100,
+      "name": "Âdiyât",
+      "nameEn": "Al-'Adiyat",
+      "meaning": "Koşanlar",
+      "meaningEn": "The Courser",
+      "revelationOrder": 14,
+      "place": "mekke",
+      "ayahCount": 11
+    }
+  ],
+  "alak": [
+    {
+      "n": 1,
+      "tr": "Yaratan Rabbinin adıyla oku",
+      "en": "Read! In the name of your Lord who created",
+      "ar": "ٱقۡرَأۡ بِٱسۡمِ رَبِّكَ ٱلَّذِي خَلَقَ"
+    },
+    {
+      "n": 2,
+      "tr": "O, insanı bir alekadan (embriyodan) yarattı",
+      "en": "He created man from a clinging form",
+      "ar": "خَلَقَ ٱلۡإِنسَٰنَ مِنۡ عَلَقٍ"
+    },
+    {
+      "n": 3,
+      "tr": "Oku! Rabbin sonsuz kerem sahibidir",
+      "en": "Read! Your Lord is the Most Bountiful One",
+      "ar": "ٱقۡرَأۡ وَرَبُّكَ ٱلۡأَكۡرَمُ"
+    },
+    {
+      "n": 4,
+      "tr": "O Rab ki kalemle yazmayı öğretti",
+      "en": "who taught by [means of] the pen",
+      "ar": "ٱلَّذِي عَلَّمَ بِٱلۡقَلَمِ"
+    },
+    {
+      "n": 5,
+      "tr": "İnsana bilmediği şeyleri öğretti",
+      "en": "who taught man what he did not know",
+      "ar": "عَلَّمَ ٱلۡإِنسَٰنَ مَا لَمۡ يَعۡلَمۡ"
+    },
+    {
+      "n": 6,
+      "tr": "Hayır! Doğrusu (kâfir) insan azgınlık eder",
+      "en": "But man exceeds all bounds",
+      "ar": "كَلَّآ إِنَّ ٱلۡإِنسَٰنَ لَيَطۡغَىٰٓ"
+    },
+    {
+      "n": 7,
+      "tr": "Kendisinin muhtaç olmadığını zannettiği için",
+      "en": "when he thinks he is self-sufficient",
+      "ar": "أَن رَّءَاهُ ٱسۡتَغۡنَىٰٓ"
+    },
+    {
+      "n": 8,
+      "tr": "Muhakkak ki dönüş mutlaka Rabbinedir",
+      "en": "[Prophet], all will return to your Lord",
+      "ar": "إِنَّ إِلَىٰ رَبِّكَ ٱلرُّجۡعَىٰٓ"
+    }
+  ],
+  "searchResults": [
+    {
+      "surah": "Bakara",
+      "surahEn": "Al-Baqarah",
+      "n": 153,
+      "tr": "Ey iman edenler! Sabır ve namazla yardım isteyin. Şüphe yok ki Allah, sabredenlerle beraberdir",
+      "en": "You who believe, seek help through steadfastness and prayer, for God is with the steadfast"
+    },
+    {
+      "surah": "Bakara",
+      "surahEn": "Al-Baqarah",
+      "n": 155,
+      "tr": "Çaresiz biz sizi biraz korku, biraz açlık, biraz da mallardan, canlardan ve ürünlerden eksiltme ile imtihan edeceğiz. Müjdele o sabredenleri",
+      "en": "We shall certainly test you with fear and hunger, and loss of property, lives, and crops. But [Prophet], give good news to those who are steadfast"
+    },
+    {
+      "surah": "Âl-i İmrân",
+      "surahEn": "Ali 'Imran",
+      "n": 17,
+      "tr": "O sabredenleri, o doğruluktan şaşmayanları, o elpençe divan duranları, o nafaka verenleri ve seher vakitlerinde o istiğfar edip yalvaranları (görür)",
+      "en": "those who are steadfast, truthful, truly devout, who give [in God’s cause] and pray before dawn for forgiveness.’"
+    },
+    {
+      "surah": "Âl-i İmrân",
+      "surahEn": "Ali 'Imran",
+      "n": 120,
+      "tr": "Size bir iyilik dokunsa fenalarına gider, başınıza bir kötülük gelse onunla sevinirler. Eğer sabreder ve Allah'dan gereğince korkarsanız, onların hileleri size hiçbir zarar vermez; çünkü Allah onları kendi amelleriyle kuşatmıştır",
+      "en": "They grieve at any good that befalls you [believers] and rejoice at your misfortunes. But if you are steadfast and conscious of God, their scheming will not harm you in the least: God encircles everything they do"
+    }
+  ],
+  "stats": {
+    "surahCount": 114,
+    "ayahCount": 6236
+  }
+}

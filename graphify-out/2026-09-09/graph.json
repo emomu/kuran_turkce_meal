@@ -1668,7 +1668,7 @@
       "file_type": "code",
       "norm_label": "logo()",
       "source_file": "website/src/components/Logo.jsx",
-      "source_location": "L13"
+      "source_location": "L9"
     },
     {
       "id": "website_src_components_reveal_reveal",
@@ -40294,7 +40294,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "website/src/components/Logo.jsx",
-      "source_location": "L13",
+      "source_location": "L9",
       "weight": 1.0
     },
     {

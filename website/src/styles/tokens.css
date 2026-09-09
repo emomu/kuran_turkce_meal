@@ -1,0 +1,65 @@
+/* Tasarım tokenları — doğrudan lib/core/theme/app_colors.dart ve
+   app_typography.dart dosyalarından alındı. Değerler uygulamayla birebir
+   aynı; site ile uygulama yan yana konduğunda aynı yüzey hissi olsun. */
+
+:root {
+  /* Açık tema */
+  --bg: #FAF9F6;
+  --surface: #FFFEFB;
+  --surface-sunken: #F1EFEA;
+  --ink: #1C1B18;
+  --ink-muted: #6B6862;
+  --ink-faint: #9C9891;
+  --divider: #E6E3DC;
+  --accent: #3F6B54;
+  --on-accent: #FFFEFB;
+
+  /* Vurgulama renkleri (ayet işaretleme paleti) */
+  --hl-yellow: #F5D77E;
+  --hl-green: #9FD4AE;
+  --hl-blue: #9EC4E8;
+  --hl-pink: #E8A9BC;
+  --hl-purple: #C0AEE0;
+
+  /* Tipografi — uygulamada Source Serif 4 (okuma) + Inter (arayüz) */
+  --font-ui: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --font-reading: 'Source Serif 4', 'Iowan Old Style', Georgia, serif;
+
+  /* Boşluk ölçeği — Insets */
+  --xxs: 4px;
+  --xs: 8px;
+  --sm: 12px;
+  --md: 16px;
+  --lg: 24px;
+  --xl: 32px;
+  --xxl: 48px;
+  --gutter: 20px;
+
+  /* Köşe yarıçapları — Radii */
+  --r-sm: 8px;
+  --r-md: 12px;
+  --r-lg: 16px;
+  --r-xl: 20px;
+  --r-pill: 999px;
+
+  /* Hareket — Motion */
+  --t-fast: 150ms;
+  --t-normal: 250ms;
+  --t-slow: 400ms;
+  --ease: cubic-bezier(0.215, 0.61, 0.355, 1);
+
+  --page-max: 1120px;
+}
+
+/* Koyu tema. Uygulamadaki dark paletin birebir karşılığı. */
+[data-theme='dark'] {
+  --bg: #14130F;
+  --surface: #1D1C18;
+  --surface-sunken: #262420;
+  --ink: #EDEAE3;
+  --ink-muted: #9A968D;
+  --ink-faint: #6A665E;
+  --divider: #2E2C27;
+  --accent: #7FB394;
+  --on-accent: #14130F;
+}
