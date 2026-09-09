@@ -105,9 +105,17 @@ halde Railway kökteki Flutter projesini derlemeye çalışır.
 | Ayar | Değer |
 |---|---|
 | Root Directory | `website` |
-| Build Command | `npm ci && npm run build` (railway.json'da tanımlı) |
+| Build Command | `npm run build` (railway.json'da tanımlı) |
 | Start Command | `npm start` (railway.json'da tanımlı) |
 | Node | 20+ (`.nvmrc` ve `engines`) |
+
+Build komutunda `npm ci` **yok**: Nixpacks bağımlılıkları kendi adımında
+zaten kuruyor. İkinci bir `npm ci` `node_modules`'ü silmeye çalışır ve
+Railway'in oraya bağladığı önbellek dizini yüzünden `EBUSY` ile düşer.
+
+`vite` ve `@vitejs/plugin-react` devDependencies değil `dependencies`
+altında: Nixpacks kurulumu `NODE_ENV=production` ile yapabiliyor, o
+durumda devDependencies atlanır ve `vite build` bulunamaz.
 
 Ortam değişkeni gerekmez. Railway `PORT`'u kendi atar; `server.js` bu
 değişkeni okur ve `0.0.0.0`'a bağlanır — konteynerde `localhost`'a
