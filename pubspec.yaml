@@ -3,7 +3,7 @@ description: "Kur'an-ı Kerim Türkçe meali — iniş sırasına göre okuma, t
 publish_to: 'none' 
 
 
-version: 1.0.1+1
+version: 1.0.2+1
 
 environment:
   sdk: ^3.11.1
