@@ -5,6 +5,8 @@ import 'package:go_router/go_router.dart';
 
 import '../../../core/theme/app_typography.dart';
 import '../../../shared/widgets/empty_state.dart';
+import '../../donate/providers/donation_provider.dart';
+import '../../donate/widgets/donation_card.dart';
 import '../../settings/providers/preferences_provider.dart';
 import '../providers/home_provider.dart';
 import '../widgets/home_cards.dart';
@@ -43,6 +45,7 @@ class HomeScreen extends ConsumerWidget {
     final sortByRevelation = ref.watch(
       preferencesProvider.select((p) => p.sortByRevelation),
     );
+    final showDonationCard = ref.watch(showDonationCardProvider);
 
     return Scaffold(
       // Tur, sure listesi ve günün ayeti yerleşmeden başlamamalı; hedefler
@@ -118,6 +121,15 @@ class HomeScreen extends ConsumerWidget {
                             ),
                       orElse: () => const SizedBox.shrink(),
                     ),
+
+                    // Bağış hatırlatması, günün ayetinin altında ve sure
+                    // listesinin üstünde. Ekranın en tepesine konmadı:
+                    // kullanıcının ana ekrana geliş sebebi okumak, kart
+                    // "devam et" ile "günün ayeti"nin önüne geçmemeli.
+                    if (showDonationCard) ...[
+                      const SizedBox(height: Insets.sm),
+                      const DonationCard(),
+                    ],
 
                     const SizedBox(height: Insets.lg),
 

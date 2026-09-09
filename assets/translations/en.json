@@ -296,5 +296,49 @@
     "loadFailed": "Could not load the verses",
     "searchCard": "The story of {name}",
     "searchCardHint": "{count} verses · in order of revelation"
+  },
+  "donate": {
+    "title": "Support",
+    "headline": "This app is free, and will stay free",
+    "subhead": "No ads, no accounts, no tracking. If you'd like, you can support it with a voluntary contribution.",
+    "explainTitle": "Why donate?",
+    "explainBody": "This app is written by one person in their spare time and given away to everyone. Developer account fees, audio hosting and test devices all cost money. Your contribution covers those costs and keeps the app free of ads.\n\nDonating is entirely voluntary. No feature of the app is paid; you get exactly the same access whether you donate or not.",
+    "waysTitle": "WAYS TO SUPPORT",
+    "channel": {
+      "buymeacoffee": {
+        "title": "Buy Me a Coffee",
+        "subtitle": "One-time contribution by card"
+      },
+      "papara": {
+        "title": "Papara",
+        "subtitle": "Quick transfer with Papara"
+      },
+      "iban": {
+        "title": "Bank transfer (IBAN)",
+        "subtitle": "Tap to copy the IBAN"
+      }
+    },
+    "copied": "IBAN copied to clipboard",
+    "openFailed": "Couldn't open the link. Make sure you have a browser installed.",
+    "noChannels": "No donation method is configured right now.",
+    "alreadyDonated": "I've already donated",
+    "never": "Don't remind me again",
+    "thanks": "Thank you. Reminders won't be shown again.",
+    "neverConfirmTitle": "Turn off reminders?",
+    "neverConfirmBody": "The home screen card and the notification won't appear again. You can still reach this page from Settings whenever you like.",
+    "neverConfirmAction": "Turn off",
+    "neverDone": "Reminders turned off.",
+    "silenced": "Reminders are off. You can always reach this page from Settings.",
+    "disclaimer": "Donations are completed outside the app, in your browser. The app never sees or stores any payment details.",
+    "bannerTitle": "Support the app",
+    "bannerBody": "Help keep it free of ads",
+    "bannerTitleDonated": "Thank you for your support",
+    "bannerBodyDonated": "Your contribution keeps the app ad-free",
+    "cardTitle": "Enjoying the app?",
+    "cardBody": "A voluntary contribution keeps it ad-free",
+    "dismiss": "Dismiss",
+    "notificationTitle": "Quran — Turkish Translation",
+    "notificationBody": "The app is free and ad-free. You can support it with a voluntary contribution if you wish.",
+    "holder": "Recipient:"
   }
 }

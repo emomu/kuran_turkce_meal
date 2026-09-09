@@ -23,6 +23,18 @@ class DailyAyahNotifications {
   static const _channelId = 'daily_ayah';
   static const _notificationId = 1001;
 
+  /// Bağış hatırlatması ayrı bir kanalda ve ayrı bir kimlikte durur.
+  ///
+  /// Ayrı kanal olması önemli: Android'de kullanıcı bildirim kanallarını tek
+  /// tek kapatabilir. Günün ayetini isteyip bağış hatırlatmasını istemeyen
+  /// biri, ikisi aynı kanalda olsaydı ya ikisine birden katlanır ya da
+  /// ikisini birden kapatırdı.
+  ///
+  /// Ayrı kimlik olması da şart: aynı kimlikle planlanan bildirim öncekini
+  /// siler, bağış hatırlatması günün ayetini iptal ederdi.
+  static const _donateChannelId = 'donate_reminder';
+  static const _donateNotificationId = 1002;
+
   final _plugin = FlutterLocalNotificationsPlugin();
 
   bool _initialized = false;
@@ -110,6 +122,35 @@ class DailyAyahNotifications {
     }
   }
 
+  /// İzin hâlihazırda verilmiş mi — kullanıcıya sormadan.
+  ///
+  /// [requestPermission]'dan farkı, izin penceresi açmamasıdır. Açılışta
+  /// planlamayı tazelerken buna bakılır: kullanıcı izni sistem ayarlarından
+  /// geri almış olabilir ve uygulama bunu ancak sorarak öğrenir. Sormadan
+  /// planlamak, bildirimin sessizce düşmemesine yol açardı.
+  Future<bool> hasPermission() async {
+    if (!_supported) return false;
+    await init();
+    if (!_initialized) return false;
+
+    try {
+      if (Platform.isIOS) {
+        final ios = _plugin.resolvePlatformSpecificImplementation<
+            IOSFlutterLocalNotificationsPlugin>();
+        final settings = await ios?.checkPermissions();
+        return settings?.isAlertEnabled ?? false;
+      }
+
+      final android = _plugin.resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin>();
+      if (android == null) return false;
+      return await android.areNotificationsEnabled() ?? false;
+    } catch (error) {
+      debugPrint('Bildirim izni sorgulanamadı: $error');
+      return false;
+    }
+  }
+
   /// Her gün [hour]:[minute] saatinde tekrarlayan hatırlatmayı kurar.
   Future<void> schedule({
     required int hour,
@@ -159,6 +200,68 @@ class DailyAyahNotifications {
       await _plugin.cancel(id: _notificationId);
     } catch (error) {
       debugPrint('Bildirim iptal edilemedi: $error');
+    }
+  }
+
+  /// Bağış hatırlatmasını [delay] sonrasına kurar.
+  ///
+  /// Tekrarlamaz — `matchDateTimeComponents` verilmez. Bir kez düşer, bir
+  /// sonrakine ne zaman izin verileceğine [DonationNotifier] karar verir.
+  /// Tekrarlayan bir bağış bildirimi, kullanıcı uygulamayı hiç açmasa bile
+  /// yılda bir düşmeye devam ederdi.
+  ///
+  /// İzin istenmez: bu bildirim yalnızca kullanıcının günün ayeti için zaten
+  /// izin verdiği durumda planlanır. Bağış için ayrıca izin penceresi açmak
+  /// hem rahatsız edici olur hem de reddedilmesi çok olası.
+  Future<void> scheduleDonationReminder({
+    required Duration delay,
+    required String title,
+    required String body,
+    String payload = '/destek',
+  }) async {
+    if (!_supported) return;
+    await init();
+    if (!_initialized) return;
+
+    try {
+      await cancelDonationReminder();
+
+      await _plugin.zonedSchedule(
+        id: _donateNotificationId,
+        title: title,
+        body: body,
+        scheduledDate: tz.TZDateTime.now(tz.local).add(delay),
+        notificationDetails: const NotificationDetails(
+          android: AndroidNotificationDetails(
+            _donateChannelId,
+            'Destek hatırlatması',
+            channelDescription:
+                'Uygulamaya gönüllü katkı hakkında seyrek bir hatırlatma',
+            // Düşük önem: sesli uyarı ve ekran üstü kutu yok, yalnızca
+            // bildirim gölgesinde sessizce durur.
+            importance: Importance.low,
+            priority: Priority.low,
+          ),
+          iOS: DarwinNotificationDetails(
+            presentAlert: true,
+            presentBadge: false,
+            presentSound: false,
+          ),
+        ),
+        androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+        payload: payload,
+      );
+    } catch (error) {
+      debugPrint('Bağış hatırlatması planlanamadı: $error');
+    }
+  }
+
+  Future<void> cancelDonationReminder() async {
+    if (!_supported) return;
+    try {
+      await _plugin.cancel(id: _donateNotificationId);
+    } catch (error) {
+      debugPrint('Bağış hatırlatması iptal edilemedi: $error');
     }
   }
 

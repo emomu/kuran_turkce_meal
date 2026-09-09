@@ -182,5 +182,13 @@
             <action android:name="android.intent.action.PROCESS_TEXT"/>
             <data android:mimeType="text/plain"/>
         </intent>
+
+        <!-- Bağış bağlantısı cihazın tarayıcısında açılır. Android 11'den
+             itibaren paket görünürlüğü kısıtlı: bu girdi olmadan
+             `url_launcher` tarayıcıyı bulamaz ve bağlantı sessizce açılmaz. -->
+        <intent>
+            <action android:name="android.intent.action.VIEW"/>
+            <data android:scheme="https"/>
+        </intent>
     </queries>
 </manifest>

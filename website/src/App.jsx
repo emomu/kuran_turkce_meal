@@ -7,6 +7,7 @@ import { Features } from './sections/Features'
 import { Screens } from './sections/Screens'
 import { Privacy } from './sections/Privacy'
 import { Faq } from './sections/Faq'
+import { Support } from './sections/Support'
 import { Cta } from './sections/Cta'
 
 export default function App() {
@@ -35,6 +36,7 @@ export default function App() {
         <Screens t={t} lang={lang} />
         <Privacy t={t} />
         <Faq t={t} />
+        <Support t={t} />
         <Cta t={t} lang={lang} />
       </main>
     </>

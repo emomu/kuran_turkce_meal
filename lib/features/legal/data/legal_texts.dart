@@ -104,6 +104,18 @@ Uygulama her yaştan kullanıcıya uygundur ve hiç kimseden — çocuklar dahil
 kişisel veri toplamadığı için çocuklara yönelik ek bir veri işleme
 yapılmaz.
 
+## Bağışlar
+
+Uygulama içinde gönüllü bir bağış bağlantısı sunulur. Bağış bağlantısına
+dokunduğunuzda cihazınızın tarayıcısı açılır ve işlem uygulamanın dışında,
+ilgili ödeme sağlayıcısında tamamlanır. Uygulama hiçbir ödeme bilgisini
+görmez, işlemez veya saklamaz; bağış yapıp yapmadığınızı da bilemez.
+Cihazınızda yalnızca hatırlatmanın bir daha gösterilip gösterilmeyeceği
+tutulur ve bu bilgi hiçbir yere gönderilmez.
+
+Bağış gönüllüdür. Bağış yapmanız durumunda uygulamada ek bir özellik,
+içerik veya ayrıcalık açılmaz; uygulamanın tamamı herkese ücretsizdir.
+
 ## Haklarınız
 
 Kişisel veri toplamadığımız için tarafımızda silinecek, düzeltilecek veya
@@ -185,6 +197,18 @@ The app is suitable for users of all ages, and because it collects no
 personal data from anyone — including children — no additional processing
 of children's data takes place.
 
+## Donations
+
+The app offers a voluntary donation link. Tapping it opens your device's
+browser, and the transaction is completed outside the app at the relevant
+payment provider. The app never sees, processes or stores any payment
+details, and cannot tell whether you donated. The only thing stored on your
+device is whether the reminder should be shown again, and that is never sent
+anywhere.
+
+Donating is voluntary. Donating does not unlock any additional feature,
+content or privilege; the entire app is free for everyone.
+
 ## Your rights
 
 Because we collect no personal data, there is nothing on our side to
@@ -249,6 +273,18 @@ ve arayüzü geliştiricisine aittir.
 
 Uygulama "olduğu gibi" sunulur. Kesintisiz veya hatasız çalışacağı, belirli
 bir amaca uygun olacağı yönünde açık ya da örtülü bir garanti verilmez.
+
+## Bağışlar
+
+Uygulama içinden erişilen bağış bağlantıları gönüllü katkı içindir. Bağış
+karşılığında herhangi bir mal, hizmet, dijital içerik ya da uygulama içi
+ayrıcalık taahhüt edilmez; uygulamanın bütün özellikleri bağıştan bağımsız
+olarak ücretsizdir.
+
+Ödeme işlemi uygulamanın dışında, seçtiğiniz ödeme sağlayıcısının kendi
+şartları altında gerçekleşir. Bu işlemlerden doğan uyuşmazlıklarda ilgili
+sağlayıcının şartları geçerlidir. Yapılan bağışlar, yürürlükteki hukukun
+zorunlu kıldığı haller dışında iade edilmez.
 
 ## Sorumluluk sınırı
 
@@ -321,6 +357,18 @@ code, and interface of the app belong to its developer.
 The app is provided "as is". No express or implied warranty is given that
 it will operate uninterrupted or error-free, or that it is fit for a
 particular purpose.
+
+## Donations
+
+Donation links reachable from within the app are for voluntary
+contributions. No goods, services, digital content or in-app privilege is
+promised in return for a donation; every feature of the app is free
+regardless of whether you donate.
+
+Payment takes place outside the app, under the terms of the payment provider
+you choose. Any dispute arising from such a transaction is governed by that
+provider's terms. Donations are non-refundable except where applicable law
+requires otherwise.
 
 ## Limitation of liability
 

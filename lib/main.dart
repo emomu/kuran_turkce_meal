@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -5,12 +7,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:just_audio_background/just_audio_background.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'core/notifications/daily_ayah_bootstrap.dart';
 import 'core/notifications/daily_ayah_notifications.dart';
 import 'core/providers/app_providers.dart';
 import 'core/router/app_router.dart';
 import 'core/theme/app_theme.dart';
 import 'core/widgets_bridge/home_widget_service.dart';
 import 'core/widgets_bridge/home_widget_sync.dart';
+import 'features/donate/providers/donation_provider.dart';
+import 'features/donate/providers/donation_reminder.dart';
 import 'features/settings/providers/preferences_provider.dart';
 
 Future<void> main() async {
@@ -118,7 +123,31 @@ class _QuranAppState extends ConsumerState<QuranApp>
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    WidgetsBinding.instance.addPostFrameCallback((_) => _syncWidgets());
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _syncWidgets();
+      // Hataları uygulamayı ilgilendirmez; servislerin içinde yutulur.
+      unawaited(_registerOpen());
+    });
+  }
+
+  /// Açılışta yapılan hafif işler: bildirim kaydını tazelemek, bağış
+  /// sayacını artırmak ve gerekiyorsa bağış hatırlatmasını planlamak.
+  ///
+  /// İlk kareden sonra çalışır — hiçbiri açılışı bekletmeye değmez ve
+  /// hiçbiri kullanıcının o anda gördüğü ekranı etkilemez.
+  ///
+  /// Sıra önemli: bağış hatırlatması günün ayeti bildiriminin açık olmasına
+  /// bakıyor ve [refreshDailyAyahNotification] izin yoksa o tercihi
+  /// kapatabiliyor. Önce bildirim tazelenmezse, bağış hatırlatması izni
+  /// olmayan bir cihazda planlanmış sayılır ve bir yıl boyunca tekrar
+  /// denenmezdi.
+  Future<void> _registerOpen() async {
+    if (!mounted) return;
+    ref.read(donationProvider.notifier).registerAppOpen();
+
+    await refreshDailyAyahNotification(ref);
+    if (!mounted) return;
+    await maybeScheduleDonationReminder(ref);
   }
 
   @override

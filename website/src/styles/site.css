@@ -462,6 +462,113 @@
   color: var(--ink-muted);
 }
 
+/* ------------------------------------------------------------- Destek */
+
+/* Bölüm ortalanır ama okuma genişliğini aşmaz: bağış metni uzun soluklu
+   değil, birkaç cümlelik bir davet. */
+.support {
+  max-width: 720px;
+  margin-inline: auto;
+  text-align: center;
+}
+
+.support__channels {
+  display: grid;
+  gap: var(--sm);
+  margin-top: var(--lg);
+  text-align: start;
+}
+
+/* Kanal satırı hem <a> hem <button> olabiliyor (bağlantı ve kopyalama);
+   ikisi de aynı görünmeli, o yüzden düğmenin tarayıcı varsayılanları
+   sıfırlanır. */
+.support__channel {
+  display: flex;
+  align-items: center;
+  gap: var(--sm);
+  width: 100%;
+  padding: var(--md);
+  border-radius: var(--r-lg);
+  background: var(--surface);
+  border: 1px solid var(--divider);
+  font: inherit;
+  color: inherit;
+  text-align: start;
+  cursor: pointer;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.support__channel:hover {
+  border-color: color-mix(in srgb, var(--accent) 45%, var(--divider));
+  transform: translateY(-1px);
+}
+
+.support__channel-icon {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  color: var(--accent);
+}
+
+.support__channel-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  flex: 1;
+}
+
+.support__channel-title {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+/* IBAN uzun ve boşluklu; taşmak yerine sarmalı ve rakamlar hizalı
+   dursun diye sekmeli rakam kullanılır. */
+.support__channel-value {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--ink-muted);
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+/* Alıcı adı IBAN'ın altında, biraz daha soluk: havale ekranında ikisi de
+   gerekiyor ama asıl kopyalanan numara. */
+.support__channel-holder {
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--ink-faint);
+}
+
+.support__channel-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  flex: none;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--accent);
+}
+
+.support__note {
+  margin-top: var(--md);
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--ink-faint);
+}
+
+@media (max-width: 560px) {
+  /* Dar ekranda eylem etiketi alta iner; üç sütun sığmıyor ve IBAN
+     kırpılıyordu. */
+  .support__channel { flex-wrap: wrap; }
+  .support__channel-action { width: 100%; padding-inline-start: 50px; }
+}
+
 /* ------------------------------------------------------------ CTA + alt */
 
 .cta {

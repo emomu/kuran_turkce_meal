@@ -81,6 +81,20 @@ dönebilirsiniz.
   yer, okuma serisi. Flutter motorunu çalıştırmadan, paylaşılan veri deposunu
   okuyarak anında görünürler.
 
+### Destek
+
+- **Gönüllü bağış** — Ayarların en üstündeki "Destek ol" girişi ve bağış
+  sayfası. Bağış karşılığında hiçbir özellik açılmaz; uygulamanın tamamı
+  bağıştan bağımsız olarak ücretsizdir. Ödeme uygulamanın dışında,
+  tarayıcıda tamamlanır — uygulama hiçbir ödeme bilgisi görmez.
+- **Sessiz hatırlatma** — Uygulama 14 gün ve 20 açılış eşiğini geçtikten
+  sonra ana ekranda kapatılabilir bir kart çıkar. Kapatılırsa 30, ertelenirse
+  60 gün susar; "destekledim" denirse bir daha hiç çıkmaz.
+- **Basamaklı bildirim** — Kurulumdan sonraki 1, 3, 7, 10, 14, 21, 30, 60,
+  120 ve 240. günlerde birer kez düşer, sonra tamamen durur. Yalnızca günün
+  ayeti bildirimi açıksa planlanır ve ayrı bir bildirim kanalında durur —
+  kullanıcı yalnızca bunu kapatabilir.
+
 ### Arayüz
 
 - **Açık / koyu tema** — Sistem tercihine uyar ya da elle seçilir.
@@ -201,6 +215,7 @@ lib/
 │   ├── plans/            Okuma planları ve gün takibi
 │   ├── bookmarks/        Yer imleri, notlar, vurgular
 │   ├── legal/            Gizlilik politikası ve kullanım şartları
+│   ├── donate/           Gönüllü bağış ve hatırlatma
 │   └── settings/         Tercihler
 └── shared/widgets/       Ortak bileşenler
 

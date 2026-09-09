@@ -296,5 +296,49 @@
     "loadFailed": "Ayetler yüklenemedi",
     "searchCard": "{name} kıssası",
     "searchCardHint": "{count} ayet · iniş sırasına göre"
+  },
+  "donate": {
+    "title": "Destek Ol",
+    "headline": "Bu uygulama ücretsiz ve öyle kalacak",
+    "subhead": "Reklam yok, hesap yok, takip yok. Dilerseniz gönüllü bir katkıyla destek olabilirsiniz.",
+    "explainTitle": "Neden bağış?",
+    "explainBody": "Uygulama bir kişinin boş vakitlerinde yazılıyor ve herkese açık olarak dağıtılıyor. Geliştirici hesabı ücretleri, ses dosyalarının barındırılması ve test cihazları bir maliyet oluşturuyor. Katkınız bu maliyeti karşılar ve uygulamanın reklamsız kalmasını sağlar.\n\nBağış tamamen gönüllüdür. Uygulamanın hiçbir özelliği ücretli değildir; bağış yaptığınızda da yapmadığınızda da her şeye aynı şekilde erişirsiniz.",
+    "waysTitle": "DESTEK YOLLARI",
+    "channel": {
+      "buymeacoffee": {
+        "title": "Buy Me a Coffee",
+        "subtitle": "Kartla tek seferlik katkı"
+      },
+      "papara": {
+        "title": "Papara",
+        "subtitle": "Papara ile hızlı gönderim"
+      },
+      "iban": {
+        "title": "Banka havalesi (IBAN)",
+        "subtitle": "Dokunun, IBAN panoya kopyalansın"
+      }
+    },
+    "copied": "IBAN panoya kopyalandı",
+    "openFailed": "Bağlantı açılamadı. Tarayıcınızın kurulu olduğundan emin olun.",
+    "noChannels": "Şu anda tanımlı bir bağış yolu yok.",
+    "alreadyDonated": "Zaten destek oldum",
+    "never": "Bir daha hatırlatma",
+    "thanks": "Teşekkürler. Hatırlatmalar artık gösterilmeyecek.",
+    "neverConfirmTitle": "Hatırlatmalar kapatılsın mı?",
+    "neverConfirmBody": "Ana ekrandaki kart ve bildirim bir daha gösterilmez. Destek sayfasına Ayarlar'dan istediğiniz zaman ulaşabilirsiniz.",
+    "neverConfirmAction": "Kapat",
+    "neverDone": "Hatırlatmalar kapatıldı.",
+    "silenced": "Hatırlatmalar kapalı. Bu sayfaya Ayarlar'dan her zaman ulaşabilirsiniz.",
+    "disclaimer": "Bağışlar uygulamanın dışında, tarayıcınızda tamamlanır. Uygulama hiçbir ödeme bilgisi görmez veya saklamaz.",
+    "bannerTitle": "Destek ol",
+    "bannerBody": "Uygulamayı reklamsız tutmaya katkıda bulunun",
+    "bannerTitleDonated": "Desteğiniz için teşekkürler",
+    "bannerBodyDonated": "Katkınız uygulamayı reklamsız tutuyor",
+    "cardTitle": "Uygulamayı beğendiniz mi?",
+    "cardBody": "Gönüllü bir katkı reklamsız kalmasını sağlar",
+    "dismiss": "Kapat",
+    "notificationTitle": "Kur'an — Türkçe Meal",
+    "notificationBody": "Uygulama ücretsiz ve reklamsız. Dilerseniz gönüllü katkıyla destek olabilirsiniz.",
+    "holder": "Alıcı:"
   }
 }

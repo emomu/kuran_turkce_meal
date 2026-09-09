@@ -32,6 +32,7 @@ export function Cta({ t, lang }) {
             <nav className="footer__links">
               <a href="#features">{t.nav.features}</a>
               <a href="#screens">{t.nav.screens}</a>
+              <a href="#support">{t.nav.support}</a>
               <a href="/privacy-policy.html">{t.privacyLinks.policy}</a>
               <a href="/terms.html">{t.privacyLinks.terms}</a>
               <a

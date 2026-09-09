@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../features/bookmarks/view/bookmarks_screen.dart';
+import '../../features/donate/view/donate_screen.dart';
 import '../../features/home/view/home_screen.dart';
 import '../../features/legal/data/legal_texts.dart';
 import '../../features/legal/view/legal_document_screen.dart';
@@ -144,6 +145,13 @@ final appRouter = GoRouter(
       builder: (context, state) => ProphetAyahsScreen(
         prophetId: state.pathParameters['prophetId']!,
       ),
+    ),
+
+    // Bağış ekranı. Bildirimden de bu yola gelinir (bkz.
+    // `scheduleDonationReminder` yükü).
+    GoRoute(
+      path: '/destek',
+      builder: (context, state) => const DonateScreen(),
     ),
 
     GoRoute(

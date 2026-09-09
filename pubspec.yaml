@@ -32,6 +32,10 @@ dependencies:
   lottie: ^3.3.3
   home_widget: ^0.9.3
 
+  # Bağış bağlantısını cihazın tarayıcısında açmak için. Ödeme uygulamanın
+  # dışında tamamlanır: uygulama içi bir ödeme akışı yok, WebView yok.
+  url_launcher: ^6.3.1
+
   # Tilavet sesi. `just_audio` ayet dosyalarını tek kesintisiz akış gibi
   # çalar; `just_audio_background` kilit ekranı ve bildirim kontrollerini
   # verir; `audio_session` telefon geldiğinde susmayı, kulaklık çıkınca

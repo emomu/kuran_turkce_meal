@@ -13,6 +13,7 @@ export const content = {
       screens: 'Ekranlar',
       privacy: 'Gizlilik',
       faq: 'Sorular',
+      support: 'Destek',
       download: 'İndir',
     },
 
@@ -111,6 +112,31 @@ export const content = {
       },
     ],
 
+    supportTitle: 'Uygulama ücretsiz ve öyle kalacak',
+    supportLede:
+      'Reklam yok, hesap yok, takip yok. Uygulama bir kişinin boş vakitlerinde yazılıyor ve herkese açık dağıtılıyor; geliştirici hesabı, ses barındırma ve test cihazları bir maliyet oluşturuyor. Dilerseniz gönüllü bir katkıyla destek olabilirsiniz.',
+    supportChannels: {
+      buymeacoffee: {
+        title: 'Buy Me a Coffee',
+        subtitle: 'Kartla tek seferlik katkı',
+        action: 'Aç',
+      },
+      papara: {
+        title: 'Papara',
+        subtitle: 'Papara ile hızlı gönderim',
+        action: 'Aç',
+      },
+      iban: {
+        title: 'Banka havalesi (IBAN)',
+        subtitle: '',
+        holderLabel: 'Alıcı:',
+        action: 'Kopyala',
+      },
+    },
+    supportCopied: 'Kopyalandı',
+    supportNote:
+      'Bağış tamamen gönüllüdür ve karşılığında uygulamada hiçbir özellik açılmaz — bağış yapsanız da yapmasanız da her şeye aynı şekilde erişirsiniz.',
+
     ctaTitle: 'Okumaya başlayın',
     ctaLede: 'Ücretsiz, reklamsız, hesapsız. İndirin ve açın.',
 
@@ -124,6 +150,7 @@ export const content = {
       screens: 'Screens',
       privacy: 'Privacy',
       faq: 'FAQ',
+      support: 'Support',
       download: 'Download',
     },
 
@@ -216,6 +243,31 @@ export const content = {
         a: 'The Turkish translation and commentary are bundled with the app. The source code is MIT licensed; the translation and commentary texts fall outside that licence.',
       },
     ],
+
+    supportTitle: 'The app is free, and will stay free',
+    supportLede:
+      'No ads, no accounts, no tracking. It is written by one person in their spare time and given away to everyone; developer account fees, audio hosting and test devices all cost money. If you would like, you can support it with a voluntary contribution.',
+    supportChannels: {
+      buymeacoffee: {
+        title: 'Buy Me a Coffee',
+        subtitle: 'One-time contribution by card',
+        action: 'Open',
+      },
+      papara: {
+        title: 'Papara',
+        subtitle: 'Quick transfer with Papara',
+        action: 'Open',
+      },
+      iban: {
+        title: 'Bank transfer (IBAN)',
+        subtitle: '',
+        holderLabel: 'Recipient:',
+        action: 'Copy',
+      },
+    },
+    supportCopied: 'Copied',
+    supportNote:
+      'Donating is entirely voluntary and unlocks nothing in the app — you get exactly the same access whether you contribute or not.',
 
     ctaTitle: 'Start reading',
     ctaLede: 'Free, ad-free, account-free. Download and open.',

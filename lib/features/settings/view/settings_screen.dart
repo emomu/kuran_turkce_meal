@@ -11,6 +11,8 @@ import '../../../data/models/reader_preferences.dart';
 import '../../../data/models/reciter.dart';
 import '../../audio/providers/download_provider.dart';
 import '../../audio/widgets/audio_download_sheet.dart';
+import '../../donate/data/donation_links.dart';
+import '../../donate/widgets/support_banner.dart';
 import '../../../shared/widgets/pressable.dart';
 import '../providers/preferences_provider.dart';
 import '../../onboarding/providers/tour_provider.dart';
@@ -47,6 +49,15 @@ class SettingsScreen extends ConsumerWidget {
           children: [
             Text('nav.settings'.tr(), style: theme.textTheme.displaySmall),
             const SizedBox(height: Insets.lg),
+
+            // Destek çağrısı listenin en başında, kendi bölümü olmadan.
+            // Bir ayar değil — bir davet; bu yüzden ayar gruplarının
+            // biçimini taklit etmez, kendi yüzeyinde durur. Bağış kanalı
+            // yapılandırılmamışsa hiç çizilmez.
+            if (DonationLinks.isConfigured) ...[
+              const SupportBanner(),
+              const SizedBox(height: Insets.lg),
+            ],
 
             _Section(
               title: 'settings.appearance'.tr(),

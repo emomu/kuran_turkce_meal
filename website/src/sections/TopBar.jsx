@@ -32,6 +32,7 @@ export function TopBar({ t, lang }) {
           <a href="#screens">{t.nav.screens}</a>
           <a href="#privacy">{t.nav.privacy}</a>
           <a href="#faq">{t.nav.faq}</a>
+          <a href="#support">{t.nav.support}</a>
         </nav>
 
         <div className="topbar__actions">
