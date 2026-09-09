@@ -52,3 +52,46 @@ tool/roots_data/quran-morphology.txt
 android/key.properties
 *.jks
 *.keystore
+
+# ---------------------------------------------------------------- graphify
+#
+# Bilgi grafiği kaynaktan üretilir (`graphify update .`). Türetilmiş
+# çıktıları depoda tutmak, her kod değişikliğinde binlerce satırlık
+# anlamsız diff üretiyor ve klonu megabaytlarca şişiriyor.
+#
+# `GRAPH_REPORT.md` izlenmeye devam ediyor: mimariyi anlatan okunabilir tek
+# dosya o ve depoya bakan birinin işine yarıyor.
+graphify-out/cache/
+graphify-out/graph.json
+graphify-out/graph.html
+graphify-out/manifest.json
+graphify-out/cost.json
+graphify-out/.graphify_labels.json
+graphify-out/.graphify_labels.json.sig
+graphify-out/.graphify_python
+graphify-out/.graphify_root
+
+# Tarihli yedekler — her `graphify update` yenisini bırakıyor.
+graphify-out/20*/
+
+# ------------------------------------------------------------------ araçlar
+# Editör ve araç önbellekleri.
+.claude/
+*.tmp
+*.bak
+.eslintcache
+
+# ------------------------------------------------------------------- ortam
+# Ortam değişkenleri ve API anahtarları — asla depoya girmemeli.
+.env
+.env.*
+!.env.example
+*.secrets
+secrets.json
+
+# ------------------------------------------------------------------ mağaza
+# Yayın için üretilen paketler.
+*.apk
+*.aab
+*.ipa
+*.app.zip

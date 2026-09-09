@@ -1,15 +1,16 @@
 # Kur'an — Türkçe Meal
 
-**Kur'an'ı iniş sırasına göre okumak için tasarlanmış, tamamen çevrimdışı bir Flutter uygulaması.**
+**Kur'an'ı iniş sırasına göre okumak için tasarlanmış, çevrimdışı çalışan bir Flutter uygulaması.**
 
-Giriş yok. Hesap yok. Reklam yok. Analitik yok. Sunucu yok.
-Uygulama açılır ve okumaya başlanır.
+Giriş yok. Hesap yok. Reklam yok. Analitik yok. Arka planda hiçbir istek yok.
+Uygulama açılır ve okumaya başlanır — meal, tefsir, arama ve kök verisi
+pakete gömülüdür. Ağa yalnızca siz tilavet indirmek istediğinizde çıkılır.
 
 [![Flutter](https://img.shields.io/badge/Flutter-3.41-02569B?logo=flutter&logoColor=white)](https://flutter.dev)
 [![Dart](https://img.shields.io/badge/Dart-3.11-0175C2?logo=dart&logoColor=white)](https://dart.dev)
 [![Lisans](https://img.shields.io/badge/Lisans-MIT-green.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/Platform-iOS%20%7C%20Android-lightgrey.svg)](#)
-[![Testler](https://img.shields.io/badge/testler-322%20geçiyor-brightgreen.svg)](#geliştirme)
+[![Testler](https://img.shields.io/badge/testler-505%20geçiyor-brightgreen.svg)](#geliştirme)
 
 ---
 
@@ -37,7 +38,8 @@ Katkılar açıktır — bkz. [Katkıda bulunma](#katkıda-bulunma).
 
 Mevcut Kur'an uygulamalarının çoğu hesap ister, reklam gösterir, arka planda
 veri toplar ya da açılmak için internet bekler. Bu uygulama bunların hiçbirini
-yapmaz.
+yapmaz: metnin tamamı cihazınızda, ağa çıkan tek şey isteğe bağlı tilavet
+indirmesi.
 
 Bir de okuma sırası meselesi var. Mushaf sırası kabaca uzunluğa göredir;
 metnin hangi sırayla geldiğini göstermez. **İniş sırasına göre okumak**,
@@ -59,6 +61,10 @@ dönebilirsiniz.
 - **Tefsir** — Ayete dokununca açılır ya da ayarlardan sürekli görünür yapılır.
 - **Arapça metin** — İsteğe bağlı, varsayılan kapalı.
 - **Okuma ayarları** — Punto ve satır aralığı, okurken canlı değişir.
+- **Tilavet** — Beş kâri (Alafasy, Husary, Abdul Basit, Sudais, Minshawi);
+  sure sure indirilir, sonrası çevrimdışı. Çalan ayet metinde vurgulanır ve
+  liste ona kayar; kilit ekranından yönetilir, telefon gelince susar,
+  kulaklık çıkınca durur. Oynatma hızı 0.5×–2.0× arası ayarlanır.
 
 ### Keşif
 
@@ -68,6 +74,18 @@ dönebilirsiniz.
 - **Kök analizi** — Bir kelimeye dokunun, Arapça kökünü ve o kökün Kur'an'da
   geçtiği bütün ayetleri görün. Aynı kökten türeyen kelimelerin farklı
   bağlamlarda nasıl anlam kazandığını izleyebilirsiniz.
+- **Ayet referansıyla doğrudan gitme** — Aradığınız ayetin yerini
+  biliyorsanız arama kutusuna yazın: `2:255`, `2/255`, `2.255`, `bakara 255`,
+  `âl-i imrân 7` ya da yalnızca `36`. Sonuç listenin başına çıkar ve dokununca
+  doğrudan o ayete konumlanır. Yalnızca sure adı yazıldığında sure baştan
+  açılır. Referans çözülemezse arama olağan tam metin aramasına düşer —
+  "7 kat gök" arayan kullanıcı 7. sureye götürülmez.
+- **Peygamber kıssaları** — Arama kutusuna bir peygamber adı yazın
+  (25 peygamber tanınır); o peygamberin anıldığı bütün ayetler **iniş
+  sırasına göre** listelenir. Sıralama bu ekranın varlık sebebi: bir kıssa
+  Kur'an'a tek seferde girmez. Mûsâ kıssası önce kısa değinmelerle başlar,
+  sonraki yıllarda ayrıntılanır. Mushaf sırasıyla okunduğunda bu gelişim
+  görünmez — Bakara'daki uzun anlatım başa düşer, oysa o sonradan inmiştir.
 
 ### Takip
 
@@ -111,11 +129,22 @@ Bu bölüm bir vaat değil, kodun doğrulanabilir bir özeti:
 | | |
 |---|---|
 | Toplanan veri | **Hiç** |
-| Ağ istekleri | **Yok** — uygulama internet izni bile kullanmaz |
 | Analitik / çökme raporu SDK'sı | **Yok** |
 | Reklam ağı | **Yok** |
 | Hesap / giriş | **Yok** |
 | Verinin bulunduğu yer | Yalnızca cihaz — SQLite ve SharedPreferences |
+| Ağ istekleri | Yalnızca **siz** başlattığınızda: tilavet indirme ve bağış bağlantısı |
+
+Meal, tefsir, arama dizini ve kök verisi uygulamayla birlikte gelir; okuma,
+arama, planlar ve kök analizi internet olmadan çalışır.
+
+Ağa çıkılan iki yer var ve ikisi de sizin bir dokunuşunuzla başlar:
+
+- **Tilavet indirme** — Seçtiğiniz sureyi seçtiğiniz kâriden indirir. İstek
+  yalnızca ses dosyasını ister; kimlik, cihaz bilgisi ya da kullanım verisi
+  gönderilmez. İndirmezseniz hiç istek yapılmaz.
+- **Bağış bağlantısı** — Cihazın tarayıcısını açar. Uygulama içinde ödeme
+  akışı yoktur; hiçbir ödeme bilgisi görülmez veya saklanmaz.
 
 Notlarınız, yer imleriniz, vurgularınız ve okuma ilerlemeniz cihazınızdan
 çıkmaz. Uygulamayı silerseniz veriler de silinir; başka hiçbir yerde kopyası
@@ -210,8 +239,10 @@ lib/
 │   ├── onboarding/       İlk kullanım tanıtımı
 │   ├── home/             Sure listesi, günün ayeti, kaldığın yer
 │   ├── reader/           Okuma akışı, ayet eylemleri, tefsir
-│   ├── search/           FTS5 araması, vurgulu sonuçlar
+│   ├── search/           FTS5 araması, ayet referansı, vurgulu sonuçlar
 │   ├── roots/            Kök analizi ve kök arama
+│   ├── prophets/         Peygamber kıssaları, iniş sırasına göre
+│   ├── audio/            Tilavet oynatma, kâri seçimi, indirme
 │   ├── plans/            Okuma planları ve gün takibi
 │   ├── bookmarks/        Yer imleri, notlar, vurgular
 │   ├── legal/            Gizlilik politikası ve kullanım şartları
@@ -242,7 +273,7 @@ bir kez, gün dönümünde kurulan alarmla tazelenir.
 ## Geliştirme
 
 ```bash
-flutter test        # 322 test
+flutter test        # 505 test
 flutter analyze     # statik analiz
 ```
 

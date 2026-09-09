@@ -22,3 +22,12 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Vite ve derleme önbellekleri
+.vite/
+*.tsbuildinfo
+
+# Ortam değişkenleri — Railway'e panelden girilir, depoya girmemeli.
+.env
+.env.*
+!.env.example
