@@ -11,6 +11,16 @@ pakete gömülüdür. Ağa yalnızca siz tilavet indirmek istediğinizde çıkı
 [![Lisans](https://img.shields.io/badge/Lisans-MIT-green.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/Platform-iOS%20%7C%20Android-lightgrey.svg)](#)
 [![Testler](https://img.shields.io/badge/testler-505%20geçiyor-brightgreen.svg)](#geliştirme)
+[![Destek ol](https://img.shields.io/badge/Destek%20ol-Buy%20Me%20a%20Coffee-FFDD00?logo=buymeacoffee&logoColor=black)](https://buymeacoffee.com/emomu)
+
+<a href="https://buymeacoffee.com/emomu">
+  <img src="https://img.buymeacoffee.com/button-api/?text=Bir%20kahve%20ısmarla&emoji=☕&slug=emomu&button_colour=3F6B54&font_colour=ffffff&font_family=Inter&outline_colour=ffffff&coffee_colour=FFDD00" alt="Bir kahve ısmarla" height="44">
+</a>
+
+Uygulama ücretsiz, reklamsız ve öyle kalacak. Destek olmak isterseniz
+[Buy Me a Coffee](https://buymeacoffee.com/emomu) ya da banka havalesi:
+`TR07 0001 0090 1003 0726 1050 10` (Emirhan Soylu). Bağış tamamen gönüllüdür
+ve karşılığında uygulamada hiçbir özellik açılmaz.
 
 ---
 
