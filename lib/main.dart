@@ -198,7 +198,31 @@ class _QuranAppState extends ConsumerState<QuranApp>
               maxScaleFactor: 1.3,
             ),
           ),
-          child: child!,
+          // Boşluğa dokununca klavye kapanır — uygulamanın her ekranında.
+          //
+          // iOS'ta klavyeyi kapatmanın yerleşik bir yolu yok: Android'in
+          // geri tuşu gibi bir çıkış bulunmadığı için kullanıcı bir alana
+          // yazdıktan sonra klavyeyle baş başa kalır ve içeriğin yarısı
+          // örtülü durur.
+          //
+          // `TapRegion` burada işe yaramaz: `onTapOutside` kendi sınırının
+          // dışına dokunulunca ateşlenir ve bu widget ağacın en dışında
+          // olduğu için "dışarısı" diye bir yer kalmaz. `Listener` ise
+          // dokunuşu görür ama tüketmez — altındaki düğmeler, listeler ve
+          // kaydırmalar dokunuşu almaya devam eder.
+          child: Builder(
+            builder: (context) => Listener(
+              onPointerDown: (_) {
+                // Klavye kapalıyken hiçbir şey yapılmaz: düğme ya da
+                // kaydırma odağını düşürmek erişilebilirlik gezinmesini
+                // bozardı. Ölçü dokunma anında okunur; builder'ın yakaladığı
+                // değer o an güncel olmayabilir.
+                if (MediaQuery.viewInsetsOf(context).bottom <= 0) return;
+                FocusManager.instance.primaryFocus?.unfocus();
+              },
+              child: child!,
+            ),
+          ),
         );
       },
     );

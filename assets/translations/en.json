@@ -8,7 +8,8 @@
     "search": "Search",
     "plans": "Plans",
     "saved": "Saved",
-    "settings": "Settings"
+    "settings": "Settings",
+    "assistant": "Assistant"
   },
   "common": {
     "back": "Back",
@@ -295,7 +296,8 @@
     "chronologicalNote": "Verses are ordered by when they were revealed, not by their place in the mushaf.",
     "loadFailed": "Could not load the verses",
     "searchCard": "The story of {name}",
-    "searchCardHint": "{count} verses · in order of revelation"
+    "searchCardHint": "{count} verses · in order of revelation",
+    "searchCardMentions": "mentioned in {count} verses · {story}-verse story"
   },
   "donate": {
     "title": "Support",
@@ -340,5 +342,15 @@
     "notificationTitle": "Quran — Turkish Translation",
     "notificationBody": "The app is free and ad-free. You can support it with a voluntary contribution if you wish.",
     "holder": "Recipient:"
+  },
+  "assistant": {
+    "title": "Assistant",
+    "clear": "Clear chat",
+    "hint": "Ask about a topic, verse or surah…",
+    "welcomeTitle": "Translation assistant",
+    "welcomeBody": "Ask about a topic, a situation or a verse; I will search the translation and show you what I find.",
+    "tryThese": "Try one of these",
+    "disclaimer": "I only search the translation text. I do not interpret or issue rulings; I show the verses as they are. Works fully offline.",
+    "resultCount": "{count} verses"
   }
 }

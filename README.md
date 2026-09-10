@@ -90,12 +90,36 @@ dönebilirsiniz.
   doğrudan o ayete konumlanır. Yalnızca sure adı yazıldığında sure baştan
   açılır. Referans çözülemezse arama olağan tam metin aramasına düşer —
   "7 kat gök" arayan kullanıcı 7. sureye götürülmez.
+- **Asistan** — Soru sorun, ayet gelsin: "sabır hakkında ne diyor",
+  "zor zamandayım", "Kehf kaç ayet", "Bakara 255", "Muhammed". Asistan bir
+  dil modeli çalıştırmaz; soruyu tanır, mevcut veri katmanından karşılar ve
+  cevabı şablonla kurar. Bu yüzden **çevrimdışı** çalışır, anında cevap
+  verir ve **uydurma yapamaz** — gösterdiği her cümle ya bir şablondan ya
+  bir ayetten gelir. Yorum yapmaz, hüküm vermez: "faiz haram mı" sorusuna
+  fetva değil, konuyla ilgili ayetler ve bir ilim ehline başvurma önerisi
+  döner. Kur'an dışı sorular cevap üreten katmana hiç ulaşmadan reddedilir;
+  sınırı bir talimat değil, kodun kendisi korur. Türkçe ve İngilizce'de
+  ayrı ayrı çalışır: her dilin kendi soru kalıpları, arama terimleri ve
+  cevap şablonları var.
 - **Peygamber kıssaları** — Arama kutusuna bir peygamber adı yazın
   (25 peygamber tanınır); o peygamberin anıldığı bütün ayetler **iniş
   sırasına göre** listelenir. Sıralama bu ekranın varlık sebebi: bir kıssa
   Kur'an'a tek seferde girmez. Mûsâ kıssası önce kısa değinmelerle başlar,
   sonraki yıllarda ayrıntılanır. Mushaf sırasıyla okunduğunda bu gelişim
   görünmez — Bakara'daki uzun anlatım başa düşer, oysa o sonradan inmiştir.
+
+  Kıssa sınırları elle çizildi (`tool/story_bounds.py`). Ad taraması tek
+  başına anlatının tamamını vermiyordu: anlatı sürerken ad tekrarlanmaz
+  ("melek dedi ki", "sonra doğum sancısı onu...") ve o ayetler düşerdi.
+  Meryem 16-34 tek bir anlatıdır ama taramaya yalnızca dört ayeti giriyor,
+  doğum sahnesi görünmüyordu. Sınırlarla birlikte kıssa verisi 644'ten
+  1.244 ayete çıktı.
+
+  Hz. Muhammed'de veri ikiye ayrılır. Kur'an ona çoğunlukla adıyla değil
+  sıfatıyla seslenir ("Ey Peygamber", "Ey Rasûl") ve meal bu hitapları
+  "(Ey Muhammed)" diye açar. Kıssa listesi bu ayetleri dışarıda bırakır —
+  hitap bir kıssa değildir — ama arama onları da gösterir: kıssası 10 ayet,
+  anıldığı 140 ayet.
 
 ### Takip
 
@@ -252,6 +276,7 @@ lib/
 │   ├── home/             Sure listesi, günün ayeti, kaldığın yer
 │   ├── reader/           Okuma akışı, ayet eylemleri, tefsir
 │   ├── search/           FTS5 araması, ayet referansı, vurgulu sonuçlar
+│   ├── assistant/        Niyet çözümleme, konu sözlüğü, şablon cevaplar
 │   ├── roots/            Kök analizi ve kök arama
 │   ├── prophets/         Peygamber kıssaları, iniş sırasına göre
 │   ├── audio/            Tilavet oynatma, kâri seçimi, indirme

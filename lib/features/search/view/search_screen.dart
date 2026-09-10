@@ -10,6 +10,7 @@ import '../../../data/repositories/quran_repository.dart';
 import '../../../shared/widgets/empty_state.dart';
 import '../../../shared/widgets/pressable.dart';
 import '../providers/search_provider.dart';
+import '../widgets/search_suggestion_marquee.dart';
 import '../../../shared/widgets/tab_bar_inset.dart';
 import '../../../shared/widgets/responsive_layout.dart';
 import '../../onboarding/providers/tour_provider.dart';
@@ -31,11 +32,38 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
   final _controller = TextEditingController();
   final _focusNode = FocusNode();
 
+  /// Arama alanı odakta mı.
+  ///
+  /// Öneri şeridi yalnızca odaktayken görünür: kullanıcı yazmaya hazır
+  /// olduğu anda ne yazabileceğini gösterir. Boş ekranda sürekli durması
+  /// hem alanı yer hem de sorulmadan cevap vermek gibi olurdu.
+  bool _isFocused = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _focusNode.addListener(_onFocusChange);
+  }
+
+  void _onFocusChange() {
+    if (_isFocused == _focusNode.hasFocus) return;
+    setState(() => _isFocused = _focusNode.hasFocus);
+  }
+
   @override
   void dispose() {
+    _focusNode.removeListener(_onFocusChange);
     _controller.dispose();
     _focusNode.dispose();
     super.dispose();
+  }
+
+  /// Şeritten seçilen öneriyi arama kutusuna yazar ve aramayı başlatır.
+  void _applySuggestion(String text) {
+    _controller.text = text;
+    _controller.selection =
+        TextSelection.collapsed(offset: text.length);
+    ref.read(searchProvider.notifier).updateQuery(text);
   }
 
   @override
@@ -92,6 +120,27 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                         ),
                 ),
               ),
+            ),
+
+            // Öneri şeridi: alan odaktayken ve sorgu boşken görünür.
+            // Kullanıcı yazmaya başlayınca kaybolur — o noktada örneklere
+            // değil sonuçlara yer gerekir.
+            AnimatedSize(
+              duration: const Duration(milliseconds: 220),
+              curve: Curves.easeOutCubic,
+              // `query.isEmpty` değil `!hasQuery`: arama iki karakterden
+              // önce başlamıyor, o yüzden tek harf yazan kullanıcıda şerit
+              // de durmalı. Aksi hâlde "a" yazınca şerit kayboluyor ama
+              // sonuç da gelmiyordu ve ekran bomboş kalıyordu.
+              child: _isFocused && !state.hasQuery
+                  ? Padding(
+                      padding: const EdgeInsets.only(bottom: Insets.sm),
+                      child: SearchSuggestionMarquee(
+                        languageCode: context.locale.languageCode,
+                        onPick: _applySuggestion,
+                      ),
+                    )
+                  : const SizedBox(width: double.infinity),
             ),
 
             // Sonuç sayısı — kullanıcı aramanın işe yarayıp yaramadığını
@@ -154,6 +203,12 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
 
   Widget _buildBody(BuildContext context, SearchState state) {
     if (!state.hasQuery) {
+      // Şerit görünürken boş durum gizlenir: ikisi de aynı şeyi söylüyor
+      // ve alt alta gelince ekran dolup taşıyor. Şeridin göründüğü koşulun
+      // aynısı burada da geçerli olmalı, yoksa tek harf yazan kullanıcıda
+      // ikisi birden kaybolup ekran boş kalır.
+      if (_isFocused) return const SizedBox.shrink();
+
       return EmptyState(
         icon: Icons.search_rounded,
         title: 'search.title'.tr(),
@@ -363,9 +418,20 @@ class _ProphetCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 2),
                   Text(
-                    'prophets.searchCardHint'.tr(
-                      namedArgs: {'count': '${prophet.ayahCount}'},
-                    ),
+                    // Hz. Muhammed'de iki sayı ayrışır: kıssası 10 ayet ama
+                    // adı ve ona yönelen hitaplar 140 ayette geçer. Kullanıcı
+                    // adını arattığında beklediği sayı ikincisidir; kart
+                    // yalnızca kıssayı söylerse arama eksik görünür.
+                    prophet.hasSeparateMentions
+                        ? 'prophets.searchCardMentions'.tr(
+                            namedArgs: {
+                              'count': '${prophet.mentionCount}',
+                              'story': '${prophet.ayahCount}',
+                            },
+                          )
+                        : 'prophets.searchCardHint'.tr(
+                            namedArgs: {'count': '${prophet.ayahCount}'},
+                          ),
                     style: theme.textTheme.bodySmall,
                   ),
                 ],

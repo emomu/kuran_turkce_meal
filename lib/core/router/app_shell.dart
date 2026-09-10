@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../theme/app_typography.dart';
+import '../../features/assistant/view/widgets/assistant_fab.dart';
 import '../../features/audio/widgets/audio_player_bar.dart';
 import '../../shared/widgets/responsive_layout.dart';
 
@@ -96,30 +97,14 @@ class AppShell extends ConsumerWidget {
     );
 
     return Scaffold(
-      // Boşluğa dokununca klavye kapanır.
-      //
-      // iOS'ta klavyeyi kapatmanın yerleşik bir yolu yok: Android'in geri
-      // tuşu gibi bir çıkış bulunmadığı için kullanıcı arama alanına yazdıktan
-      // sonra klavyeyle baş başa kalır ve listenin yarısı örtülü kalırdı.
-      //
-      // `onTap` yerine `onTapDown` kullanılır: dokunma tamamlanmadan kapanır,
-      // böylece liste öğesine basıldığında klavye kapanışıyla gezinme aynı
-      // anda başlar ve arada bir kare gecikme hissedilmez.
-      //
-      // `HitTestBehavior.translucent`: alttaki widget'lar dokunuşu almaya
-      // devam eder. Opak olsaydı bu katman listenin dokunuşlarını yutar ve
-      // hiçbir sureye girilemezdi.
-      //
-      // `GestureDetector` yerine `TapRegion` kullanılır: `GestureDetector`
-      // widget ağacına bir katman ekliyor ve sekme çubuğunu ölçen testler
-      // (bkz. app_shell_test.dart) `GestureDetector.first` ile artık o
-      // katmanı buluyordu. `TapRegion` ayrıca doğru soruyu soruyor:
-      // "dokunuş odaklanmış alanın dışında mı" — kaydırma ve liste
-      // dokunuşlarını hiç engellemez.
-      body: TapRegion(
-        onTapOutside: (_) => FocusManager.instance.primaryFocus?.unfocus(),
-        child: navigationShell,
-      ),
+      // Klavyeyi boşluğa dokununca kapatma uygulamanın kökünde (main.dart)
+      // kuruludur; burada ikinci kez sarmak gereksiz bir katman olurdu.
+      body: navigationShell,
+      // Asistan sekme çubuğunda değil burada: bir varış noktası değil,
+      // bulunduğun ekrana soru sorma yolu. Kabuktaki bütün sekmelerde
+      // görünür; okuma ekranı kabuğun dışında olduğu için düğmesini
+      // kendisi çizer.
+      floatingActionButton: const AssistantFab(),
       // Tilavet çubuğu sekmelerin üstünde durur ve hangi sekmede olunursa
       // olunsun görünür: ses çalarken kullanıcı ana sayfaya ya da ayarlara
       // geçtiğinde onu durduramamak, kontrolü aramak için okuma ekranına

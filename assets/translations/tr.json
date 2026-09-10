@@ -8,7 +8,8 @@
     "search": "Ara",
     "plans": "Planlar",
     "saved": "Kayıtlar",
-    "settings": "Ayarlar"
+    "settings": "Ayarlar",
+    "assistant": "Asistan"
   },
   "common": {
     "back": "Geri",
@@ -295,7 +296,8 @@
     "chronologicalNote": "Ayetler mushaf sırasına göre değil, indikleri sıraya göre dizildi.",
     "loadFailed": "Ayetler yüklenemedi",
     "searchCard": "{name} kıssası",
-    "searchCardHint": "{count} ayet · iniş sırasına göre"
+    "searchCardHint": "{count} ayet · iniş sırasına göre",
+    "searchCardMentions": "{count} ayette anılıyor · {story} ayetlik kıssa"
   },
   "donate": {
     "title": "Destek Ol",
@@ -340,5 +342,15 @@
     "notificationTitle": "Kur'an — Türkçe Meal",
     "notificationBody": "Uygulama ücretsiz ve reklamsız. Dilerseniz gönüllü katkıyla destek olabilirsiniz.",
     "holder": "Alıcı:"
+  },
+  "assistant": {
+    "title": "Asistan",
+    "clear": "Sohbeti temizle",
+    "hint": "Bir konu, ayet ya da sure sor…",
+    "welcomeTitle": "Meal asistanı",
+    "welcomeBody": "Bir konu, bir durum ya da bir ayet sor; mealde arayıp bulduğum ayetleri göstereyim.",
+    "tryThese": "Şunları deneyebilirsin",
+    "disclaimer": "Yalnızca meal metninde arama yaparım. Yorum yapmam, hüküm vermem; bulduğum ayetleri olduğu gibi gösteririm. Tamamen çevrimdışı çalışır.",
+    "resultCount": "{count} ayet"
   }
 }

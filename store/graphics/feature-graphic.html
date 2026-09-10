@@ -1,0 +1,61 @@
+<meta charset="utf-8">
+<title>feature</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { width:1024px; height:500px; overflow:hidden; }
+
+  .wrap {
+    width:1024px; height:500px;
+    background:#14130F;
+    display:flex; align-items:center; justify-content:center;
+    padding:0 70px; gap:54px;
+    position:relative; overflow:hidden;
+  }
+
+  /* Geleneksel sekizgen yıldız (rub el hizb) örgüsü. Sağ kenardan taşar ve
+     çok silik durur: zemine doku katar, metinle yarışmaz. */
+  .pattern {
+    position:absolute; right:-130px; top:50%; transform:translateY(-50%);
+    width:620px; height:620px; opacity:.07;
+    color:#7FB394;
+  }
+
+  .icon { width:156px; height:156px; border-radius:35px; flex:none; }
+
+  .txt { position:relative; z-index:2; }
+
+  h1 {
+    font-family:-apple-system,'SF Pro Display',system-ui,sans-serif;
+    font-size:56px; line-height:1.1; color:#EDEAE3;
+    font-weight:600; letter-spacing:-1.4px;
+  }
+
+  p {
+    font-family:-apple-system,'SF Pro Text',system-ui,sans-serif;
+    font-size:23px; line-height:1.5; color:#8E8A82;
+    margin-top:18px; font-weight:400; letter-spacing:-.2px;
+  }
+</style>
+
+<div class="wrap">
+  <svg class="pattern" viewBox="0 0 600 600" fill="none">
+    <defs>
+      <pattern id="star" width="100" height="100" patternUnits="userSpaceOnUse">
+        <g stroke="currentColor" stroke-width="1.3" fill="none">
+          <!-- Sekiz köşeli yıldız: üst üste binmiş iki kare. -->
+          <rect x="22" y="22" width="56" height="56"/>
+          <rect x="22" y="22" width="56" height="56" transform="rotate(45 50 50)"/>
+          <!-- Hücreleri birbirine bağlayan sekizgen -->
+          <path d="M50 14 L75 25 L86 50 L75 75 L50 86 L25 75 L14 50 L25 25 Z"/>
+        </g>
+      </pattern>
+    </defs>
+    <rect width="600" height="600" fill="url(#star)"/>
+  </svg>
+
+  <img class="icon" src="/Users/emirhansoylu/Desktop/kuran_turkce_meal/android/app/src/main/res/playstore-icon.png">
+  <div class="txt">
+    <h1>Kur'an'ı indiği sırayla okuyun</h1>
+    <p>Türkçe ve İngilizce meal, kök analizi, tilavet.<br>Reklamsız, hesapsız, çevrimdışı.</p>
+  </div>
+</div>
