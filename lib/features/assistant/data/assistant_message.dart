@@ -1,6 +1,7 @@
 /// Sohbet akışındaki tek bir mesaj.
 library;
 
+import '../domain/answer_composer.dart';
 import 'assistant_intent.dart';
 
 /// Mesajı kimin yazdığı.
@@ -56,6 +57,8 @@ class AssistantMessage {
     this.note,
     this.allAyahs = const [],
     this.resultTitle,
+    this.sections = const [],
+    this.highlightTerms = const [],
   });
 
   final int id;
@@ -92,6 +95,16 @@ class AssistantMessage {
   /// Sonuç sayfasının başlığı: "sabır", "Muhammed", "Bakara 255".
   final String? resultTitle;
 
+  /// Çoklu konu cevabında bölümler. Boşsa cevap tek parçadır ve ayetler
+  /// [ayahs] içinde durur.
+  final List<AnswerSection> sections;
+
+  /// Ayet metninde vurgulanacak kelimeler.
+  ///
+  /// Kullanıcı hangi kelimenin eşleştiğini görmeli: sonucun neden geldiği
+  /// böyle anlaşılır ve asistanın seçimi denetlenebilir olur.
+  final List<String> highlightTerms;
+
   bool get isUser => author == MessageAuthor.user;
 
   AssistantMessage copyWith({
@@ -102,6 +115,8 @@ class AssistantMessage {
     String? note,
     List<AnswerAyah>? allAyahs,
     String? resultTitle,
+    List<AnswerSection>? sections,
+    List<String>? highlightTerms,
   }) =>
       AssistantMessage(
         id: id,
@@ -113,5 +128,7 @@ class AssistantMessage {
         note: note ?? this.note,
         allAyahs: allAyahs ?? this.allAyahs,
         resultTitle: resultTitle ?? this.resultTitle,
+        sections: sections ?? this.sections,
+        highlightTerms: highlightTerms ?? this.highlightTerms,
       );
 }

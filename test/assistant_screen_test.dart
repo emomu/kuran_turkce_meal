@@ -72,8 +72,9 @@ void main() async {
 
     expect(find.text('Bakara 255:'), findsOneWidget);
     expect(find.text(ayah.translation), findsOneWidget);
-    // Kart, ayetin künyesini rozet olarak taşır.
-    expect(find.text('Bakara 255'), findsOneWidget);
+    // Kart, ayetin künyesini kendi biçiminde taşır: sure adı, ayırıcı,
+    // ayet numarası. Arama sonuçlarıyla aynı görünsün diye böyle kuruldu.
+    expect(find.text('Bakara · 255. ayet'), findsOneWidget);
   });
 
   testWidgets('uyarı notu ayetlerin altında çizilir', (tester) async {

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -7,8 +8,10 @@ import '../../../shared/widgets/pressable.dart';
 import '../../../shared/widgets/responsive_layout.dart';
 import '../data/assistant_message.dart';
 import '../providers/assistant_provider.dart';
+import '../providers/voice_input_provider.dart';
 import 'assistant_results_screen.dart';
 import 'widgets/assistant_message_bubble.dart';
+import 'widgets/assistant_thinking_indicator.dart';
 
 /// Meal asistanı.
 ///
@@ -187,7 +190,7 @@ class _MessageList extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 32),
       itemCount: count,
       itemBuilder: (context, index) {
-        if (typing == 1 && index == 0) return const _TypingIndicator();
+        if (typing == 1 && index == 0) return const AssistantThinkingIndicator();
         final message = state.messages[count - 1 - index];
         return AssistantMessageBubble(
           message: message,
@@ -308,7 +311,7 @@ class _Welcome extends StatelessWidget {
 }
 
 /// Soru yazma alanı.
-class _Composer extends StatelessWidget {
+class _Composer extends ConsumerWidget {
   const _Composer({
     required this.controller,
     required this.focusNode,
@@ -321,9 +324,42 @@ class _Composer extends StatelessWidget {
   final bool enabled;
   final VoidCallback onSend;
 
+  /// Mikrofona basıldı.
+  ///
+  /// Dinleme sürüyorsa bitirir ve tanınan metni yazı alanına koyar;
+  /// sürmüyorsa başlatır. Metin doğrudan gönderilmez — tanıma yanılabilir
+  /// ve kullanıcı göndermeden önce görmeli.
+  Future<void> _toggleVoice(BuildContext context, WidgetRef ref) async {
+    final notifier = ref.read(voiceInputProvider.notifier);
+    final voice = ref.read(voiceInputProvider);
+
+    if (voice.isListening) {
+      final text = await notifier.stop();
+      if (text.trim().isEmpty) return;
+
+      controller.text = text;
+      controller.selection = TextSelection.collapsed(offset: text.length);
+      focusNode.requestFocus();
+      return;
+    }
+
+    final languageCode = context.locale.languageCode;
+    await notifier.start(languageCode: languageCode);
+  }
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
+    final voice = ref.watch(voiceInputProvider);
+
+    // Dinlerken tanınan metin yazı alanında canlı görünür: kullanıcı
+    // söylediğinin doğru anlaşıldığını anında görmeli.
+    if (voice.isListening && voice.transcript.isNotEmpty) {
+      controller.value = TextEditingValue(
+        text: voice.transcript,
+        selection: TextSelection.collapsed(offset: voice.transcript.length),
+      );
+    }
 
     return Container(
       // Alt güvenli alan gövdeyi saran `SafeArea`'dan geliyor; burada bir
@@ -370,6 +406,16 @@ class _Composer extends StatelessWidget {
               ),
             ),
           ),
+          // Mikrofon. Cihazda konuşma tanıma yoksa düğme hiç çizilmez —
+          // basılınca hiçbir şey yapmayan bir düğme, olmayan düğmeden
+          // kötüdür.
+          if (voice.status != VoiceStatus.unavailable) ...[
+            const SizedBox(width: 6),
+            Pressable(
+              onTap: enabled ? () => _toggleVoice(context, ref) : null,
+              child: _MicButton(listening: voice.isListening),
+            ),
+          ],
           const SizedBox(width: 8),
           Pressable(
             onTap: enabled ? onSend : null,
@@ -395,64 +441,96 @@ class _Composer extends StatelessWidget {
   }
 }
 
-/// Asistan cevabı hazırlarken görünen üç nokta.
-class _TypingIndicator extends StatefulWidget {
-  const _TypingIndicator();
+/// Mikrofon düğmesi.
+///
+/// Dinlerken renk değiştirir ve nabız gibi atar: kullanıcı mikrofonun açık
+/// olduğunu bir bakışta görmeli. Açık kalmış bir mikrofon, kullanıcının
+/// fark etmediği bir şeydir ve fark ettirilmesi gerekir.
+class _MicButton extends StatefulWidget {
+  const _MicButton({required this.listening});
+
+  final bool listening;
 
   @override
-  State<_TypingIndicator> createState() => _TypingIndicatorState();
+  State<_MicButton> createState() => _MicButtonState();
 }
 
-class _TypingIndicatorState extends State<_TypingIndicator>
+class _MicButtonState extends State<_MicButton>
     with SingleTickerProviderStateMixin {
-  late final AnimationController _controller = AnimationController(
+  late final AnimationController _pulse = AnimationController(
     vsync: this,
-    duration: const Duration(milliseconds: 1100),
-  )..repeat();
+    duration: const Duration(milliseconds: 900),
+  );
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.listening) _pulse.repeat(reverse: true);
+  }
+
+  @override
+  void didUpdateWidget(_MicButton old) {
+    super.didUpdateWidget(old);
+    if (widget.listening == old.listening) return;
+
+    if (widget.listening) {
+      _pulse.repeat(reverse: true);
+    } else {
+      _pulse
+        ..stop()
+        ..value = 0;
+    }
+  }
 
   @override
   void dispose() {
-    _controller.dispose();
+    _pulse.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final color = Theme.of(context).textTheme.bodySmall?.color;
+    final theme = Theme.of(context);
+    final listening = widget.listening;
 
-    return Padding(
-      padding: const EdgeInsets.only(top: 18, left: 2),
-      child: AnimatedBuilder(
-        animation: _controller,
-        builder: (context, _) => Row(
-          children: [
-            for (var i = 0; i < 3; i++) ...[
-              // Her nokta bir öncekinden gecikmeli parlar; dalga etkisi
-              // sabit bir göstergeye göre bekleyişi kısaltır.
-              Opacity(
-                opacity:
-                    0.3 +
-                    0.7 *
-                        ((_controller.value * 3 - i).clamp(0.0, 1.0) *
-                            (1 -
-                                (_controller.value * 3 - i - 1).clamp(
-                                  0.0,
-                                  1.0,
-                                ))),
-                child: Container(
-                  width: 6,
-                  height: 6,
-                  decoration: BoxDecoration(
-                    color: color,
-                    shape: BoxShape.circle,
-                  ),
-                ),
-              ),
-              if (i < 2) const SizedBox(width: 5),
-            ],
-          ],
-        ),
-      ),
+    return AnimatedBuilder(
+      animation: _pulse,
+      builder: (context, _) {
+        // Nabız yalnızca dinlerken; durgunken sabit bir daire.
+        final glow = listening ? 0.18 + _pulse.value * 0.22 : 0.0;
+
+        return Container(
+          width: 44,
+          height: 44,
+          decoration: BoxDecoration(
+            color: listening
+                ? theme.colorScheme.primary.withValues(alpha: 0.16)
+                : theme.colorScheme.surface,
+            shape: BoxShape.circle,
+            border: Border.all(
+              color: listening
+                  ? theme.colorScheme.primary
+                  : theme.dividerColor,
+            ),
+            boxShadow: listening
+                ? [
+                    BoxShadow(
+                      color: theme.colorScheme.primary.withValues(alpha: glow),
+                      blurRadius: 12,
+                      spreadRadius: 2,
+                    ),
+                  ]
+                : null,
+          ),
+          child: Icon(
+            listening ? Icons.stop_rounded : Icons.mic_none_rounded,
+            size: 20,
+            color: listening
+                ? theme.colorScheme.primary
+                : theme.textTheme.bodySmall?.color,
+          ),
+        );
+      },
     );
   }
 }

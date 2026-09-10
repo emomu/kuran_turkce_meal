@@ -64,7 +64,27 @@ void main() {
   });
 
   group('konu cevabı', () {
-    test('sonuç yoksa cevap bir şey iddia etmez', () {
+    test('sözlük konusunda sonuç yoksa cevap bir şey iddia etmez', () {
+      // Sözlükten gelen konu meşrudur; sonuç çıkmadıysa sorun aramadadır
+      // ve kullanıcıya başka kelime denemesi önerilir.
+      final answer = AnswerComposer().topic(
+        intent: const TopicIntent(
+          query: 'sabır',
+          topicLabel: 'sabır',
+          terms: ['sabr'],
+        ),
+        ayahs: const [],
+        totalFound: 0,
+        shownSoFar: 0,
+      );
+      expect(answer.ayahs, isEmpty);
+      expect(answer.text.toLowerCase(), contains('bulamadım'));
+    });
+
+    test('serbest aramada sonuç yoksa sınır hatırlatılır', () {
+      // Sözlükte olmayan ve mealde hiç geçmeyen bir kelime, büyük
+      // olasılıkla alan dışıdır. "Başka kelime dene" demek kullanıcıyı
+      // olmayan bir sonucun peşinde dolaştırırdı.
       final answer = AnswerComposer().topic(
         intent: const TopicIntent(query: 'xyz', topicLabel: 'xyz'),
         ayahs: const [],
@@ -72,7 +92,8 @@ void main() {
         shownSoFar: 0,
       );
       expect(answer.ayahs, isEmpty);
-      expect(answer.text.toLowerCase(), contains('bulamadım'));
+      expect(answer.text.toLowerCase(), contains('geçmiyor'));
+      expect(answer.text.toLowerCase(), contains('yalnızca'));
     });
 
     test('hüküm sorusunda fetva verilmez', () {

@@ -351,6 +351,9 @@
     "welcomeBody": "Ask about a topic, a situation or a verse; I will search the translation and show you what I find.",
     "tryThese": "Try one of these",
     "disclaimer": "I only search the translation text. I do not interpret or issue rulings; I show the verses as they are. Works fully offline.",
-    "resultCount": "{count} verses"
+    "resultCount": "{count} verses",
+    "thinking": "Thinking",
+    "searching": "Searching the translation",
+    "composing": "Composing the answer"
   }
 }

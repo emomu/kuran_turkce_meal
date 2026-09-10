@@ -20,6 +20,13 @@ void main() {
 
   setUpAll(() async {
     await EasyLocalization.ensureInitialized();
+  });
+
+  setUp(() {
+    // Her test temiz bir cihazla başlar. Asistan sohbeti artık cihazda
+    // saklandığı için bu şart: önceki testin soruları ve ayetleri, bir
+    // sonraki testin ekranında geri yüklenir ve "ayet gelmemeli" diyen
+    // testler sebepsiz yere kalırdı.
     SharedPreferences.setMockInitialValues({});
   });
 
@@ -55,11 +62,19 @@ void main() {
   }
 
   /// Soruyu yazar, gönderir ve cevabı bekler.
+  ///
+  /// Klavye eylemi yerine gönder düğmesine basılır. `receiveAction` yalnızca
+  /// alan odaktayken çalışır; ikinci bir soruda odak cevaba kaymış olabilir
+  /// ve soru sessizce gönderilmemiş sayılır. Düğme her durumda çalışır ve
+  /// kullanıcının yaptığı da budur.
   Future<void> ask(WidgetTester tester, String question) async {
+    await tester.tap(find.byType(TextField));
+    await tester.pumpAndSettle();
+
     await tester.enterText(find.byType(TextField), question);
     await tester.pumpAndSettle();
 
-    await tester.testTextInput.receiveAction(TextInputAction.send);
+    await tester.tap(find.byIcon(Icons.arrow_upward_rounded));
     await tester.pumpAndSettle(const Duration(seconds: 3));
   }
 
@@ -128,5 +143,60 @@ void main() {
     await ask(tester, 'Kehf kaç ayet');
 
     expect(find.textContaining('110'), findsWidgets);
+  });
+
+  testWidgets('soru kalıbı sonucu engellemez', (tester) async {
+    // "hakkında ne diyor" kelimeleri mealde geçmez; AND zincirinde
+    // bırakılırsa sonuç boş döner. Temizlik olmadan bu test kalır.
+    await openAssistant(tester);
+    await ask(tester, 'sabır hakkında ne diyor');
+
+    expect(find.byType(AssistantAyahCard), findsWidgets);
+  });
+
+  testWidgets('yazım hatası olan konu yine de bulunur', (tester) async {
+    await openAssistant(tester);
+    await ask(tester, 'sabir');
+
+    expect(find.byType(AssistantAyahCard), findsWidgets);
+  });
+
+  testWidgets('iki konu birden sorulduğunda ikisi de gösterilir',
+      (tester) async {
+    await openAssistant(tester);
+    await ask(tester, 'sabır ve şükür');
+
+    expect(find.byType(AssistantAyahCard), findsWidgets);
+    // Her bölüm kendi başlığıyla çizilmeli.
+    expect(find.text('sabır'), findsWidgets);
+    expect(find.text('şükür'), findsWidgets);
+  });
+
+  testWidgets('sonuç bulunamayan sorguda sınır hatırlatılır', (tester) async {
+    // Mealde hiç geçmeyen bir kelime: gevşetme de sonuç vermez ve cevap
+    // "başka kelime dene" yerine asistanın alanını söyler.
+    await openAssistant(tester);
+    await ask(tester, 'zzqxwv');
+
+    expect(find.byType(AssistantAyahCard), findsNothing);
+    expect(find.textContaining('yalnızca'), findsOneWidget);
+  });
+
+  testWidgets('bir ayet kaydedilebilir', (tester) async {
+    await openAssistant(tester);
+    await ask(tester, 'Bakara 255');
+    await ask(tester, 'bunu kaydet');
+
+    expect(find.textContaining('kaydedildi'), findsOneWidget);
+  });
+
+  testWidgets('aynı suredeki komşu ayetler gösterilir', (tester) async {
+    await openAssistant(tester);
+    await ask(tester, 'Bakara 255');
+    await ask(tester, 'aynı suredeki diğerleri');
+
+    // Çevresindeki ayetlerle birlikte birden fazla kart olmalı.
+    expect(find.byType(AssistantAyahCard), findsWidgets);
+    expect(find.textContaining('çevresindeki'), findsOneWidget);
   });
 }

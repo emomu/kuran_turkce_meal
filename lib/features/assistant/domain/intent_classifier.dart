@@ -20,6 +20,8 @@ import '../../../data/models/surah.dart';
 import '../../search/data/verse_reference.dart';
 import '../data/assistant_intent.dart';
 import '../data/topic_lexicon.dart';
+import 'fuzzy_match.dart';
+import 'query_cleaner.dart';
 
 /// Soru → niyet dönüşümü. Saf fonksiyon: aynı girdi hep aynı çıktıyı verir.
 class IntentClassifier {
@@ -103,6 +105,36 @@ class IntentClassifier {
     'story', 'his story', 'the story of', 'life of', 'narrative',
   ];
 
+  /// Son ayeti kaydetme isteği.
+  static const _savePatterns = <String>[
+    'kaydet', 'kaydeder misin', 'yer imi', 'işaretle', 'isaretle',
+    'favorilere ekle', 'bunu kaydet', 'sakla',
+    'save', 'save this', 'bookmark', 'bookmark this', 'add to saved',
+  ];
+
+  /// Son ayeti paylaşma isteği.
+  static const _sharePatterns = <String>[
+    'paylaş', 'paylas', 'bunu paylaş', 'gönder', 'gonder', 'kopyala',
+    'share', 'share this', 'send this', 'copy',
+  ];
+
+  /// Aynı suredeki komşu ayetleri isteme.
+  static const _sameSurahPatterns = <String>[
+    'ayni suredeki', 'aynı suredeki', 'ayni surede', 'aynı surede',
+    'bu surenin', 'surenin devami', 'surenin devamı', 'oncesi sonrasi',
+    'öncesi sonrası', 'baglami', 'bağlamı', 'devamini oku',
+    'same surah', 'rest of the surah', 'in the same chapter',
+    'context', 'surrounding verses',
+  ];
+
+  /// Konuları birbirine bağlayan ayraçlar.
+  ///
+  /// "sabır ve şükür" iki konudur. Tek konuya indirmek sorunun yarısını
+  /// atmaktır; burada ayrılıp iki niyet birden çözülür.
+  static const _conjunctions = <String>[
+    ' ve ', ' ile ', ' veya ', ' ya da ', ' and ', ' or ', ' vs ',
+  ];
+
   /// Sorguyu sınıflandırır.
   ///
   /// [hasPreviousResults] önceki cevapta ayet olup olmadığı. Takip
@@ -125,6 +157,19 @@ class IntentClassifier {
       if (_matchesAny(compact, _morePatterns, exact: true)) {
         return wrap(const MoreResultsIntent());
       }
+
+      // Kaydetme ve paylaşma. Sıra ifadesiyle birlikte gelebilir
+      // ("ikincisini kaydet"), o yüzden sıra ayrıca çözülür.
+      if (_matchesAny(compact, _savePatterns)) {
+        return wrap(SaveAyahIntent(_parseOrdinal(compact) ?? 0));
+      }
+      if (_matchesAny(compact, _sharePatterns)) {
+        return wrap(ShareAyahIntent(_parseOrdinal(compact) ?? 0));
+      }
+      if (_matchesAny(compact, _sameSurahPatterns)) {
+        return wrap(const SameSurahIntent());
+      }
+
       final ordinal = _parseOrdinal(compact);
       if (ordinal != null) return wrap(OpenResultIntent(ordinal));
     }
@@ -142,7 +187,17 @@ class IntentClassifier {
       return wrap(const OutOfScopeIntent(OutOfScopeReason.offTopic));
     }
 
-    // 4. Ayet referansı ve peygamber adı. Sıraları basit değil, çünkü altı
+    // 4. Çoklu konu: "sabır ve şükür", "Yusuf ile Musa". Tekil çözümlerin
+    //    hepsinden önce denenir, çünkü her biri sorunun ilk yarısına
+    //    oturup ikinci yarısını atardı: "yusuf ile musa" peygamber
+    //    çözümüne girse tek başına Yusuf'a düşerdi.
+    //
+    //    Bölme yalnızca her parça kendi başına çözülebiliyorsa kabul
+    //    edilir, bu yüzden ayracı olan her soruyu bölmez.
+    final multi = _resolveMultiTopic(raw, compact);
+    if (multi != null) return wrap(multi);
+
+    // 5. Ayet referansı ve peygamber adı. Sıraları basit değil, çünkü altı
     //    ad ikisine birden ait: Yûnus, Hûd, Yûsuf, İbrâhim, Muhammed, Nûh
     //    hem birer sure hem birer peygamberdir.
     //
@@ -176,19 +231,41 @@ class IntentClassifier {
       return wrap(const OutOfScopeIntent(OutOfScopeReason.religiousRuling));
     }
 
-    // 8. Durum ve konu sözlüğü. Durumlar önce denenir: "zor zamandayım"
+    // 9. Durum ve konu sözlüğü. Durumlar önce denenir: "zor zamandayım"
     //    hem durum hem "zor" kelimesiyle konu araması olabilir.
-    final situation = _resolveTopic(compact, TopicLexicon.situations);
+    //
+    //    Konu eşleşmesi temizlenmiş metinde yapılır. Sebebi somut: kısa
+    //    tetikleyiciler soru kalıplarının içinde eşleşiyordu — "hak"
+    //    tetikleyicisi "hakkında" kelimesinin içinde bulunuyor ve
+    //    "kelebekler hakkında ne diyor" sorusunu adalet konusuna
+    //    bağlıyordu. Ek serbestliği Türkçe için gerekli ("hakkı",
+    //    "hakları"), o yüzden çözüm eşleşmeyi gevşetmek değil, soru
+    //    kalıbını önce atmak.
+    final cleaned = QueryCleaner.clean(compact);
+    final haystack = cleaned.isEmpty ? compact : cleaned.query;
+
+    final situation = _resolveTopic(haystack, TopicLexicon.situations);
     if (situation != null) return wrap(situation);
 
-    final concept = _resolveTopic(compact, TopicLexicon.concepts);
+    final concept = _resolveTopic(haystack, TopicLexicon.concepts);
     if (concept != null) return wrap(concept);
 
-    // 9. Serbest arama. Sözlükte yoksa da kullanıcının kelimeleri mealde
-    //    geçiyor olabilir; arama katmanı karar verir. Buraya düşen sorgu
-    //    hiç sonuç getirmezse cevap "bulamadım" olur — uydurma değil.
+    // 10. Serbest arama. Sözlükte yoksa da kullanıcının kelimeleri mealde
+    //     geçiyor olabilir; arama katmanı karar verir. Buraya düşen sorgu
+    //     hiç sonuç getirmezse cevap "bulamadım" olur — uydurma değil.
+    //
+    //     Soru kalıbı burada atılır: "sabır hakkında ne diyor" sorgusunda
+    //     mealde aranacak olan yalnızca "sabır"dır. Kelimeler AND ile
+    //     bağlandığı için tek bir "hakkında" bütün sonuçları silerdi.
     if (_looksSearchable(compact)) {
-      return wrap(TopicIntent(query: raw.trim(), topicLabel: raw.trim()));
+      final label = cleaned.isEmpty ? raw.trim() : cleaned.query;
+
+      return wrap(TopicIntent(
+        query: raw.trim(),
+        topicLabel: label,
+        searchTerms: cleaned.terms,
+        termsWereReduced: cleaned.wasReduced,
+      ));
     }
 
     return wrap(const OutOfScopeIntent(OutOfScopeReason.unclear));
@@ -222,6 +299,9 @@ class IntentClassifier {
     final words = compact.split(RegExp(r'\s+'));
     final wantsStory = _matchesAny(compact, _storyPatterns);
 
+    // Önce tam eşleşme aranır. Yazım hatası payı ancak hiçbir ad tam
+    // tutmazsa devreye girer: "nuh" ile "ruh" birbirine bir harf uzaklıkta
+    // ve tam eşleşme varken bulanık eşleşmeye bakmak yanlış olurdu.
     for (final word in words) {
       if (word.length < 3) continue;
       for (final p in prophets) {
@@ -230,7 +310,87 @@ class IntentClassifier {
         }
       }
     }
+
+    // Yazım hatası payı. "yusf", "ibrahm", "sülayman" da tanınmalı.
+    for (final word in words) {
+      if (word.length < 5) continue;
+      if (QueryCleaner.isStopWord(word)) continue;
+
+      for (final p in prophets) {
+        final tr = foldName(p.name);
+        final en = foldName(p.nameEn);
+        if (FuzzyMatch.isNear(word, tr) || FuzzyMatch.isNear(word, en)) {
+          return ProphetIntent(prophet: p, wantsStory: wantsStory);
+        }
+      }
+    }
     return null;
+  }
+
+  /// Sorguda birden fazla konu ya da kişi var mı.
+  ///
+  /// "sabır ve şükür" iki konudur ve kullanıcı ikisini de görmek ister.
+  /// Ayraçtan bölünüp her parça ayrı ayrı çözülür; en az iki parça
+  /// anlamlı bir niyete oturuyorsa çoklu niyet kurulur.
+  ///
+  /// Yalnız parçalar kendi başlarına çözülebilmeli: "anne ve babaya iyilik"
+  /// bölünürse iki anlamsız parça çıkar ve tek konu olarak kalması doğru
+  /// olur. Bu kural, ayracı olan her soruyu bölmemizi engeller.
+  MultiTopicIntent? _resolveMultiTopic(String raw, String compact) {
+    String? separator;
+    for (final c in _conjunctions) {
+      if (compact.contains(c)) {
+        separator = c;
+        break;
+      }
+    }
+    if (separator == null) return null;
+
+    // İkiden fazla parçaya bölünen sorular ("a ve b ve c") de desteklenir
+    // ama üçten fazlası cevabı okunmaz yapar; ilk üçü alınır.
+    final chunks = compact
+        .split(separator)
+        .map((c) => c.trim())
+        .where((c) => c.length >= 3)
+        .take(3)
+        .toList();
+    if (chunks.length < 2) return null;
+
+    final parts = <AssistantIntent>[];
+    for (final chunk in chunks) {
+      // Her parça yalnızca sözlük ve peygamber üzerinden çözülür. Serbest
+      // aramaya düşen bir parça, bölmenin yanlış olduğunun işaretidir:
+      // "anne ve babaya iyilik" böyle elenir.
+      final situation = _resolveTopic(chunk, TopicLexicon.situations);
+      final concept = situation ?? _resolveTopic(chunk, TopicLexicon.concepts);
+      if (concept != null) {
+        parts.add(concept);
+        continue;
+      }
+
+      final prophet = _resolveProphet(chunk);
+      if (prophet != null) {
+        parts.add(prophet);
+        continue;
+      }
+
+      return null;
+    }
+
+    // Aynı konuya iki kez çıkan bölme ("sabır ve sabretmek") tekile iner.
+    final seen = <String>{};
+    final unique = <AssistantIntent>[];
+    for (final part in parts) {
+      final key = switch (part) {
+        TopicIntent(:final topicLabel) => 'topic:$topicLabel',
+        ProphetIntent(:final prophet) => 'prophet:${prophet.id}',
+        _ => part.toString(),
+      };
+      if (seen.add(key)) unique.add(part);
+    }
+
+    if (unique.length < 2) return null;
+    return MultiTopicIntent(unique);
   }
 
   /// Sorgu bir sure künyesi soruyor mu.
@@ -315,7 +475,15 @@ class IntentClassifier {
       }
     }
 
-    if (best == null) return null;
+    // Tam eşleşme yoksa yazım hatası payıyla bir daha bakılır. İki aşama
+    // ayrı tutuldu: hatalı yazılmış bir kelimenin, doğru yazılmış başka
+    // bir konuyu yenmesi istenmez.
+    if (best == null) {
+      final fuzzy = _resolveTopicFuzzy(compact, topics);
+      if (fuzzy == null) return null;
+      best = fuzzy;
+    }
+
     final label = best.labelFor(languageCode);
     return TopicIntent(
       query: label,
@@ -323,6 +491,49 @@ class IntentClassifier {
       terms: best.termsFor(languageCode),
       isSituational: best.isSituational,
     );
+  }
+
+  /// Tetikleyicileri yazım hatası payıyla arar.
+  ///
+  /// Yalnızca tek kelimelik tetikleyicilerde çalışır: çok kelimeli bir
+  /// kalıpta ("zor zaman") hata payı vermek, alakasız cümleleri konuya
+  /// bağlardı. Sorgunun kelimeleri de elenmiş hâlde gelir — "hakkında"
+  /// gibi bir soru kalıbının bir konuya yakın çıkması istenmez.
+  Topic? _resolveTopicFuzzy(String compact, List<Topic> topics) {
+    final words = compact
+        .split(RegExp(r'\s+'))
+        .where((w) => w.length >= 5 && !QueryCleaner.isStopWord(w))
+        .toList();
+    if (words.isEmpty) return null;
+
+    Topic? best;
+    var bestDistance = 1 << 30;
+
+    for (final topic in topics) {
+      final triggers = _en
+          ? [...topic.triggersEn, ...topic.triggers]
+          : [...topic.triggers, ...topic.triggersEn];
+
+      for (final trigger in triggers) {
+        if (trigger.contains(' ')) continue;
+        if (trigger.length < 5) continue;
+
+        for (final word in words) {
+          final tolerance = FuzzyMatch.toleranceFor(
+            word.length < trigger.length ? word.length : trigger.length,
+          );
+          if (tolerance == 0) continue;
+
+          final d = FuzzyMatch.distance(word, trigger, maxDistance: tolerance);
+          if (d <= tolerance && d < bestDistance) {
+            best = topic;
+            bestDistance = d;
+          }
+        }
+      }
+    }
+
+    return best;
   }
 
   /// Sorgu serbest aramaya değer mi.
@@ -380,6 +591,19 @@ class IntentClassifier {
       final candidates = [s.name, s.nameEn ?? ''].map(foldName);
       if (candidates.any((c) => c.isNotEmpty && c.startsWith(needle))) {
         return s.number;
+      }
+    }
+
+    // Son çare: yazım hatası payı. "bakra", "fatiha" yerine "fatih" gibi
+    // kaçırmalar burada yakalanır. Kısa adlarda denenmez — "nas", "asr",
+    // "tin" birbirine ve sıradan kelimelere fazla yakın.
+    if (needle.length >= 5) {
+      for (final s in surahs) {
+        final candidates = [s.name, s.nameEn ?? ''].map(foldName);
+        for (final c in candidates) {
+          if (c.isEmpty) continue;
+          if (FuzzyMatch.isNear(needle, c)) return s.number;
+        }
       }
     }
     return null;

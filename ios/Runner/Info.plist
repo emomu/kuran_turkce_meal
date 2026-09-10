@@ -8,11 +8,15 @@
 	<array>
 		<string>audio</string>
 	</array>
-	<!-- Uygulama mikrofon kaydı yapmaz. Bu anahtar yalnızca tilavet oynatıcısının
-	     kullandığı AVAudioSession API'si kayıt kategorilerine de erişebildiği için
-	     Apple tarafından zorunlu tutulur (App Store doğrulama kodu 90683). -->
+	<!-- Mikrofon iki sebeple istenir: asistana sesli soru sorma özelliği ve
+	     tilavet oynatıcısının kullandığı AVAudioSession API'si (App Store
+	     doğrulama kodu 90683). Ses kaydedilmez ve hiçbir yere gönderilmez;
+	     tanıma cihazın kendi motoruyla yapılır. -->
 	<key>NSMicrophoneUsageDescription</key>
-	<string>Bu uygulama mikrofonu kullanmaz. Bu izin, tilavet sesinin telefon görüşmesi ve kulaklık durumlarıyla uyumlu çalması için gereken sistem ses ayarları nedeniyle istenir.</string>
+	<string>Asistana sesli soru sorabilmen için mikrofon kullanılır. Konuşman kaydedilmez ve hiçbir sunucuya gönderilmez.</string>
+	<!-- Sesli soruyu metne çeviren sistem servisi. Çeviri cihazda yapılır. -->
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>Sesli sorduğun soruyu yazıya çevirmek için kullanılır. Metin yalnızca cihazında işlenir.</string>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 	<key>CFBundleDevelopmentRegion</key>

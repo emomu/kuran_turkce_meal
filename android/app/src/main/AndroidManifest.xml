@@ -8,6 +8,9 @@
          içeriği tamamen çevrimdışıdır ve ağ, kullanıcı bir sureyi dinlemeyi
          seçip indirmeyi onayladığında kullanılır. -->
     <uses-permission android:name="android.permission.INTERNET"/>
+    <!-- Asistana sesli soru sormak için. Ses kaydedilmez; sistemin konuşma
+         tanıma servisine verilir ve metne çevrilir. -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
     <!-- Ekran kapalıyken tilavetin sürmesi için. -->
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
@@ -181,6 +184,11 @@
         <intent>
             <action android:name="android.intent.action.PROCESS_TEXT"/>
             <data android:mimeType="text/plain"/>
+        </intent>
+        <!-- Android 11'den itibaren paket görünürlüğü kısıtlı; konuşma
+             tanıma servisi bu girdi olmadan bulunamaz. -->
+        <intent>
+            <action android:name="android.speech.RecognitionService"/>
         </intent>
 
         <!-- Bağış bağlantısı cihazın tarayıcısında açılır. Android 11'den

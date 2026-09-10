@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../shared/widgets/pressable.dart';
 import '../../data/assistant_message.dart';
+import '../../domain/answer_composer.dart';
 import 'assistant_ayah_card.dart';
 
 /// Sohbetteki tek bir mesaj.
@@ -64,6 +65,16 @@ class AssistantMessageBubble extends StatelessWidget {
             style: theme.textTheme.bodyMedium?.copyWith(height: 1.5),
           ),
 
+          // Çoklu konu cevabı: her bölüm kendi başlığıyla. Başlıklar
+          // olmadan iki konunun ayetleri tek listeye karışır ve
+          // karşılaştırma kaybolur.
+          for (final section in message.sections)
+            _Section(
+              section: section,
+              languageCode: languageCode,
+              highlightTerms: message.highlightTerms,
+            ),
+
           // Cevabın dayandığı ayetler. Son öğenin altına ayırıcı çizilmez:
           // orada liste bitiyor, çizgi havada kalırdı.
           for (var i = 0; i < message.ayahs.length; i++)
@@ -71,6 +82,7 @@ class AssistantMessageBubble extends StatelessWidget {
               answer: message.ayahs[i],
               languageCode: languageCode,
               showDivider: i < message.ayahs.length - 1,
+              highlightTerms: message.highlightTerms,
             ),
 
           if (message.actions.isNotEmpty) ...[
@@ -126,6 +138,57 @@ class AssistantMessageBubble extends StatelessWidget {
       return;
     }
     onAction(action, message);
+  }
+}
+
+/// Çoklu konu cevabında tek bir bölüm: başlık ve ayetleri.
+class _Section extends StatelessWidget {
+  const _Section({
+    required this.section,
+    required this.languageCode,
+    required this.highlightTerms,
+  });
+
+  final AnswerSection section;
+  final String languageCode;
+  final List<String> highlightTerms;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(top: 14, bottom: 2),
+          child: Row(
+            children: [
+              Text(
+                section.label,
+                style: theme.textTheme.labelLarge?.copyWith(
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              const SizedBox(width: 6),
+              Text(
+                '(${section.totalFound})',
+                style: theme.textTheme.labelSmall?.copyWith(
+                  color: theme.textTheme.bodySmall?.color,
+                ),
+              ),
+            ],
+          ),
+        ),
+        for (var i = 0; i < section.ayahs.length; i++)
+          AssistantAyahCard(
+            answer: section.ayahs[i],
+            languageCode: languageCode,
+            showDivider: i < section.ayahs.length - 1,
+            highlightTerms: highlightTerms,
+          ),
+      ],
+    );
   }
 }
 

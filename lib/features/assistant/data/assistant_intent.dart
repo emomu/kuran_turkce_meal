@@ -100,6 +100,8 @@ class TopicIntent extends AssistantIntent {
     required this.topicLabel,
     this.terms = const [],
     this.isSituational = false,
+    this.searchTerms = const [],
+    this.termsWereReduced = false,
   });
 
   /// Serbest aramada kullanıcının yazdığı sorgu.
@@ -125,6 +127,56 @@ class TopicIntent extends AssistantIntent {
   /// Durum sorularında cevap farklı açılır: kullanıcı bilgi değil dayanak
   /// arıyordur.
   final bool isSituational;
+
+  /// Sorgu temizlenirken atılan soru kalıplarından sonra kalan kelimeler.
+  ///
+  /// Serbest aramada kullanılır. Kullanıcı "sabır hakkında ne diyor"
+  /// yazdığında mealde aranacak olan yalnızca "sabır"dır; gerisi soru
+  /// kalıbıdır ve AND zincirinde sonucu boşaltır.
+  final List<String> searchTerms;
+
+  /// Aramada gerçekten kullanılan kelimeler değiştiyse cevapta söylenir.
+  ///
+  /// Kullanıcı neden o sonuçları gördüğünü bilmeli: "borç" ile aradığımı
+  /// söylemek, sessizce sorgusunu değiştirmekten dürüsttür.
+  final bool termsWereReduced;
+}
+
+/// Birden fazla konu bir arada soruldu: "sabır ve şükür", "Yusuf ile Musa".
+///
+/// Kullanıcı iki şeyi karşılaştırmak ya da ikisini birden görmek ister.
+/// Tek konuya indirgemek ("en uzun tetikleyici kazanır") sorunun yarısını
+/// atmak olurdu; bu niyet iki tarafı da taşır ve cevap ikisini ayrı ayrı
+/// sunar.
+class MultiTopicIntent extends AssistantIntent {
+  const MultiTopicIntent(this.parts);
+
+  /// Sorudaki her bir konu. En az iki tane olur.
+  final List<AssistantIntent> parts;
+}
+
+/// Son gösterilen ayet kaydedilmek isteniyor: "bunu kaydet".
+class SaveAyahIntent extends AssistantIntent {
+  const SaveAyahIntent(this.index);
+
+  /// Kaçıncı sonuç kaydedilecek. Belirtilmediyse 0 — son cevabın ilki.
+  final int index;
+}
+
+/// Son gösterilen ayet paylaşılmak isteniyor: "bunu paylaş".
+class ShareAyahIntent extends AssistantIntent {
+  const ShareAyahIntent(this.index);
+
+  final int index;
+}
+
+/// Son ayetin bulunduğu suredeki diğer ayetler isteniyor.
+///
+/// "aynı suredeki diğerleri", "bu surenin devamı". Kullanıcı bir ayeti
+/// bağlamında okumak ister; asistan onu okuma ekranına atmak yerine
+/// komşu ayetleri gösterebilir.
+class SameSurahIntent extends AssistantIntent {
+  const SameSurahIntent();
 }
 
 /// Önceki cevabın devamı isteniyor: "daha fazla", "devamı".

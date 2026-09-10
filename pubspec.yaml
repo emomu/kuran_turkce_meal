@@ -3,7 +3,7 @@ description: "Kur'an-ı Kerim Türkçe ve İngilizce meali — iniş sırasına 
 publish_to: 'none' 
 
 
-version: 1.0.2+1
+version: 1.0.3+1
 
 environment:
   sdk: ^3.11.1
@@ -47,6 +47,7 @@ dependencies:
   # İndirme onayında mobil veri uyarısı gösterebilmek için. Yalnızca
   # bağlantı türü sorulur; ağ erişimi ya da konum izni gerektirmez.
   connectivity_plus: ^6.1.0
+  speech_to_text: ^7.4.0
 
 dev_dependencies:
   flutter_test:

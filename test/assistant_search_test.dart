@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kuran_turkce_meal/data/db/search_normalizer.dart';
 import 'package:kuran_turkce_meal/features/assistant/data/topic_lexicon.dart';
@@ -84,6 +87,58 @@ void main() {
       for (final topic in TopicLexicon.concepts) {
         expect(topic.isSituational, isFalse, reason: topic.id);
       }
+    });
+  });
+
+  group('terimler gerçek metinde', () {
+    // Sözlüğün en sinsi hatası sessiz olanıdır: terim mealde hiç geçmez,
+    // arama boş döner, asistan "bulamadım" der ve kimse sebebini anlamaz.
+    // Bu test o hatayı derleme zamanına yakın bir yere çeker — sözlüğe
+    // yeni konu ekleyen biri, terimin gerçekten metinde olduğunu bilir.
+    late final String corpus;
+    late final String corpusEn;
+
+    setUpAll(() {
+      final raw = File('assets/data/ayahs.json').readAsStringSync();
+      final ayahs = (jsonDecode(raw) as List).cast<Map<String, dynamic>>();
+
+      corpus = ayahs
+          .map((a) => SearchNormalizer.normalize(a['translation'] as String))
+          .join(' ');
+      corpusEn = ayahs
+          .map((a) => SearchNormalizer.normalize(
+                (a['translation_en'] as String?) ?? '',
+              ))
+          .join(' ');
+    });
+
+    test('her Türkçe terim mealde geçiyor', () {
+      final dead = <String>[];
+
+      for (final topic in TopicLexicon.all) {
+        for (final term in topic.terms) {
+          if (!corpus.contains(SearchNormalizer.normalize(term))) {
+            dead.add('${topic.id}: "$term"');
+          }
+        }
+      }
+
+      expect(dead, isEmpty, reason: 'mealde geçmeyen terimler: $dead');
+    });
+
+    test('her konunun en az bir İngilizce terimi metinde geçiyor', () {
+      // İngilizce tarafta terim başına ısrar edilmez: çeviri farklı
+      // kelimeler kullanabilir. Aranan, konunun bütünüyle ölü olmaması.
+      final dead = <String>[];
+
+      for (final topic in TopicLexicon.all) {
+        final anyHit = topic.termsEn.any(
+          (t) => corpusEn.contains(SearchNormalizer.normalize(t)),
+        );
+        if (!anyHit) dead.add(topic.id);
+      }
+
+      expect(dead, isEmpty, reason: 'İngilizce karşılığı olmayan: $dead');
     });
   });
 }

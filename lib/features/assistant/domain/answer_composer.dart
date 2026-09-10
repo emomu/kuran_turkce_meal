@@ -30,12 +30,46 @@ class ComposedAnswer {
     this.ayahs = const [],
     this.actions = const [],
     this.note,
+    this.highlightTerms = const [],
+    this.sections = const [],
   });
 
   final String text;
   final List<AnswerAyah> ayahs;
   final List<AssistantAction> actions;
   final String? note;
+
+  /// Ayet metninde vurgulanacak kelimeler.
+  ///
+  /// Kullanıcı sonucun neden geldiğini görmeli: "sabır" arandıysa ayette
+  /// o kelime kalın çıkar. Eşleşmeyi göstermek, sonucu savunmanın en
+  /// kısa yolu — asistan neden bu ayeti seçtiğini kelimeyle söyler.
+  final List<String> highlightTerms;
+
+  /// Çoklu konu cevabında bölümler. Boşsa cevap tek parçadır.
+  final List<AnswerSection> sections;
+}
+
+/// Çoklu konu cevabında tek bir bölüm.
+///
+/// "sabır ve şükür" sorusunda iki bölüm olur; her biri kendi başlığı ve
+/// kendi ayetleriyle sunulur. Ayetleri tek listede toplamak sorunun
+/// karşılaştırma yanını kaybettirirdi.
+class AnswerSection {
+  const AnswerSection({
+    required this.label,
+    required this.ayahs,
+    required this.totalFound,
+  });
+
+  /// Bölümün adı: "sabır", "Yusuf".
+  final String label;
+
+  /// Bu bölümde gösterilen ayetler.
+  final List<AnswerAyah> ayahs;
+
+  /// Bu konuda toplam kaç ayet bulundu.
+  final int totalFound;
 }
 
 /// Şablon bestecisi.
@@ -84,24 +118,60 @@ class AnswerComposer {
     required List<AnswerAyah> ayahs,
     required int totalFound,
     required int shownSoFar,
+    List<String>? narrowedTo,
+    List<String> highlightTerms = const [],
   }) {
     if (ayahs.isEmpty) {
+      // Sözlükten gelen bir konuda sonuç yoksa sorun aramadadır; kullanıcı
+      // meşru bir konu sordu. Serbest aramada sonuç yoksa sorulan şey
+      // büyük olasılıkla mealde hiç geçmiyor — o zaman sınırı hatırlatmak,
+      // "başka kelime dene" demekten dürüst. Kullanıcıyı olmayan bir
+      // sonucun peşinde dolaştırmamak gerekir.
+      if (intent.isFromLexicon) {
+        return ComposedAnswer(
+          text: _pickFor(
+            tr: [
+              'Bu konuda ayet bulamadım. Başka bir kelimeyle dener misin?',
+              'Aradığın kelimeyi mealde bulamadım. Farklı bir ifade '
+                  'deneyebilirsin.',
+            ],
+            en: [
+              'I could not find any verse on this. Try another word?',
+              'I could not find that word in the translation. Try a '
+                  'different phrase.',
+            ],
+          ),
+          actions: [_helpAction],
+        );
+      }
+
       return ComposedAnswer(
-        text: _pickFor(
-          tr: [
-            'Bu konuda ayet bulamadım. Başka bir kelimeyle dener misin?',
-            'Aradığın kelimeyi mealde bulamadım. Farklı bir ifade '
-                'deneyebilirsin.',
-          ],
-          en: [
-            'I could not find any verse on this. Try another word?',
-            'I could not find that word in the translation. Try a different '
-                'phrase.',
-          ],
-        ),
+        text: _en
+            ? 'I could not find "${intent.topicLabel}" anywhere in the '
+                'translation. I only search the Qur\'an translation — if '
+                'you meant something else, try a topic, a verse number or '
+                'a surah name.'
+            : '"${intent.topicLabel}" mealin hiçbir yerinde geçmiyor. Ben '
+                'yalnızca Kur\'an mealinde arama yapıyorum — başka bir şey '
+                'kastettiysen bir konu, ayet numarası ya da sure adı '
+                'yazabilirsin.',
         actions: [_helpAction],
       );
     }
+
+    // Sorgu gevşetildiyse bu söylenir. Kullanıcının yazdığından başka bir
+    // şeyi aramak meşrudur — boş sonuç dönmekten iyidir — ama sessizce
+    // yapılmaz: neden bu ayetleri gördüğünü bilmeli.
+    //
+    // Vurgu terimlerinden ayrı tutulur: vurgu her cevapta yapılır,
+    // bu not yalnızca sorgu gerçekten değiştiğinde düşülür.
+    final narrowNote = narrowedTo == null || narrowedTo.isEmpty
+        ? null
+        : _en
+            ? 'No verse contained all your words, so I searched for: '
+                '${narrowedTo.join(', ')}.'
+            : 'Kelimelerinin hepsini içeren ayet yoktu; '
+                '${narrowedTo.join(', ')} ile aradım.';
 
     final label = intent.topicLabel;
     final first = ayahs.first;
@@ -163,14 +233,17 @@ class AnswerComposer {
       ayahs: ayahs,
       actions: actions,
       // Kavram aramalarında uyarı düşülür: gösterilen ayetler kelime
-      // eşleşmesiyle bulundu, konunun tamamı değil.
-      note: intent.isSituational
-          ? null
-          : _en
-              ? 'These verses were found by word match; they may not cover '
-                  'the whole subject.'
-              : 'Bu ayetler kelime eşleşmesiyle bulundu; konunun tamamını '
-                  'kapsamayabilir.',
+      // eşleşmesiyle bulundu, konunun tamamı değil. Sorgu gevşetildiyse
+      // önce o söylenir — kullanıcı için daha yeni bir bilgi.
+      note: narrowNote ??
+          (intent.isSituational
+              ? null
+              : _en
+                  ? 'These verses were found by word match; they may not '
+                      'cover the whole subject.'
+                  : 'Bu ayetler kelime eşleşmesiyle bulundu; konunun '
+                      'tamamını kapsamayabilir.'),
+      highlightTerms: highlightTerms,
     );
   }
 
@@ -378,9 +451,14 @@ class AnswerComposer {
       );
 
   /// Devam eden sayfa.
-  ComposedAnswer continuation(List<AnswerAyah> page) => ComposedAnswer(
+  ComposedAnswer continuation(
+    List<AnswerAyah> page, {
+    List<String> terms = const [],
+  }) =>
+      ComposedAnswer(
         text: _en ? 'Continued:' : 'Devamı:',
         ayahs: page,
+        highlightTerms: terms,
       );
 
   /// Selamlama.
@@ -437,6 +515,109 @@ class AnswerComposer {
           ),
         ],
       );
+
+  /// Birden fazla konu soruldu.
+  ///
+  /// Cevap bölümler hâlinde kurulur; her bölüm kendi başlığını taşır.
+  /// Metin yalnızca giriş cümlesidir — asıl ayrım arayüzde bölüm
+  /// başlıklarıyla yapılır, çünkü iki konuyu tek paragrafta anlatmak
+  /// karşılaştırmayı zorlaştırır.
+  ComposedAnswer multiTopic(
+    List<AnswerSection> sections, {
+    List<String> highlightTerms = const [],
+  }) {
+    final labels = sections.map((s) => s.label).toList();
+    final withResults = sections.where((s) => s.ayahs.isNotEmpty).toList();
+
+    if (withResults.isEmpty) {
+      return ComposedAnswer(
+        text: _en
+            ? 'I could not find verses for ${_joinLabels(labels)}.'
+            : '${_joinLabels(labels)} için ayet bulamadım.',
+        actions: [_helpAction],
+      );
+    }
+
+    final text = _en
+        ? 'Here is what I found on ${_joinLabels(labels)}, side by side:'
+        : '${_joinLabels(labels)} konularında bulduklarım, yan yana:';
+
+    final total = sections.fold(0, (sum, s) => sum + s.totalFound);
+    final shown = sections.fold(0, (sum, s) => sum + s.ayahs.length);
+
+    return ComposedAnswer(
+      text: text,
+      sections: withResults,
+      highlightTerms: highlightTerms,
+      actions: [if (total > shown) _openAllAction(total)],
+      note: _en
+          ? 'Each heading is searched separately; the verses are not a '
+              'comparison, only what matched each word.'
+          : 'Her başlık ayrı arandı; ayetler bir karşılaştırma değil, '
+              'her kelimeye karşılık bulunanlardır.',
+    );
+  }
+
+  /// Bir ayet kaydedildi ya da kayıttan çıkarıldı.
+  ComposedAnswer savedAyah(AnswerAyah target, {required bool isSaved}) =>
+      ComposedAnswer(
+        text: isSaved
+            ? (_en
+                ? '${target.label} is saved. You can find it under Saved.'
+                : '${target.label} kaydedildi. Kaydedilenler bölümünde '
+                    'bulabilirsin.')
+            : (_en
+                ? '${target.label} is no longer saved.'
+                : '${target.label} kayıtlardan çıkarıldı.'),
+        ayahs: [target],
+        actions: [
+          AssistantAction(
+            label: _en ? 'Open Saved' : 'Kaydedilenleri aç',
+            kind: AssistantActionKind.navigate,
+            route: '/kaydedilenler',
+          ),
+        ],
+      );
+
+  /// Bir ayet paylaşıldı.
+  ///
+  /// Paylaşım sayfası sistemin elinde; asistan yalnızca açtığını söyler.
+  /// Kullanıcı vazgeçmiş de olabilir, o yüzden "paylaşıldı" değil
+  /// "paylaşım açıldı" denir — olmayan bir şeyi iddia etmemek burada da
+  /// geçerli.
+  ComposedAnswer sharedAyah(AnswerAyah target) => ComposedAnswer(
+        text: _en
+            ? 'I opened the share sheet for ${target.label}.'
+            : '${target.label} için paylaşım penceresini açtım.',
+        ayahs: [target],
+      );
+
+  /// Bir ayetin suredeki komşuları gösterildi.
+  ComposedAnswer sameSurah({
+    required AnswerAyah anchor,
+    required List<AnswerAyah> ayahs,
+    required int surahNumber,
+  }) =>
+      ComposedAnswer(
+        text: _en
+            ? '${anchor.label} in its surrounding verses:'
+            : '${anchor.label} ve çevresindeki ayetler:',
+        ayahs: ayahs,
+        actions: [
+          AssistantAction(
+            label: _en ? 'Read in surah' : 'Surede oku',
+            kind: AssistantActionKind.navigate,
+            route: '/sure/$surahNumber?ayet=${anchor.ayah.ayahNumber}',
+          ),
+        ],
+      );
+
+  /// Etiketleri okunur biçimde birleştirir: "sabır ve şükür".
+  String _joinLabels(List<String> labels) {
+    if (labels.length == 1) return labels.first;
+    final head = labels.sublist(0, labels.length - 1).join(', ');
+    return _en ? '$head and ${labels.last}' : '$head ve ${labels.last}';
+  }
 
   /// Alan dışı soru.
   ///

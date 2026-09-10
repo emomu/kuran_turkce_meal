@@ -351,6 +351,9 @@
     "welcomeBody": "Bir konu, bir durum ya da bir ayet sor; mealde arayıp bulduğum ayetleri göstereyim.",
     "tryThese": "Şunları deneyebilirsin",
     "disclaimer": "Yalnızca meal metninde arama yaparım. Yorum yapmam, hüküm vermem; bulduğum ayetleri olduğu gibi gösteririm. Tamamen çevrimdışı çalışır.",
-    "resultCount": "{count} ayet"
+    "resultCount": "{count} ayet",
+    "thinking": "Düşünülüyor",
+    "searching": "Mealde aranıyor",
+    "composing": "Cevap hazırlanıyor"
   }
 }
