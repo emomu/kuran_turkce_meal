@@ -139,8 +139,8 @@ dönebilirsiniz.
   başına anlatının tamamını vermiyordu: anlatı sürerken ad tekrarlanmaz
   ("melek dedi ki", "sonra doğum sancısı onu...") ve o ayetler düşerdi.
   Meryem 16-34 tek bir anlatıdır ama taramaya yalnızca dört ayeti giriyor,
-  doğum sahnesi görünmüyordu. Sınırlarla birlikte kıssa verisi 644'ten
-  1.244 ayete çıktı.
+  doğum sahnesi görünmüyordu. Sınırlarla birlikte kıssa verisi 644’ten
+  1.411 ayete çıktı.
 
   Hz. Muhammed'de veri ikiye ayrılır. Kur'an ona çoğunlukla adıyla değil
   sıfatıyla seslenir ("Ey Peygamber", "Ey Rasûl") ve meal bu hitapları
