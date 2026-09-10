@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:just_audio_background/just_audio_background.dart';
@@ -198,9 +199,101 @@ class _QuranAppState extends ConsumerState<QuranApp>
               maxScaleFactor: 1.3,
             ),
           ),
-          child: child!,
+          // Boşluğa dokununca klavye kapanır — uygulamanın her ekranında.
+          //
+          // iOS'ta klavyeyi kapatmanın yerleşik bir yolu yok: Android'in
+          // geri tuşu gibi bir çıkış bulunmadığı için kullanıcı bir alana
+          // yazdıktan sonra klavyeyle baş başa kalır ve içeriğin yarısı
+          // örtülü durur.
+          //
+          // `TapRegion` burada işe yaramaz: `onTapOutside` kendi sınırının
+          // dışına dokunulunca ateşlenir ve bu widget ağacın en dışında
+          // olduğu için "dışarısı" diye bir yer kalmaz. `Listener` ise
+          // dokunuşu görür ama tüketmez — altındaki düğmeler, listeler ve
+          // kaydırmalar dokunuşu almaya devam eder.
+          child: Builder(
+            builder: (context) => Listener(
+              key: _keyboardDismissKey,
+              onPointerDown: (event) {
+                // Klavye kapalıyken hiçbir şey yapılmaz: düğme ya da
+                // kaydırma odağını düşürmek erişilebilirlik gezinmesini
+                // bozardı. Ölçü dokunma anında okunur; builder'ın yakaladığı
+                // değer o an güncel olmayabilir.
+                if (MediaQuery.viewInsetsOf(context).bottom <= 0) return;
+
+                // Dokunulan yerde tıklanabilir bir şey varsa klavye kapanmaz.
+                //
+                // Bu katman bütün ekranı dinliyor ve dokunuşu tüketmiyor;
+                // dolayısıyla bir düğmeye basıldığında hem düğme çalışıyor
+                // hem klavye kapanıyordu. Arama ekranındaki öneri şeridi
+                // bunu görünür kıldı: bir öneriye basmak metni kutuya
+                // yazıyor ama aynı anda klavyeyi kapatıyordu — kullanıcı
+                // yazmaya devam edemiyordu.
+                final self = _keyboardDismissKey.currentContext
+                    ?.findRenderObject();
+                if (keyboardDismissHitsInteractive(event.position, self)) {
+                  return;
+                }
+
+                FocusManager.instance.primaryFocus?.unfocus();
+              },
+              child: child!,
+            ),
+          ),
         );
       },
     );
   }
+}
+
+/// Klavyeyi kapatan dinleyicinin kimliği.
+///
+/// İsabet denetimi kendi katmanını atlayabilsin diye tutuluyor.
+final _keyboardDismissKey = GlobalKey();
+
+/// Verilen ekran noktasında dokunuşa yanıt veren bir widget var mı.
+///
+/// Klavyeyi kapatan genel dinleyici bunu sorar: boşluğa dokunulduysa klavye
+/// kapanır, bir düğmeye ya da metin alanına dokunulduysa dokunulmaz.
+///
+/// Sınanabilmesi için dışa açık; uygulama kodunda yalnızca o dinleyici
+/// çağırır (bkz. test/keyboard_dismiss_test.dart).
+///
+/// `hitTest` o noktadaki render nesnelerini en üstten en alta sıralar;
+/// aralarında bir `RenderPointerListener` ya da `RenderSemanticsGestureHandler`
+/// varsa orada tıklanabilir bir şey vardır. Metin alanının kendisi de bu
+/// denetimden geçer — zaten ona dokunulduğunda klavyenin kapanmaması doğru.
+bool keyboardDismissHitsInteractive(
+  Offset position,
+  RenderObject? self,
+) {
+  // Kök `RenderView`'dır, `RenderBox` değil: doğrudan `RenderBox` beklemek
+  // denetimi sessizce devre dışı bırakıyordu (her zaman false dönüyordu).
+  // `RenderView.hitTest` doğru giriş noktası.
+  final root = WidgetsBinding.instance.rootElement?.renderObject;
+  if (root is! RenderView) return false;
+
+  final result = HitTestResult();
+  root.hitTest(result, position: position);
+
+  for (final entry in result.path) {
+    final target = entry.target;
+    // Dinleyicinin kendisi sayılmaz: bütün ekranı kapladığı için her
+    // dokunuşta isabet alır ve sayılsaydı klavye hiçbir zaman kapanmazdı.
+    if (identical(target, self)) continue;
+
+    // İki işaret aranır ve ikisi de gerçek bir etkileşimi gösterir:
+    // `GestureDetector` birincisini, `InkWell`/`ElevatedButton` gibi Material
+    // düğmeleri ikincisini üretir.
+    //
+    // `RenderPointerListener`'a bakılmaz: `MaterialApp` fare imleci için
+    // ekranın tamamını kaplayan bir tane koyuyor ve boş alanda da isabet
+    // alıyor. Ona bakılsaydı klavye hiçbir yerde kapanmazdı — denetimin
+    // tamamı sessizce işlevsiz kalırdı.
+    if (target is RenderSemanticsGestureHandler ||
+        target is RenderMouseRegion) {
+      return true;
+    }
+  }
+  return false;
 }

@@ -8,6 +8,7 @@ import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 import '../../../core/router/app_router.dart';
 import '../../../core/theme/app_typography.dart';
+import '../../assistant/view/widgets/assistant_fab.dart';
 import '../../../shared/widgets/responsive_layout.dart';
 import '../../../data/models/ayah.dart';
 import '../../../data/models/surah.dart';
@@ -41,6 +42,12 @@ class ReaderScreen extends ConsumerStatefulWidget {
   @override
   ConsumerState<ReaderScreen> createState() => _ReaderScreenState();
 }
+
+/// Asistan düğmesinin liste sonunda bıraktığı pay.
+///
+/// Düğme 56pt; üstüne bir nefes eklenir. Bu pay olmadan son ayetin alt
+/// satırları düğmenin altında kalıyor ve okunamıyordu.
+const double _fabClearance = 72;
 
 class _ReaderScreenState extends ConsumerState<ReaderScreen> {
   final _itemScrollController = ItemScrollController();
@@ -400,6 +407,11 @@ class _ReaderScreenState extends ConsumerState<ReaderScreen> {
         if (!didPop) popOrHome(context);
       },
       child: Scaffold(
+        // Asistan düğmesi okuma ekranında da durur: aklına takılan soruyu
+        // okurken sormak, çıkıp bir sekmeye gitmekten doğal. Tilavet çubuğu
+        // `bottomNavigationBar` yuvasında olduğu için `Scaffold` düğmeyi
+        // çalarken kendiliğinden onun üstüne alır.
+        floatingActionButton: const AssistantFab(),
         body: asyncData.when(
           loading: () => const Center(child: CupertinoStyleLoader()),
           error: (error, _) => _ReaderError(message: '$error'),
@@ -454,10 +466,14 @@ class _ReaderScreenState extends ConsumerState<ReaderScreen> {
                             // Üst çubuk ile metin arasında nefes payı.
                             top: Insets.xs,
                             // Alt güvenli alan + nefes payı; son ayet çentiğin
-                            // altında kalmasın.
+                            // altında kalmasın. Asistan düğmesi de sağ altta
+                            // duruyor: 56pt düğme + nefes kadar pay bırakılır,
+                            // yoksa son ayetin son satırı düğmenin altında
+                            // kalır ve okunamaz.
                             bottom:
                                 MediaQuery.paddingOf(context).bottom +
-                                Insets.xl,
+                                Insets.xl +
+                                _fabClearance,
                           ),
                           itemBuilder: (context, index) {
                             if (index == 0) {

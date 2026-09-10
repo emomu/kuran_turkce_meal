@@ -133,12 +133,13 @@ void main() async {
       return hits;
     }
 
-    test('Sâlih ayetleri "salih amel" ifadesini yakalamamış', () {
-      // Kaba tarama 79 ayet buluyordu; bunların çoğu "salih amel" idi.
-      // Büyük harf duyarlı arama bunu 16'ya indirdi.
+    test('Sâlih listesi "salih amel" ayetlerine savrulmamış', () {
+      // Kaba tarama 79 ayet buluyordu; çoğu "salih amel" idi. Büyük harf
+      // duyarlı arama bunu 16'ya indirdi, kıssa sınırları anlatı ayetlerini
+      // ekleyerek 54'e çıkardı. Denetim sayının kendisi değil: 79'a
+      // yaklaşmıyorsa kaba tarama geri gelmemiş demektir.
       final salih = prophets.firstWhere((p) => p.id == 'salih');
-      expect(salih.ayahCount, lessThan(30));
-      expect(mentionRate(salih, ['Sâlih', 'Salih']), salih.ayahCount);
+      expect(salih.ayahCount, lessThan(70));
     });
 
     test('Muhammed ayetleri hitap kalıbından arındırılmış', () {
@@ -148,18 +149,58 @@ void main() async {
       expect(m.ayahCount, lessThan(30));
     });
 
-    test('her ayette peygamberin adı gerçekten geçiyor', () {
-      // Örnek olarak adı tek yazımlı olanlar sınanır; çok varyantlı adlarda
-      // yazım listesi burada tekrarlanmak zorunda kalırdı.
-      const singleSpelling = {
-        'suleyman': ['Süleyman'],
-        'suayb': ['Şuayb'],
-        'yusuf': ['Yûsuf', 'Yusuf'],
+    test('kıssasız peygamberlerde her ayette ad geçiyor', () {
+      // Kıssa sınırı tanımlanmamış peygamberlerde liste yalnızca ad
+      // taramasından gelir; orada ad her ayette geçmeli. Yanlış eşleşmeyi
+      // yakalayan asıl denetim budur.
+      //
+      // Sınırlı olanlar buraya alınmaz: onlarda anlatı ayetleri de listede
+      // olduğu için oran doğal olarak düşer (Yûsuf %41, Sâlih %29) ve
+      // beklenen davranış budur.
+      const spellings = {
+        'yakub': ['Yakûb', 'Yakub', 'Yakup', 'Yâkub'],
+        'ishak': ['İshâk', 'İshak'],
       };
 
-      for (final entry in singleSpelling.entries) {
+      for (final entry in spellings.entries) {
         final p = prophets.firstWhere((x) => x.id == entry.key);
         expect(mentionRate(p, entry.value), p.ayahCount, reason: p.name);
+      }
+    });
+
+    test('sınırlı kıssalar anlatının tamamını taşır', () {
+      // Yûsuf kıssası tek surede baştan sona anlatılır (12:4-101). Ad
+      // taraması ondan 41 ayet alıyordu; anlatının yarısından çoğu
+      // düşüyordu. Sınırla birlikte blok bütünüyle gelir.
+      final yusuf = prophets.firstWhere((p) => p.id == 'yusuf');
+      expect(yusuf.ayahCount, greaterThan(90));
+
+      final inSurah = yusuf.ayahIds
+          .map((id) => ayahsById[id])
+          .whereType<Ayah>()
+          .where((a) => a.surahNumber == 12)
+          .map((a) => a.ayahNumber)
+          .toList();
+      // 4-101 arası kesintisiz olmalı.
+      expect(inSurah, contains(4));
+      expect(inSurah, contains(101));
+      expect(inSurah.length, greaterThan(90));
+    });
+
+    test('Îsâ kıssası doğum sahnesini içerir', () {
+      // Kullanıcının bildirdiği eksiklik: Meryem 22 ve 27 listede vardı ama
+      // aradaki doğum sahnesi (23-26) yoktu; okuyan kopuk bir anlatı
+      // görüyordu.
+      final isa = prophets.firstWhere((p) => p.id == 'isa');
+      final maryam = isa.ayahIds
+          .map((id) => ayahsById[id])
+          .whereType<Ayah>()
+          .where((a) => a.surahNumber == 19)
+          .map((a) => a.ayahNumber)
+          .toSet();
+
+      for (var n = 16; n <= 34; n++) {
+        expect(maryam, contains(n), reason: 'Meryem $n eksik');
       }
     });
   });
@@ -200,6 +241,76 @@ void main() async {
       // İki harfle neredeyse her ad eşleşirdi.
       expect(repo.byName('mu', fold: foldSurahName), isNull);
       expect(repo.byName('y', fold: foldSurahName), isNull);
+    });
+  });
+
+  group('anılma listesi', () {
+    // Kur'an Hz. Muhammed'e çoğunlukla adıyla değil sıfatıyla seslenir
+    // ("Ey Peygamber", "Ey Rasûl") ve meal bunu "(Ey Muhammed)" diye açar.
+    // Kıssa listesi bu ayetleri dışarıda bırakır — kıssa ekranı için doğru,
+    // arama için değil. Arama 10 sonuç dönüyordu; gerçek sayı 140.
+    Prophet muhammed() => prophets.firstWhere((p) => p.id == 'muhammed');
+
+    test('Muhammed anılma listesi kıssa listesinden geniş', () {
+      final p = muhammed();
+      expect(p.hasSeparateMentions, isTrue);
+      expect(p.mentionCount, greaterThan(p.ayahCount));
+      // Sayı meale bağlı; eşiği düşük tutmak regresyonu yine yakalar.
+      expect(p.mentionCount, greaterThan(100));
+    });
+
+    test('kıssa listesi anılma listesinin alt kümesi', () {
+      final p = muhammed();
+      expect(p.mentionIds.toSet().containsAll(p.ayahIds), isTrue);
+    });
+
+    test('"Ey Muhammed" hitabı anılma listesinde var', () async {
+      final p = muhammed();
+      final hasAddress = p.mentionIds
+          .map((id) => ayahsById[id])
+          .whereType<Ayah>()
+          .any((a) => a.translation.contains('Ey Muhammed'));
+      expect(hasAddress, isTrue);
+    });
+
+    test('"Ey Muhammed" hitabı kıssa listesinde yok', () {
+      // Kıssa ekranının davranışı korunmalı: hitap ayetleri kıssa değildir.
+      final p = muhammed();
+      final story = p.ayahIds.map((id) => ayahsById[id]).whereType<Ayah>();
+      for (final a in story) {
+        expect(
+          RegExp(r'[Ee]y\s+Muhammed').hasMatch(a.translation),
+          isFalse,
+          reason: '${a.reference} kıssa listesinde ama hitap ayeti',
+        );
+      }
+    });
+
+    test('diğer peygamberlerde iki liste aynı', () {
+      // Ayrım yalnızca kendisine hitap edilen peygamberde anlamlı; başka
+      // yerde ayrışırlarsa üretim aracında bir hata var demektir.
+      for (final p in prophets.where((p) => p.id != 'muhammed')) {
+        expect(p.mentionIds, p.ayahIds, reason: p.id);
+        expect(p.hasSeparateMentions, isFalse, reason: p.id);
+      }
+    });
+
+    test('anılma listesi iniş sırasına göre dizili', () {
+      final p = muhammed();
+      var previous = (-1, -1);
+      for (final id in p.mentionIds) {
+        final ayah = ayahsById[id];
+        if (ayah == null) continue;
+        final order = surahs[ayah.surahNumber]!.revelationOrder;
+        final current = (order, ayah.ayahNumber);
+        expect(
+          current.$1 > previous.$1 ||
+              (current.$1 == previous.$1 && current.$2 >= previous.$2),
+          isTrue,
+          reason: '${ayah.reference} sıra dışı',
+        );
+        previous = current;
+      }
     });
   });
 }

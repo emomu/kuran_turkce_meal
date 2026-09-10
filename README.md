@@ -10,7 +10,7 @@ pakete gömülüdür. Ağa yalnızca siz tilavet indirmek istediğinizde çıkı
 [![Dart](https://img.shields.io/badge/Dart-3.11-0175C2?logo=dart&logoColor=white)](https://dart.dev)
 [![Lisans](https://img.shields.io/badge/Lisans-MIT-green.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/Platform-iOS%20%7C%20Android-lightgrey.svg)](#)
-[![Testler](https://img.shields.io/badge/testler-505%20geçiyor-brightgreen.svg)](#geliştirme)
+[![Testler](https://img.shields.io/badge/testler-689%20geçiyor-brightgreen.svg)](#geliştirme)
 [![Destek ol](https://img.shields.io/badge/Destek%20ol-Buy%20Me%20a%20Coffee-FFDD00?logo=buymeacoffee&logoColor=black)](https://buymeacoffee.com/emomu)
 
 <a href="https://buymeacoffee.com/emomu">
@@ -90,12 +90,63 @@ dönebilirsiniz.
   doğrudan o ayete konumlanır. Yalnızca sure adı yazıldığında sure baştan
   açılır. Referans çözülemezse arama olağan tam metin aramasına düşer —
   "7 kat gök" arayan kullanıcı 7. sureye götürülmez.
+- **Asistan** — Soru sorun, ayet gelsin: "sabır hakkında ne diyor",
+  "zor zamandayım", "Kehf kaç ayet", "Bakara 255", "Muhammed". Asistan bir
+  dil modeli çalıştırmaz; soruyu tanır, mevcut veri katmanından karşılar ve
+  cevabı şablonla kurar. Bu yüzden **çevrimdışı** çalışır, anında cevap
+  verir ve **uydurma yapamaz** — gösterdiği her cümle ya bir şablondan ya
+  bir ayetten gelir. Yorum yapmaz, hüküm vermez: "faiz haram mı" sorusuna
+  fetva değil, konuyla ilgili ayetler ve bir ilim ehline başvurma önerisi
+  döner. Kur'an dışı sorular cevap üreten katmana hiç ulaşmadan reddedilir;
+  sınırı bir talimat değil, kodun kendisi korur. Türkçe ve İngilizce'de
+  ayrı ayrı çalışır: her dilin kendi soru kalıpları, arama terimleri ve
+  cevap şablonları var.
+
+  Soru bir arama sorgusu gibi değil, konuşma gibi yazılır — asistan da onu
+  öyle karşılar:
+
+  - **Yazım hatası affedilir.** "sabir", "sabr", "sabırr" hepsi "sabır"a
+    çözülür. Kural tabanlı bir sınıflandırıcının en kırılgan yeri tam
+    eşleşmedir: klavyede harf atlamak ya da şapkayı unutmak sıktır ve
+    kullanıcı hiçbir şey yapmadığı hâlde "anlayamadım" cevabı alırdı.
+  - **Soru kalıbı ayıklanır.** "sabır hakkında ne diyor" sorusundan geriye
+    "sabır" kalır. Kelimeler AND ile bağlandığı için tek bir "hakkında"
+    bütün sonuçları siliyordu.
+  - **Sonuçlar konuya göre sıralanır.** FTS5'in bm25 ölçütü terim
+    yoğunluğuna bakar, konuya bakmaz; bu da üç kelimelik ayetleri başa
+    çıkarır. Sıralayıcı ayet uzunluğunu ve konu örtüşmesini hesaba katar.
+  - **Sohbet cihazda saklanır.** Asistan kapanıp açıldığında konuşma
+    durur: sorulan soru, gösterilen ayet ve "daha fazla" listesi yerinde
+    kalır. Kaydedilenler cihazdan çıkmaz.
+  - **Sesle sorulabilir.** Yazmak herkes için kolay değil. Tanıma cihazın
+    kendi motoruyla yapılır, ses buluta gitmez. Tanınan metin doğrudan
+    gönderilmez, yazı alanına konur — kullanıcı görüp düzeltebilir.
+  - **Bekleme açıklanır.** Cevap hazırlanırken üç nokta yerine ne
+    yapıldığı yazar ("Mealde aranıyor"); bir saniyeyi aşarsa süre sayacı
+    belirir.
+
+  Karşılanamayan sorular cihazda sayılır (`assistant_stats.dart`): konu
+  sözlüğünün hangi yöne büyümesi gerektiği tahminle değil ölçümle
+  belirlenir. Sayaç yalnızca cihazda durur, hiçbir yere gönderilmez.
 - **Peygamber kıssaları** — Arama kutusuna bir peygamber adı yazın
   (25 peygamber tanınır); o peygamberin anıldığı bütün ayetler **iniş
   sırasına göre** listelenir. Sıralama bu ekranın varlık sebebi: bir kıssa
   Kur'an'a tek seferde girmez. Mûsâ kıssası önce kısa değinmelerle başlar,
   sonraki yıllarda ayrıntılanır. Mushaf sırasıyla okunduğunda bu gelişim
   görünmez — Bakara'daki uzun anlatım başa düşer, oysa o sonradan inmiştir.
+
+  Kıssa sınırları elle çizildi (`tool/story_bounds.py`). Ad taraması tek
+  başına anlatının tamamını vermiyordu: anlatı sürerken ad tekrarlanmaz
+  ("melek dedi ki", "sonra doğum sancısı onu...") ve o ayetler düşerdi.
+  Meryem 16-34 tek bir anlatıdır ama taramaya yalnızca dört ayeti giriyor,
+  doğum sahnesi görünmüyordu. Sınırlarla birlikte kıssa verisi 644'ten
+  1.244 ayete çıktı.
+
+  Hz. Muhammed'de veri ikiye ayrılır. Kur'an ona çoğunlukla adıyla değil
+  sıfatıyla seslenir ("Ey Peygamber", "Ey Rasûl") ve meal bu hitapları
+  "(Ey Muhammed)" diye açar. Kıssa listesi bu ayetleri dışarıda bırakır —
+  hitap bir kıssa değildir — ama arama onları da gösterir: kıssası 10 ayet,
+  anıldığı 140 ayet.
 
 ### Takip
 
@@ -145,6 +196,7 @@ Bu bölüm bir vaat değil, kodun doğrulanabilir bir özeti:
 | Reklam ağı | **Yok** |
 | Hesap / giriş | **Yok** |
 | Verinin bulunduğu yer | Yalnızca cihaz — SQLite ve SharedPreferences |
+| Mikrofon | Yalnızca asistana **siz** sesle sorarken; kayıt saklanmaz |
 | Ağ istekleri | Yalnızca **siz** başlattığınızda: tilavet indirme ve bağış bağlantısı |
 
 Meal, tefsir, arama dizini ve kök verisi uygulamayla birlikte gelir; okuma,
@@ -157,6 +209,12 @@ Ağa çıkılan iki yer var ve ikisi de sizin bir dokunuşunuzla başlar:
   gönderilmez. İndirmezseniz hiç istek yapılmaz.
 - **Bağış bağlantısı** — Cihazın tarayıcısını açar. Uygulama içinde ödeme
   akışı yoktur; hiçbir ödeme bilgisi görülmez veya saklanmaz.
+
+Asistanın sesli girişi bu listeye girmez çünkü uygulama ağa çıkmaz: tanıma
+işletim sisteminin kendi motoruyla yapılır. Ses kaydı uygulamada tutulmaz,
+tanınan metin de gönderilmeden önce yazı alanında size gösterilir. Cihazın
+tanıma motoru kendi başına ağ kullanabilir — bu işletim sisteminin
+davranışıdır ve sistem ayarlarından denetlenir.
 
 Notlarınız, yer imleriniz, vurgularınız ve okuma ilerlemeniz cihazınızdan
 çıkmaz. Uygulamayı silerseniz veriler de silinir; başka hiçbir yerde kopyası
@@ -252,6 +310,8 @@ lib/
 │   ├── home/             Sure listesi, günün ayeti, kaldığın yer
 │   ├── reader/           Okuma akışı, ayet eylemleri, tefsir
 │   ├── search/           FTS5 araması, ayet referansı, vurgulu sonuçlar
+│   ├── assistant/        Niyet çözümleme, bulanık eşleştirme, sıralama,
+│   │                     sohbet geçmişi, sesli giriş, şablon cevaplar
 │   ├── roots/            Kök analizi ve kök arama
 │   ├── prophets/         Peygamber kıssaları, iniş sırasına göre
 │   ├── audio/            Tilavet oynatma, kâri seçimi, indirme
@@ -285,7 +345,7 @@ bir kez, gün dönümünde kurulan alarmla tazelenir.
 ## Geliştirme
 
 ```bash
-flutter test        # 505 test
+flutter test        # 689 test
 flutter analyze     # statik analiz
 ```
 

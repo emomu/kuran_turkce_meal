@@ -13,6 +13,7 @@ class EmptyState extends StatelessWidget {
     required this.title,
     required this.message,
     this.action,
+    this.actionFullBleed = false,
   });
 
   final IconData icon;
@@ -20,39 +21,60 @@ class EmptyState extends StatelessWidget {
   final String message;
   final Widget? action;
 
+  /// Eylem alanı yatay boşluğun dışına taşsın.
+  ///
+  /// Kayan şerit gibi ekranı boydan boya kullanan içerikler için: metnin
+  /// kenar boşluğu şeridi daraltır ve kayma dar bir pencereden izlenir.
+  final bool actionFullBleed;
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: Insets.xl),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              icon,
-              size: 40,
-              color: theme.colorScheme.onSurface.withValues(alpha: 0.25),
-            ),
-            const SizedBox(height: Insets.md),
-            Text(
-              title,
-              style: theme.textTheme.titleMedium,
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: Insets.xs),
-            Text(
-              message,
-              style: theme.textTheme.bodySmall,
-              textAlign: TextAlign.center,
-            ),
-            if (action != null) ...[
-              const SizedBox(height: Insets.lg),
-              action!,
-            ],
-          ],
+    final content = Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(
+          icon,
+          size: 40,
+          color: theme.colorScheme.onSurface.withValues(alpha: 0.25),
         ),
+        const SizedBox(height: Insets.md),
+        Text(
+          title,
+          style: theme.textTheme.titleMedium,
+          textAlign: TextAlign.center,
+        ),
+        const SizedBox(height: Insets.xs),
+        Text(
+          message,
+          style: theme.textTheme.bodySmall,
+          textAlign: TextAlign.center,
+        ),
+      ],
+    );
+
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: Insets.xl),
+            child: content,
+          ),
+          if (action != null) ...[
+            const SizedBox(height: Insets.lg),
+            // Boydan boya içerik kenar boşluğunun dışında kalır; diğerleri
+            // metinle aynı hizada durur.
+            if (actionFullBleed)
+              action!
+            else
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: Insets.xl),
+                child: action!,
+              ),
+          ],
+        ],
       ),
     );
   }

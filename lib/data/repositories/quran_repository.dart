@@ -181,6 +181,46 @@ class QuranRepository {
         .toList();
   }
 
+  /// Konu terimlerinden herhangi biri geçen ayetleri arar.
+  ///
+  /// [search] kullanıcının kelimelerini AND ile bağlar; burada terimler
+  /// alternatiftir ve OR ile bağlanır. Asistanın konu sözlüğü böyle çalışır:
+  /// "sabr", "sabred", "katlan" terimlerinden biri geçen ayet sabır
+  /// konusundadır, üçü birden geçmesi beklenmez.
+  Future<List<SearchHit>> searchAny(
+    Iterable<String> terms, {
+    String languageCode = 'tr',
+    int limit = 60,
+  }) async {
+    final ftsQuery = SearchNormalizer.toFtsOrQuery(terms);
+    if (ftsQuery == null) return const [];
+
+    final db = await _db.database;
+    final isEnglish = languageCode == 'en';
+    final ftsTable = isEnglish ? 'ayahs_fts_en' : 'ayahs_fts';
+    final nameColumn = isEnglish ? 'COALESCE(s.name_en, s.name)' : 's.name';
+
+    final rows = await db.rawQuery(
+      '''
+      SELECT a.*, $nameColumn AS surah_name
+      FROM $ftsTable f
+      JOIN ayahs  a ON a.id = f.rowid
+      JOIN surahs s ON s.number = a.surah_number
+      WHERE $ftsTable MATCH ?
+      ORDER BY bm25($ftsTable), a.id
+      LIMIT ?
+      ''',
+      [ftsQuery, limit],
+    );
+
+    return rows
+        .map((r) => SearchHit(
+              ayah: Ayah.fromMap(r),
+              surahName: r['surah_name']! as String,
+            ))
+        .toList();
+  }
+
   /// Günün ayeti.
   ///
   /// Tarihten türetilen sabit bir tohumla seçilir: aynı gün içinde uygulama

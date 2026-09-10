@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../features/assistant/view/assistant_screen.dart';
 import '../../features/bookmarks/view/bookmarks_screen.dart';
 import '../../features/donate/view/donate_screen.dart';
 import '../../features/home/view/home_screen.dart';
@@ -92,6 +93,15 @@ final appRouter = GoRouter(
           ],
         ),
       ],
+    ),
+
+    // Asistan. Sekme değil, her ekrandaki yüzen düğmeden açılır ve kabuğun
+    // dışında durur: sohbet tüm yüksekliği kullanır, sekme çubuğu cevabın
+    // altını yemez. Geri tuşu çağıran ekrana döndürür — asistan bir varış
+    // noktası değil, araya giren bir yardımcı.
+    GoRoute(
+      path: '/asistan',
+      builder: (context, state) => const AssistantScreen(),
     ),
 
     // Okuma ekranı. `ayet` sorgu parametresi verilirse o ayete konumlanır;

@@ -101,6 +101,40 @@ abstract final class SearchNormalizer {
     return terms.map((w) => '"$w"*').join(' AND ');
   }
 
+  /// Verilen terimleri OR ile bağlayan bir FTS5 ifadesi kurar.
+  ///
+  /// Asistanın konu sözlüğü için. Bir konunun terimleri alternatiftir, hepsi
+  /// birden değil: "sabr", "sabred", "katlan" terimlerinden *herhangi biri*
+  /// geçen ayet sabır konusundadır. [toFtsQuery] ise kullanıcının yazdığı
+  /// kelimeleri AND ile bağlar — orada tersi doğrudur, iki kelime yazan
+  /// kullanıcı ikisini birden içeren ayeti arar.
+  ///
+  /// Çok kelimeli terimler ("ortak koş") tırnak içinde öbek olarak aranır;
+  /// tek kelimeliler önek eşleşmesiyle, böylece "sabr" hem "sabrı" hem
+  /// "sabrederek" biçimlerini yakalar.
+  static String? toFtsOrQuery(Iterable<String> rawTerms) {
+    final clauses = <String>[];
+
+    for (final term in rawTerms) {
+      final words = normalize(term)
+          .split(RegExp(r'[^\p{L}\p{N}]+', unicode: true))
+          .where((w) => w.isNotEmpty)
+          .toList();
+      if (words.isEmpty) continue;
+
+      if (words.length == 1) {
+        if (words.first.length < 2) continue;
+        clauses.add('"${words.first}"*');
+      } else {
+        // Öbek araması: kelimeler bu sırayla yan yana geçmeli.
+        clauses.add('"${words.join(' ')}"');
+      }
+    }
+
+    if (clauses.isEmpty) return null;
+    return clauses.join(' OR ');
+  }
+
   /// Sonuç listesinde eşleşen kelimeleri kalın göstermek için, ham metinde
   /// vurgulanacak aralıkları bulur.
   ///
