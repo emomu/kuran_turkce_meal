@@ -33,6 +33,7 @@ void main() {
 
   stdout.writeln('store/privacy-policy.html ve store/terms.html yazıldı.');
 }
+//deneme
 
 void _write(
   String path, {
