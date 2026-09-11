@@ -118,6 +118,37 @@ void main() {
     expect(await hitsInteractiveAt(tester, find.text('sabır')), isTrue);
   });
 
+  testWidgets('kaydırma listesinin boş alanı tıklanabilir sayılmaz',
+      (tester) async {
+    // Keşfet ekranında klavye açıkken listenin boş alanına dokunmak klavyeyi
+    // kapatmıyordu: `Scrollable` bir `RenderSemanticsGestureHandler` üretiyor
+    // ve boş alanda da isabet alıyor, denetim onu bir düğme sanıyordu.
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: CustomScrollView(
+            slivers: [
+              const SliverToBoxAdapter(child: SizedBox(height: 40)),
+              SliverFillRemaining(
+                hasScrollBody: false,
+                child: Container(),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+
+    final size = tester.getSize(find.byType(Scaffold));
+    expect(
+      keyboardDismissHitsInteractive(
+        Offset(size.width / 2, size.height - 60),
+        null,
+      ),
+      isFalse,
+    );
+  });
+
   testWidgets('düz metin isabeti tıklanabilir sayılmaz', (tester) async {
     await tester.pumpWidget(
       const MaterialApp(

@@ -4,6 +4,10 @@ import 'package:go_router/go_router.dart';
 
 import '../../features/assistant/view/assistant_screen.dart';
 import '../../features/bookmarks/view/bookmarks_screen.dart';
+import '../../features/discover/view/discover_screen.dart';
+import '../../features/discover/view/prophets_screen.dart';
+import '../../features/discover/view/topic_ayahs_screen.dart';
+import '../../features/discover/view/verse_search_screen.dart';
 import '../../features/donate/view/donate_screen.dart';
 import '../../features/home/view/home_screen.dart';
 import '../../features/legal/data/legal_texts.dart';
@@ -12,7 +16,7 @@ import '../../features/plans/view/plan_detail_screen.dart';
 import '../../features/plans/view/plans_screen.dart';
 import '../../features/prophets/view/prophet_ayahs_screen.dart';
 import '../../features/reader/view/reader_screen.dart';
-import '../../features/search/view/search_screen.dart';
+import '../../features/roots/view/root_search_screen.dart';
 import '../../features/settings/view/settings_screen.dart';
 import '../../features/splash/view/splash_screen.dart';
 import 'app_shell.dart';
@@ -63,8 +67,8 @@ final appRouter = GoRouter(
         StatefulShellBranch(
           routes: [
             GoRoute(
-              path: '/ara',
-              builder: (context, state) => const SearchScreen(),
+              path: '/kesfet',
+              builder: (context, state) => const DiscoverScreen(),
             ),
           ],
         ),
@@ -146,6 +150,42 @@ final appRouter = GoRouter(
       builder: (context, state) => LegalDocumentScreen(
         title: 'settings.sources'.tr(),
         body: LegalTexts.sources(context.locale.languageCode),
+      ),
+    ),
+
+    // Keşfet'in açtığı ekranlar. Kabuğun dışında dururlar: birer varış
+    // noktası, sekme değil — geri tuşu Keşfet'e döndürür.
+    //
+    // Ayrı bir arama ekranı yok. Keşfet'in kutusu hem fihristi hem meal
+    // metnini arıyor; kullanıcıyı önündeki iş için başka bir ekrana
+    // göndermenin karşılığı yoktu.
+
+    // Kıssası anlatılan peygamberlerin listesi. Bu ekrandan önce
+    // `/kissa/:id` rotasına gezilebilir hiçbir yol yoktu.
+    GoRoute(
+      path: '/kissalar',
+      builder: (context, state) => const ProphetsScreen(),
+    ),
+
+    GoRoute(
+      path: '/kokler',
+      builder: (context, state) => const RootSearchScreen(),
+    ),
+
+    // Bir sorgunun bütün meal sonuçları. Keşfet'teki sonuç grubu ilk beşi
+    // gösteriyor; "Hepsini Gör" buraya getirir.
+    GoRoute(
+      path: '/ayet-arama',
+      builder: (context, state) => VerseSearchScreen(
+        query: state.uri.queryParameters['q'] ?? '',
+      ),
+    ),
+
+    // Bir konunun ayetleri, mushaf sırasına göre.
+    GoRoute(
+      path: '/fihrist/:topicId',
+      builder: (context, state) => TopicAyahsScreen(
+        topicId: state.pathParameters['topicId']!,
       ),
     ),
 

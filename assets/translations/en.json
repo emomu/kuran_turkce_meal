@@ -5,7 +5,7 @@
   },
   "nav": {
     "read": "Read",
-    "search": "Search",
+    "search": "Explore",
     "plans": "Plans",
     "saved": "Saved",
     "settings": "Settings",
@@ -102,6 +102,30 @@
     "goToAyah": "Go to {surah} {verse}",
     "goToSurah": "Open Surah {surah}",
     "goToHint": "Jump straight to this passage"
+  },
+  "discover": {
+    "title": "Explore",
+    "subtitle": "Find where each subject appears in the Qur'an",
+    "searchHint": "Search",
+    "noResults": "No topics found",
+    "noResultsFor": "No topic matches \"{}\"",
+    "loadFailed": "Could not load the index",
+    "ayahCount": "{} verses",
+    "prophetsTitle": "Stories",
+    "prophetsSubtitle": "{} prophets",
+    "rootsTitle": "Roots",
+    "rootsSubtitle": "{} word roots",
+    "coreHeading": "Verses that define this subject",
+    "scannedHeading": "Other related verses",
+    "scannedNote": "These were found by scanning the translation for the subject's terms; they are not curated.",
+    "relatedTitle": "Related subjects",
+    "topicResults": "Topics",
+    "verseResults": "{} verses in the translation",
+    "all": "All",
+    "seeAll": "See All",
+    "prophetResults": "Stories",
+    "prophetsHint": "In order of revelation",
+    "rootsHint": "Every occurrence of a word"
   },
   "saved": {
     "title": "Saved",
@@ -226,12 +250,12 @@
       "listenBody": "Start the Arabic recitation here. The verse being recited is highlighted and the page follows along. Audio downloads once, then plays offline."
     },
     "search": {
-      "fieldTitle": "Search translation and commentary",
-      "fieldBody": "Just type a word and every verse containing it is listed. If you know the reference, type something like \"2:255\" to go straight there.",
-      "turkishTitle": "Accents don't matter",
+      "fieldTitle": "One box, four searches",
+      "fieldBody": "Type a subject (\"patience\"), a word (\"orphan\"), a verse number (\"2:255\") or a prophet's name (\"moses\"). You don't have to say which one it is; results arrive grouped.",
+      "turkishTitle": "Spelling doesn't matter",
       "turkishBody": "Typing \"adalet\" also finds \"adâlet\". Case and accented letters won't break the search.",
-      "prophetsTitle": "Follow the stories",
-      "prophetsBody": "Type a prophet's name — \"moses\", \"joseph\" — and every verse mentioning them is listed in the order it was revealed, so you can see how the story unfolds."
+      "topicsTitle": "Browse the index",
+      "topicsBody": "The cards below are the Qur'an's subject index. If you don't know what to search for, pick a section and browse — each subject lists the verses that define it first, then other related verses."
     },
     "plans": {
       "cardTitle": "Pick your own pace",
@@ -248,6 +272,12 @@
       "occurrencesBody": "All verses containing words from this root. The highlight shows the derived form in that verse.",
       "searchTitle": "Look up another root",
       "searchBody": "Search roots by their letters here, and compare roots with related meanings."
+    },
+    "assistant": {
+      "whatTitle": "A helper that searches the translation",
+      "whatBody": "Ask about a subject, a situation or a verse. It reads your question, searches the translation and shows what it finds with the source. Sentences like \"what should I do in hard times\" work too.",
+      "limitTitle": "No interpretation, no rulings",
+      "limitBody": "This is not a language model; it shows verses as they are and writes nothing of its own. It works entirely offline — none of your questions leave the device."
     }
   },
   "surahMeta": {

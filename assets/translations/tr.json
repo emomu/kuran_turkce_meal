@@ -5,7 +5,7 @@
   },
   "nav": {
     "read": "Oku",
-    "search": "Ara",
+    "search": "Keşfet",
     "plans": "Planlar",
     "saved": "Kayıtlar",
     "settings": "Ayarlar",
@@ -102,6 +102,30 @@
     "goToAyah": "{surah} {verse}. ayete git",
     "goToSurah": "{surah} suresini aç",
     "goToHint": "Doğrudan bu konuma gider"
+  },
+  "discover": {
+    "title": "Keşfet",
+    "subtitle": "Kur'an'da hangi konu nerede geçiyor",
+    "searchHint": "Ara",
+    "noResults": "Konu bulunamadı",
+    "noResultsFor": "\"{}\" için eşleşen konu yok",
+    "loadFailed": "Fihrist yüklenemedi",
+    "ayahCount": "{} ayet",
+    "prophetsTitle": "Kıssalar",
+    "prophetsSubtitle": "{} peygamber",
+    "rootsTitle": "Kökler",
+    "rootsSubtitle": "{} kelime kökü",
+    "coreHeading": "Bu konuyu kuran ayetler",
+    "scannedHeading": "Konuyla ilgili diğer ayetler",
+    "scannedNote": "Bu ayetler meal metninde konu terimleri taranarak bulundu; seçilmiş değil.",
+    "relatedTitle": "İlgili konular",
+    "topicResults": "Konular",
+    "verseResults": "Mealde {} sonuç",
+    "all": "Tümü",
+    "seeAll": "Hepsini Gör",
+    "prophetResults": "Kıssalar",
+    "prophetsHint": "İniş sırasına göre",
+    "rootsHint": "Bir kelimenin her geçişi"
   },
   "saved": {
     "title": "Kaydedilenler",
@@ -226,12 +250,12 @@
       "listenBody": "Arapça tilaveti buradan başlatırsınız. Okunan ayet vurgulanır ve sayfa kendiliğinden akar. Ses bir kez indirilir, sonrası çevrimdışı çalışır."
     },
     "search": {
-      "fieldTitle": "Mealde arayın",
-      "fieldBody": "Bir kelime yazmanız yeterli; o kelimenin geçtiği bütün ayetler listelenir. Ayet numarası biliyorsanız \"2:255\" gibi yazıp doğrudan oraya gidebilirsiniz.",
+      "fieldTitle": "Tek kutu, dört arama",
+      "fieldBody": "Bir konu yazın (\"sabır\"), bir kelime yazın (\"yetim\"), bir ayet numarası yazın (\"2:255\") ya da bir peygamber adı yazın (\"musa\"). Hangisi olduğunu söylemeniz gerekmez; sonuçlar gruplanarak gelir.",
       "turkishTitle": "Türkçe karakter derdi yok",
       "turkishBody": "\"adalet\" yazarsanız \"adâlet\" de bulunur. Büyük-küçük harf ve şapkalı harfler aramayı bozmaz.",
-      "prophetsTitle": "Kıssaları takip edin",
-      "prophetsBody": "Bir peygamber adı yazın — \"musa\", \"yusuf\" — o peygamberin anıldığı ayetler indikleri sıraya göre listelenir. Kıssanın nasıl geliştiğini baştan izlersiniz."
+      "topicsTitle": "Fihriste göz atın",
+      "topicsBody": "Aşağıdaki kartlar Kur'an'ın konu fihristi. Ne arayacağınızı bilmiyorsanız bir bölüm seçip gezinin — her konuda önce o konuyu kuran ayetler, sonra ilgili diğer ayetler listelenir."
     },
     "plans": {
       "cardTitle": "Kendi temponuzu seçin",
@@ -248,6 +272,12 @@
       "occurrencesBody": "Aynı kökten türeyen kelimelerin geçtiği bütün ayetler burada. Vurgulu kısım o ayetteki türevi gösterir.",
       "searchTitle": "Başka kök arayın",
       "searchBody": "Buradan harflerine göre kök arayabilir, anlamı yakın kökleri karşılaştırabilirsiniz."
+    },
+    "assistant": {
+      "whatTitle": "Mealde arayan bir yardımcı",
+      "whatBody": "Bir konu, bir durum ya da bir ayet sorun. Sorunuzu anlayıp mealde arar, bulduğu ayetleri kaynağıyla gösterir. \"Zor zamanlarda ne yapmalıyım\" gibi cümleler de çalışır.",
+      "limitTitle": "Yorum yapmaz, hüküm vermez",
+      "limitBody": "Bu bir dil modeli değil; ayetleri olduğu gibi gösterir, kendi cümlesini kurmaz. Tamamen çevrimdışı çalışır — hiçbir sorunuz cihazdan çıkmaz."
     }
   },
   "surahMeta": {

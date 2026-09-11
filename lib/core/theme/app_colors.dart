@@ -77,4 +77,47 @@ abstract final class AppColors {
     highlightPink,
     highlightPurple,
   ];
+
+  // ------------------------------------------------------------ Fihrist
+
+  /// Fihrist bölümlerinin renkleri.
+  ///
+  /// Kartlar renkle ayrışır çünkü fihrist gezilen bir yer: kullanıcı aradığı
+  /// bölümü okumadan, rengiyle tanır. Düz bir liste bunu veremiyordu — elli
+  /// altı satır aynı griydi ve göz tutunacak yer bulamıyordu.
+  ///
+  /// Renkler paletin kendi mantığında kaldı: düşük doygunluk, kırık tonlar.
+  /// Doygun renkler ("bible app yeşili") bu uygulamada yabancı durur ve
+  /// mürekkep-kâğıt hissini bozardı. Ayrım için doygunluk değil ton farkı
+  /// kullanılıyor.
+  ///
+  /// Her bölümün iki tonu var: koyu temada zemin daha koyu olmalı, yoksa
+  /// kart metni okunmaz hâle gelir.
+  static const topicLight = <String, Color>{
+    'inanc': Color(0xFF4A6B7C),
+    'ibadet': Color(0xFF3F6B54),
+    'ahlak': Color(0xFF7C6545),
+    'iliskiler': Color(0xFF8A5A5F),
+    'hukuk': Color(0xFF5A5A78),
+    'ahiret': Color(0xFF6B4F6B),
+    'kainat': Color(0xFF4A7068),
+    'haller': Color(0xFF7A6A52),
+  };
+
+  static const topicDark = <String, Color>{
+    'inanc': Color(0xFF2E4551),
+    'ibadet': Color(0xFF2A4638),
+    'ahlak': Color(0xFF52432E),
+    'iliskiler': Color(0xFF5C3C3F),
+    'hukuk': Color(0xFF3C3C50),
+    'ahiret': Color(0xFF473547),
+    'kainat': Color(0xFF2F4945),
+    'haller': Color(0xFF514637),
+  };
+
+  /// Bir bölümün kart rengi. Tanımsız bölüm nötr yüzeye düşer.
+  static Color topicColor(String categoryId, {required bool isDark}) {
+    final map = isDark ? topicDark : topicLight;
+    return map[categoryId] ?? (isDark ? darkSurfaceSunken : lightSurfaceSunken);
+  }
 }

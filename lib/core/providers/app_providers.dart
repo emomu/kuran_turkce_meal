@@ -8,6 +8,7 @@ import '../../data/repositories/prophet_repository.dart';
 import '../../data/repositories/progress_repository.dart';
 import '../../data/repositories/quran_repository.dart';
 import '../../data/repositories/root_repository.dart';
+import '../../data/repositories/topic_repository.dart';
 
 /// Uygulama genelinde paylaşılan altyapı sağlayıcıları.
 
@@ -46,6 +47,18 @@ final prophetRepositoryProvider = Provider<ProphetRepository>(
 /// Peygamber verisinin yüklenmesini bekler.
 final prophetDataProvider = FutureProvider<ProphetRepository>((ref) async {
   final repo = ref.watch(prophetRepositoryProvider);
+  await repo.ensureLoaded();
+  return repo;
+});
+
+/// Konu fihristi. Asset'ten belleğe alınır (~34 KB).
+final topicRepositoryProvider = Provider<TopicRepository>(
+  (ref) => TopicRepository(),
+);
+
+/// Fihrist verisinin yüklenmesini bekler. Keşfet ekranları bunu izler.
+final topicDataProvider = FutureProvider<TopicRepository>((ref) async {
+  final repo = ref.watch(topicRepositoryProvider);
   await repo.ensureLoaded();
   return repo;
 });

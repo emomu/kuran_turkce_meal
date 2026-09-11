@@ -12,7 +12,7 @@ import 'package:kuran_turkce_meal/features/plans/providers/plans_provider.dart';
 import 'package:kuran_turkce_meal/features/plans/view/plans_screen.dart';
 import 'package:kuran_turkce_meal/data/repositories/root_repository.dart';
 import 'package:kuran_turkce_meal/features/roots/view/root_detail_screen.dart';
-import 'package:kuran_turkce_meal/features/search/view/search_screen.dart';
+import 'package:kuran_turkce_meal/features/discover/view/discover_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'helpers/localized_app.dart';
@@ -50,16 +50,16 @@ void main() async {
     await tester.pumpAndSettle();
   }
 
-  group('Arama ekranı turu', () {
+  group('Keşfet ekranı turu', () {
     testWidgets('ilk açılışta arama ipucu gösterilir', (tester) async {
-      await pumpScreen(tester, const SearchScreen());
+      await pumpScreen(tester, const DiscoverScreen());
 
       expect(find.byType(CoachMarkOverlay), findsOneWidget);
-      expect(find.text('Mealde arayın'), findsOneWidget);
+      expect(find.text('Tek kutu, dört arama'), findsOneWidget);
     });
 
     testWidgets('ikinci adım Türkçe karakterleri anlatır', (tester) async {
-      await pumpScreen(tester, const SearchScreen());
+      await pumpScreen(tester, const DiscoverScreen());
 
       await tester.tap(find.text('Devam'));
       await tester.pumpAndSettle();
@@ -67,21 +67,23 @@ void main() async {
       expect(find.text('Türkçe karakter derdi yok'), findsOneWidget);
     });
 
-    testWidgets('son adım kıssa aramasını anlatır', (tester) async {
-      await pumpScreen(tester, const SearchScreen());
+    testWidgets('son adım fihristi anlatır', (tester) async {
+      // Kıssa adımı kalktı — kıssalar artık Keşfet'in kendi kartında.
+      // Yerine fihrist geldi: ekranın asıl yeni parçası o.
+      await pumpScreen(tester, const DiscoverScreen());
 
       await tester.tap(find.text('Devam'));
       await tester.pumpAndSettle();
       await tester.tap(find.text('Devam'));
       await tester.pumpAndSettle();
 
-      expect(find.text('Kıssaları takip edin'), findsOneWidget);
+      expect(find.text('Fihriste göz atın'), findsOneWidget);
       expect(find.text('Anladım'), findsOneWidget);
     });
 
     testWidgets('izlendikten sonra arama alanı kullanılabilir',
         (tester) async {
-      await pumpScreen(tester, const SearchScreen());
+      await pumpScreen(tester, const DiscoverScreen());
 
       await tester.tap(find.text('Atla'));
       await tester.pumpAndSettle();
@@ -96,7 +98,7 @@ void main() async {
     testWidgets('daha önce izlendiyse hiç açılmaz', (tester) async {
       await pumpScreen(
         tester,
-        const SearchScreen(),
+        const DiscoverScreen(),
         initialPrefs: {TourId.search.storageKey: true},
       );
 
@@ -322,7 +324,7 @@ void main() async {
                 children: [
                   Navigator(
                     onGenerateRoute: (_) => MaterialPageRoute<void>(
-                      builder: (_) => const SearchScreen(),
+                      builder: (_) => const DiscoverScreen(),
                     ),
                   ),
                   Navigator(
@@ -350,7 +352,7 @@ void main() async {
       expect(find.text('ayarlar'), findsOneWidget);
       expect(find.byType(CoachMarkOverlay), findsNothing,
           reason: 'gizli sekmenin turu öndeki ekranın üstünde belirdi');
-      expect(find.text('Mealde arayın'), findsNothing);
+      expect(find.text('Tek kutu, dört arama'), findsNothing);
     });
 
     testWidgets('sekme öne gelince turu açılır', (tester) async {
@@ -359,7 +361,7 @@ void main() async {
       await pumpTabs(tester, index: 0);
 
       expect(find.byType(CoachMarkOverlay), findsOneWidget);
-      expect(find.text('Mealde arayın'), findsOneWidget);
+      expect(find.text('Tek kutu, dört arama'), findsOneWidget);
     });
   });
 
@@ -398,7 +400,11 @@ void main() async {
       'tour.search': [
         'fieldTitle', 'fieldBody',
         'turkishTitle', 'turkishBody',
-        'prophetsTitle', 'prophetsBody',
+        'topicsTitle', 'topicsBody',
+      ],
+      'tour.assistant': [
+        'whatTitle', 'whatBody',
+        'limitTitle', 'limitBody',
       ],
     };
 

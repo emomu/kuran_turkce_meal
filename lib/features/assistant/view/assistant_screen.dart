@@ -6,6 +6,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/router/app_router.dart';
 import '../../../shared/widgets/pressable.dart';
 import '../../../shared/widgets/responsive_layout.dart';
+import '../../onboarding/providers/tour_provider.dart';
+import '../../onboarding/widgets/coach_mark.dart';
+import '../../onboarding/widgets/tour_host.dart';
 import '../data/assistant_message.dart';
 import '../providers/assistant_provider.dart';
 import '../providers/voice_input_provider.dart';
@@ -30,6 +33,12 @@ class _AssistantScreenState extends ConsumerState<AssistantScreen> {
   final _controller = TextEditingController();
   final _focusNode = FocusNode();
   final _scrollController = ScrollController();
+
+  /// Tanıtımın işaret ettiği karşılama alanı.
+  final _welcomeKey = GlobalKey();
+
+  /// Tanıtımın işaret ettiği yazma kutusu.
+  final _composerKey = GlobalKey();
 
   @override
   void dispose() {
@@ -93,6 +102,30 @@ class _AssistantScreenState extends ConsumerState<AssistantScreen> {
     );
   }
 
+  /// Asistanın tanıtım adımları.
+  ///
+  /// İkisi de kullanıcının kendi başına anlaması zor olan şeyler. İlki ne
+  /// yaptığı: soruyu anlayıp mealde arıyor, yani kullanıcı anahtar kelime
+  /// değil cümle yazabilir. İkincisi — daha önemlisi — ne yapmadığı: bu bir
+  /// dil modeli değil, yorum yapmıyor ve çevrimdışı çalışıyor. Bir din
+  /// uygulamasında bu ayrımın söylenmemesi, söylenmesinden çok daha kötü.
+  List<TourStep> _tourSteps() {
+    return [
+      TourStep(
+        targetKey: _welcomeKey,
+        icon: Icons.auto_awesome_rounded,
+        title: 'tour.assistant.whatTitle'.tr(),
+        body: 'tour.assistant.whatBody'.tr(),
+      ),
+      TourStep(
+        targetKey: _composerKey,
+        icon: Icons.lock_outline_rounded,
+        title: 'tour.assistant.limitTitle'.tr(),
+        body: 'tour.assistant.limitBody'.tr(),
+      ),
+    ];
+  }
+
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(assistantProvider);
@@ -111,43 +144,49 @@ class _AssistantScreenState extends ConsumerState<AssistantScreen> {
       onPopInvokedWithResult: (didPop, _) {
         if (!didPop) popOrHome(context);
       },
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text('assistant.title'.tr()),
-          actions: [
-            if (!state.isEmpty)
-              IconButton(
-                icon: const Icon(Icons.refresh_rounded),
-                tooltip: 'assistant.clear'.tr(),
-                onPressed: () => ref.read(assistantProvider.notifier).clear(),
+      child: TourHost(
+        tour: TourId.assistant,
+        steps: _tourSteps,
+        child: Scaffold(
+          appBar: AppBar(
+            title: Text('assistant.title'.tr()),
+            actions: [
+              if (!state.isEmpty)
+                IconButton(
+                  icon: const Icon(Icons.refresh_rounded),
+                  tooltip: 'assistant.clear'.tr(),
+                  onPressed: () => ref.read(assistantProvider.notifier).clear(),
+                ),
+            ],
+          ),
+          body: SafeArea(
+            top: false,
+            child: ReadableWidth(
+              child: Column(
+                children: [
+                  Expanded(
+                    child: state.isEmpty
+                        ? _Welcome(
+                            key: _welcomeKey,
+                            onPick: _send,
+                            languageCode: context.locale.languageCode,
+                          )
+                        : _MessageList(
+                            state: state,
+                            controller: _scrollController,
+                            languageCode: context.locale.languageCode,
+                            onAction: _onAction,
+                          ),
+                  ),
+                  _Composer(
+                    key: _composerKey,
+                    controller: _controller,
+                    focusNode: _focusNode,
+                    enabled: !state.isThinking,
+                    onSend: _send,
+                  ),
+                ],
               ),
-          ],
-        ),
-        body: SafeArea(
-          top: false,
-          child: ReadableWidth(
-            child: Column(
-              children: [
-                Expanded(
-                  child: state.isEmpty
-                      ? _Welcome(
-                          onPick: _send,
-                          languageCode: context.locale.languageCode,
-                        )
-                      : _MessageList(
-                          state: state,
-                          controller: _scrollController,
-                          languageCode: context.locale.languageCode,
-                          onAction: _onAction,
-                        ),
-                ),
-                _Composer(
-                  controller: _controller,
-                  focusNode: _focusNode,
-                  enabled: !state.isThinking,
-                  onSend: _send,
-                ),
-              ],
             ),
           ),
         ),
@@ -190,7 +229,9 @@ class _MessageList extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 32),
       itemCount: count,
       itemBuilder: (context, index) {
-        if (typing == 1 && index == 0) return const AssistantThinkingIndicator();
+        if (typing == 1 && index == 0) {
+          return const AssistantThinkingIndicator();
+        }
         final message = state.messages[count - 1 - index];
         return AssistantMessageBubble(
           message: message,
@@ -208,7 +249,7 @@ class _MessageList extends StatelessWidget {
 /// hem ilk soruyu kolaylaştırır hem de asistanın sınırını baştan çizer:
 /// listedeki her örnek gerçekten karşılanabilen bir sorudur.
 class _Welcome extends StatelessWidget {
-  const _Welcome({required this.onPick, required this.languageCode});
+  const _Welcome({super.key, required this.onPick, required this.languageCode});
 
   final void Function(String) onPick;
   final String languageCode;
@@ -313,6 +354,7 @@ class _Welcome extends StatelessWidget {
 /// Soru yazma alanı.
 class _Composer extends ConsumerWidget {
   const _Composer({
+    super.key,
     required this.controller,
     required this.focusNode,
     required this.enabled,
@@ -508,9 +550,7 @@ class _MicButtonState extends State<_MicButton>
                 : theme.colorScheme.surface,
             shape: BoxShape.circle,
             border: Border.all(
-              color: listening
-                  ? theme.colorScheme.primary
-                  : theme.dividerColor,
+              color: listening ? theme.colorScheme.primary : theme.dividerColor,
             ),
             boxShadow: listening
                 ? [

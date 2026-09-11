@@ -17,8 +17,14 @@ enum TourId {
   /// Okuma ekranı: basılı tutma, sure sonu, punto ayarı.
   reader('tour_seen_reader'),
 
-  /// Arama ekranı: nerede aradığı ve nasıl yazılacağı.
+  /// Keşfet: tek kutunun neleri aradığı ve fihristin ne olduğu.
+  ///
+  /// Depolama anahtarı `search` kaldı: ekran yeniden kurulmuş olsa da turu
+  /// izlemiş kullanıcıya yeniden göstermek, ona yeni bir şey öğretmez.
   search('tour_seen_search'),
+
+  /// Asistan: ne yaptığı ve — daha önemlisi — ne yapmadığı.
+  assistant('tour_seen_assistant'),
 
   /// Planlar ekranı: planın ne olduğu ve nasıl işlediği.
   plans('tour_seen_plans'),

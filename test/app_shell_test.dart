@@ -24,7 +24,7 @@ void main() async {
           branches: [
             for (final path in [
               '/',
-              '/ara',
+              '/kesfet',
               '/planlar',
               '/kayitlar',
               '/ayarlar',
@@ -54,7 +54,13 @@ void main() async {
   testWidgets('beş sekme etiketleriyle çizilir', (tester) async {
     await pumpShell(tester);
     // Asistan sekmede değil; yüzen düğmeden açılıyor.
-    for (final label in ['Oku', 'Ara', 'Planlar', 'Kayıtlar', 'Ayarlar']) {
+    for (final label in [
+      'Oku',
+      'Keşfet',
+      'Planlar',
+      'Kayıtlar',
+      'Ayarlar',
+    ]) {
       expect(find.text(label), findsOneWidget);
     }
   });

@@ -282,16 +282,26 @@ bool keyboardDismissHitsInteractive(
     // dokunuşta isabet alır ve sayılsaydı klavye hiçbir zaman kapanmazdı.
     if (identical(target, self)) continue;
 
-    // İki işaret aranır ve ikisi de gerçek bir etkileşimi gösterir:
-    // `GestureDetector` birincisini, `InkWell`/`ElevatedButton` gibi Material
-    // düğmeleri ikincisini üretir.
+    // Kaydırılabilir alanlar atlanır. `Scrollable` kendi jest tanıyıcısı
+    // için bir `RenderSemanticsGestureHandler` üretiyor ve bu, listenin boş
+    // yerinde de isabet alıyor. Ayırt edilmeseydi kaydırılabilir her ekranda
+    // klavye kapanmazdı — Keşfet'te tam olarak bu oluyordu: liste boşken
+    // altındaki boşluğa dokunmak hiçbir şey yapmıyordu.
+    //
+    // Ölçüt, tanıyıcının dokunmaya yanıt verip vermediği: bir düğme `onTap`
+    // taşır, kaydırma yalnızca sürüklemeyi dinler.
+    if (target is RenderSemanticsGestureHandler) {
+      if (target.onTap != null || target.onLongPress != null) return true;
+      continue;
+    }
+
+    // `InkWell`/`ElevatedButton` gibi Material düğmeleri bunu üretir.
     //
     // `RenderPointerListener`'a bakılmaz: `MaterialApp` fare imleci için
     // ekranın tamamını kaplayan bir tane koyuyor ve boş alanda da isabet
     // alıyor. Ona bakılsaydı klavye hiçbir yerde kapanmazdı — denetimin
     // tamamı sessizce işlevsiz kalırdı.
-    if (target is RenderSemanticsGestureHandler ||
-        target is RenderMouseRegion) {
+    if (target is RenderMouseRegion) {
       return true;
     }
   }

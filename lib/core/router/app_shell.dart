@@ -37,8 +37,8 @@ class AppShell extends ConsumerWidget {
       label: 'nav.read'.tr(),
     ),
     (
-      icon: Icons.search_outlined,
-      activeIcon: Icons.search_rounded,
+      icon: Icons.explore_outlined,
+      activeIcon: Icons.explore_rounded,
       label: 'nav.search'.tr(),
     ),
     (
