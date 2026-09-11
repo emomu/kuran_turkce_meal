@@ -95,3 +95,6 @@ secrets.json
 *.aab
 *.ipa
 *.app.zip
+
+# App Review yazışmaları — özel, repoda durmaz
+store/appeal_*.md
