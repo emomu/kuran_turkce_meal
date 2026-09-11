@@ -78,6 +78,22 @@ dönebilirsiniz.
 
 ### Keşif
 
+Bu sekme eskiden yalnızca bir arama kutusuydu. Arama, ne aradığını bilen
+kullanıcıya hizmet eder; bilmeyene boş bir ekran gösterir. Keşfet ekranı
+ikisini birleştirir: üstte tek bir kutu, altında gezilebilir bir fihrist.
+
+- **Konu fihristi** — 8 bölüm altında 56 konu (Tevhid, Sabır, Adalet,
+  Tövbe…). Ne arayacağını bilmeyen kullanıcı bir bölüm seçip gezinir.
+  Her konuda ayetler iki bölümde listelenir: önce **o konuyu kuran ayetler**
+  — elle seçilmiş çekirdek —, sonra **konuyla ilgili diğer ayetler** — meal
+  metninde terim taramasından gelenler. Ayrım korunur, çünkü taramadan gelen
+  bir ayet isabetli olsa da konuyu kuran ayetle aynı ağırlıkta değildir.
+- **Tek kutu, dört arama** — Bir konu (`sabır`), bir kelime (`yetim`), bir
+  ayet referansı (`2:255`) ya da bir peygamber adı (`musa`) yazın; hangisi
+  olduğunu söylemeniz gerekmez. Konu ve metin araması ayrı ekranlara
+  bölünmedi: kullanıcı "sabır" yazarken bunun bir fihrist konusu mu yoksa
+  mealde geçen bir kelime mi olduğunu bilmek zorunda değil. Sonuçlar
+  gruplanır ve niyet kesinliğine göre sıralanır.
 - **Tam metin arama** — SQLite FTS5 üzerinde 6.236 ayet içinde anında.
   Türkçe'ye özgü karakter farklarını gözetir: `IŞIK` araması `ışık`'ı,
   `adalet` araması `adâlet`'i bulur.
@@ -128,7 +144,7 @@ dönebilirsiniz.
   Karşılanamayan sorular cihazda sayılır (`assistant_stats.dart`): konu
   sözlüğünün hangi yöne büyümesi gerektiği tahminle değil ölçümle
   belirlenir. Sayaç yalnızca cihazda durur, hiçbir yere gönderilmez.
-- **Peygamber kıssaları** — Arama kutusuna bir peygamber adı yazın
+- **Peygamber kıssaları** — Keşfet kutusuna bir peygamber adı yazın
   (25 peygamber tanınır); o peygamberin anıldığı bütün ayetler **iniş
   sırasına göre** listelenir. Sıralama bu ekranın varlık sebebi: bir kıssa
   Kur'an'a tek seferde girmez. Mûsâ kıssası önce kısa değinmelerle başlar,
@@ -309,6 +325,7 @@ lib/
 │   ├── onboarding/       İlk kullanım tanıtımı
 │   ├── home/             Sure listesi, günün ayeti, kaldığın yer
 │   ├── reader/           Okuma akışı, ayet eylemleri, tefsir
+│   ├── discover/         Keşfet sekmesi: konu fihristi, tek arama kutusu
 │   ├── search/           FTS5 araması, ayet referansı, vurgulu sonuçlar
 │   ├── assistant/        Niyet çözümleme, bulanık eşleştirme, sıralama,
 │   │                     sohbet geçmişi, sesli giriş, şablon cevaplar

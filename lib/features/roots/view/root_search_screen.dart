@@ -198,7 +198,12 @@ class _RootRow extends StatelessWidget {
       scale: 0.99,
       onTap: () => Navigator.of(context).push(
         MaterialPageRoute<void>(
-          builder: (_) => RootDetailScreen(rootArabic: root.arabic),
+          // Detaydaki arama düğmesi buraya geri dönsün, yeni bir arama
+          // ekranı itmesin; bkz. [RootDetailScreen.cameFromSearch].
+          builder: (_) => RootDetailScreen(
+            rootArabic: root.arabic,
+            cameFromSearch: true,
+          ),
         ),
       ),
       child: Padding(

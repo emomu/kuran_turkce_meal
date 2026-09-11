@@ -39,11 +39,46 @@ class RootDetailScreen extends ConsumerWidget {
     required this.rootArabic,
     this.focusSurah,
     this.focusAyah,
+    this.cameFromSearch = false,
   });
 
   final String rootArabic;
   final int? focusSurah;
   final int? focusAyah;
+
+  /// Bu ekrana kök arama ekranından gelinip gelinmediği.
+  ///
+  /// Üst çubuktaki arama düğmesinin davranışını belirler: aramadan
+  /// gelindiyse düğme geri döner, gelinmediyse aramayı yeni açar. Bkz.
+  /// [_openSearch].
+  final bool cameFromSearch;
+
+  /// Kök arama ekranını açar — geride zaten bir tane varsa ona döner.
+  ///
+  /// Bu ekrana iki yoldan gelinir: kök aramadan bir kök seçilerek, ya da
+  /// okuma ekranında bir kelimeye dokunularak. İlkinde arama zaten yığındadır
+  /// ve yenisini itmek aynı ekranın ikinci bir kopyasını biriktirir:
+  /// kullanıcı iki kez geri dediğinde biraz önce ayrıldığı arama ekranına
+  /// yeniden düşer ve geri gitmiş gibi hissetmez.
+  ///
+  /// [cameFromSearch] bu ayrımı çağıran tarafın bildirmesini sağlar; yığını
+  /// yoklamak `Navigator` API'siyle güvenilir biçimde yapılamıyor
+  /// (`popUntil` yalnızca eşleşene kadar kapatır, salt okunur gezmez).
+  void _openSearch(BuildContext context) {
+    // Aramadan gelindiyse geri dönmek yeterli: aynı ekranın ikinci kopyası
+    // yığına binmez.
+    if (cameFromSearch) {
+      Navigator.of(context).pop();
+      return;
+    }
+
+    // Okuma ya da plan ekranından gelinmiş; geride arama yok, yeni açılır.
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => const RootSearchScreen(),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -57,11 +92,7 @@ class RootDetailScreen extends ConsumerWidget {
             key: _rootSearchKey,
             icon: const Icon(Icons.search_rounded, size: 21),
             tooltip: 'roots.searchTitle'.tr(),
-            onPressed: () => Navigator.of(context).push(
-              MaterialPageRoute<void>(
-                builder: (_) => const RootSearchScreen(),
-              ),
-            ),
+            onPressed: () => _openSearch(context),
           ),
         ],
       ),

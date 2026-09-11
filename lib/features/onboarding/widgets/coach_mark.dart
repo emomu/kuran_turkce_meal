@@ -179,11 +179,10 @@ class _CoachMarkOverlayState extends State<CoachMarkOverlay>
     final key = step.targetKey;
     if (key == null) return null;
 
-    final context = key.currentContext;
-    if (context == null) return null;
-
-    final box = context.findRenderObject() as RenderBox?;
-    if (box == null || !box.hasSize || !box.attached) return null;
+    // Ölçüm de boyayıcıyla aynı güvenli yolu kullanır; hedef ağaçtan
+    // çıkmışsa (liste onu geri dönüştürdü) sessizce vazgeçilir.
+    final box = _SpotlightPainter._boxOf(key.currentContext);
+    if (box == null) return null;
 
     final offset = box.localToGlobal(Offset.zero);
     return offset & box.size;
@@ -276,21 +275,35 @@ class _SpotlightPainter extends CustomPainter {
 
   /// Anahtarın katman koordinatındaki karesi; çizilmediyse null.
   Rect? get target {
-    final context = targetKey?.currentContext;
-    if (context == null) return null;
+    final box = _boxOf(targetKey?.currentContext);
+    if (box == null) return null;
 
-    final box = context.findRenderObject() as RenderBox?;
-    if (box == null || !box.hasSize || !box.attached) return null;
-
-    final overlayBox =
-        overlayKey.currentContext?.findRenderObject() as RenderBox?;
-    if (overlayBox == null || !overlayBox.hasSize || !overlayBox.attached) {
-      return null;
-    }
+    final overlayBox = _boxOf(overlayKey.currentContext);
+    if (overlayBox == null) return null;
 
     // Hedefin sol üstü, katmanın kendi koordinat sistemine çevrilir.
     final topLeft = overlayBox.globalToLocal(box.localToGlobal(Offset.zero));
     return topLeft & box.size;
+  }
+
+  /// Bir bağlamın çizilebilir kutusu; ölçülemiyorsa null.
+  ///
+  /// `findRenderObject` ağaçtan çıkmış (`inactive`) bir eleman için assert
+  /// atar ve boyama sırasında bu çağrıyı korumanın başka yolu yoktu:
+  /// `currentContext` null dönmüyor, `mounted` da `true` kalabiliyor.
+  ///
+  /// Okuma ekranında liste aşağıdaki bir ayete konumlandığında hedef
+  /// `KeyedSubtree` geri dönüştürülüyor; tam o karede boyama yapılırsa
+  /// uygulama kırmızı ekrana düşüyordu.
+  ///
+  /// [Element.renderObject] bu çağrının assert atmayan karşılığıdır: eleman
+  /// canlı değilse ya da henüz çizilmediyse sessizce null döner.
+  static RenderBox? _boxOf(BuildContext? context) {
+    if (context is! Element) return null;
+
+    final box = context.renderObject;
+    if (box is! RenderBox || !box.hasSize || !box.attached) return null;
+    return box;
   }
 
   /// Delik hedefin biraz dışından geçer; öğe karartmaya yapışık durmasın.
