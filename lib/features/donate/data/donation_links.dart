@@ -58,11 +58,7 @@ class DonationChannel {
   String get subtitleKey => 'donate.channel.$id.subtitle';
 }
 
-/// Yapılandırılmış kanallar.
-///
-/// TODO: Yayına çıkmadan önce kendi hesap bilgilerinizi yazın. Değeri
-/// doldurulmamış kanallar `enabled: false` bırakılmalı — çalışmayan bir
-/// bağış düğmesi göstermek, hiç göstermemekten kötüdür.
+
 abstract final class DonationLinks {
   static const channels = <DonationChannel>[
     DonationChannel(

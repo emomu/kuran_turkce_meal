@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kuran_turkce_meal/data/models/ayah.dart';
-import 'package:kuran_turkce_meal/data/models/topic.dart';
 import 'package:kuran_turkce_meal/data/repositories/topic_repository.dart';
 import 'package:kuran_turkce_meal/features/search/data/verse_reference.dart';
 
@@ -212,6 +211,22 @@ void main() async {
     test('İngilizce ad da bulunur', () {
       final hits = repo.search('patience', fold: foldSurahName);
       expect(hits.map((t) => t.id), contains('sabir'));
+    });
+  });
+
+  group('kart görselleri', () {
+    test('her konunun görseli pakette var', () async {
+      // Dosya adı konu kimliğidir. Bir harf kayarsa kart sessizce düz renge
+      // düşer ve kimse fark etmez — üretimde bir kez "yaradilis/yaratilis"
+      // olarak kaydı ve ancak elle denetimde görüldü.
+      for (final topic in repo.all) {
+        final path = 'assets/images/topics/${topic.id}.png';
+        await expectLater(
+          rootBundle.load(path),
+          completes,
+          reason: '$path pakette yok',
+        );
+      }
     });
   });
 

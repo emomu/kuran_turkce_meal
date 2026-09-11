@@ -3,7 +3,7 @@ description: "Kur'an-ı Kerim Türkçe ve İngilizce meali — iniş sırasına 
 publish_to: 'none' 
 
 
-version: 1.0.4+1
+version: 1.0.5+1
 
 environment:
   sdk: ^3.11.1
@@ -77,6 +77,9 @@ flutter:
     - assets/data/
     - assets/translations/
     - assets/lottie/
+    # Fihrist kartlarının görselleri. Dosya adı konu kimliğidir
+    # (bkz. assets/data/topics.json); kart görseli o adla arar.
+    - assets/images/topics/
 
   # Fontlar uygulamayla birlikte paketlenir. Çalışma anında indirilmezler;
   # uygulama hiçbir ağ isteği yapmaz ve ilk açılış çevrimdışı da doğru
