@@ -408,10 +408,17 @@ class _ReaderScreenState extends ConsumerState<ReaderScreen> {
       },
       child: Scaffold(
         // Asistan düğmesi okuma ekranında da durur: aklına takılan soruyu
-        // okurken sormak, çıkıp bir sekmeye gitmekten doğal. Tilavet çubuğu
-        // `bottomNavigationBar` yuvasında olduğu için `Scaffold` düğmeyi
-        // çalarken kendiliğinden onun üstüne alır.
-        floatingActionButton: const AssistantFab(),
+        // okurken sormak, çıkıp bir sekmeye gitmekten doğal.
+        //
+        // Tilavet çubuğu burada `bottomNavigationBar` yuvasında değil, gövdenin
+        // en altında duruyor (bkz. aşağıdaki `AudioPlayerBar`); `Scaffold` onu
+        // hesaba katmadığı için düğme çalarken çubuğun üstüne biner. Pay bu
+        // yüzden elle veriliyor.
+        floatingActionButton: AssistantFab(
+          bottomOffset: audio.surahNumber == _surahNumber && audio.isActive
+              ? AudioPlayerBar.barHeight
+              : 0,
+        ),
         body: asyncData.when(
           loading: () => const Center(child: CupertinoStyleLoader()),
           error: (error, _) => _ReaderError(message: '$error'),

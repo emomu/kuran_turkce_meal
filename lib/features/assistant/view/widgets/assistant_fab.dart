@@ -2,6 +2,8 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/theme/app_typography.dart';
+
 /// Asistanı açan yüzen düğme.
 ///
 /// Asistan bir sekme değil: kullanıcı oraya "gitmez", okuduğu ya da aradığı
@@ -25,7 +27,12 @@ class AssistantFab extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return Padding(
+    // Tilavet çubuğu kayarak girip çıkıyor; düğme aynı süre ve eğriyle
+    // birlikte kayar. Anlık sıçrasaydı çubuk daha yerine oturmadan düğme
+    // yukarıda belirir, iki ayrı hareket gibi okunurdu.
+    return AnimatedPadding(
+      duration: Motion.normal,
+      curve: Motion.standard,
       padding: EdgeInsets.only(bottom: bottomOffset),
       child: FloatingActionButton(
         onPressed: () => context.push('/asistan'),

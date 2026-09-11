@@ -47,6 +47,14 @@ class AudioPlayerBar extends ConsumerWidget {
   /// araya bir parmak boyu boşluk girer.
   final bool applyBottomSafeArea;
 
+  /// Çubuğun yüksekliği (alt güvenli alan hariç).
+  ///
+  /// 1pt üst çizgi + 12pt nefes + 44pt denetim + 12pt nefes. Çubuğun üstünde
+  /// duran öğeler (asistan düğmesi) bu payı kendileri bırakır: çubuk
+  /// `bottomNavigationBar` yuvasında olmadığı ekranlarda `Scaffold` onu
+  /// hesaba katmaz.
+  static const double barHeight = 69;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final audio = ref.watch(audioProvider);
