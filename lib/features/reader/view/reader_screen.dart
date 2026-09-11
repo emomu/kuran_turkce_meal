@@ -418,6 +418,9 @@ class _ReaderScreenState extends ConsumerState<ReaderScreen> {
           bottomOffset: audio.surahNumber == _surahNumber && audio.isActive
               ? AudioPlayerBar.barHeight
               : 0,
+          // Okuma turu açıkken düğme gizlenir; baloncuğun düğmelerine
+          // binmesin ve tanıtım yarıda kesilmesin.
+          hideDuringTour: TourId.reader,
         ),
         body: asyncData.when(
           loading: () => const Center(child: CupertinoStyleLoader()),

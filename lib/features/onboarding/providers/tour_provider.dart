@@ -77,3 +77,37 @@ class TourNotifier extends StateNotifier<Set<TourId>> {
 final tourProvider = StateNotifierProvider<TourNotifier, Set<TourId>>(
   (ref) => TourNotifier(ref.watch(sharedPreferencesProvider)),
 );
+
+/// O an ekranda açık olan tanıtım katmanları.
+///
+/// Tur karartması [Overlay]'e konur, ama sekmeli kabuğun asistan düğmesi o
+/// katmanın dışında — kabuğun kendi `Scaffold`'unda — çizilir ve karartmanın
+/// üstünde parlak kalır. Görüntü kirliliğinin ötesinde: düğme basılabilir
+/// durumda kalıyor ve tur yarıda kesilebiliyordu.
+///
+/// Hangi turun açık olduğu tutulur, yalnızca bir sayı değil: "ipuçlarını
+/// tekrar göster" bütün turları sıfırlıyor ve her sekmenin `TourHost`'u kendi
+/// katmanını açıyor. Sayaç tutulsaydı, kullanıcı ayarlardayken bile ana
+/// ekranın kapanmamış turu yüzünden sayaç sıfırdan büyük kalır ve düğme her
+/// sekmede gizlenirdi. Düğmeyi gizleyen ekran, kendi turunun kimliğini sorar.
+class ActiveToursNotifier extends StateNotifier<Set<TourId>> {
+  ActiveToursNotifier() : super(const {});
+
+  void show(TourId tour) => state = {...state, tour};
+
+  void hide(TourId tour) => state = {...state}..remove(tour);
+}
+
+final activeToursProvider =
+    StateNotifierProvider<ActiveToursNotifier, Set<TourId>>(
+      (ref) => ActiveToursNotifier(),
+    );
+
+/// [tour] o an ekranda açık mı.
+///
+/// Tur boyunca gizlenmesi gereken öğeler (asistan düğmesi) bunu dinler —
+/// kendi ekranının turunu sorarak, başka bir sekmede açık kalmış tur onları
+/// etkilemesin.
+final isTourActiveProvider = Provider.family<bool, TourId>(
+  (ref, tour) => ref.watch(activeToursProvider).contains(tour),
+);

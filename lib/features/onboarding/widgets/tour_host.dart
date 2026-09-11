@@ -127,11 +127,27 @@ class _TourHostState extends ConsumerState<TourHost> {
       ),
     );
     overlay.insert(_entry!);
+    // Tur boyunca gizlenmesi gereken öğeler (asistan düğmesi) haberdar olur;
+    // bkz. [tourVisibilityProvider]. Depo kurulmamış olabilir (çıplak
+    // widget testi); tur yine de gösterilir.
+    try {
+      ref.read(activeToursProvider.notifier).show(widget.tour);
+    } on Object {
+      // Yoksay.
+    }
   }
 
   void _removeEntry() {
-    _entry?.remove();
+    if (_entry == null) return;
+    _entry!.remove();
     _entry = null;
+    // `dispose` sırasında da çağrılabilir; kapsam o an sökülmüş olabilir.
+    // Sayacın güncellenememesi turun kapanmasını engellememeli.
+    try {
+      ref.read(activeToursProvider.notifier).hide(widget.tour);
+    } on Object {
+      // Yoksay.
+    }
   }
 
   void _finish() {

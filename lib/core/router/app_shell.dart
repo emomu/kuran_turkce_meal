@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 
 import '../theme/app_typography.dart';
 import '../../features/assistant/view/widgets/assistant_fab.dart';
+import '../../features/onboarding/providers/tour_provider.dart';
 import '../../features/audio/widgets/audio_player_bar.dart';
 import '../../shared/widgets/responsive_layout.dart';
 
@@ -58,6 +59,16 @@ class AppShell extends ConsumerWidget {
     ),
   ];
 
+  /// Sekmenin tanıtım turu; yoksa null.
+  ///
+  /// Sıra [_destinations] ile aynı: oku, keşfet, planlar, kayıtlar, ayarlar.
+  static TourId? _tourFor(int index) => switch (index) {
+    0 => TourId.home,
+    1 => TourId.search,
+    2 => TourId.plans,
+    _ => null,
+  };
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
@@ -104,7 +115,13 @@ class AppShell extends ConsumerWidget {
       // bulunduğun ekrana soru sorma yolu. Kabuktaki bütün sekmelerde
       // görünür; okuma ekranı kabuğun dışında olduğu için düğmesini
       // kendisi çizer.
-      floatingActionButton: const AssistantFab(),
+      floatingActionButton: AssistantFab(
+        // Düğme, o an açık olan sekmenin turu boyunca gizlenir; karartma
+        // kabuğun `Scaffold`'unu kapsamadığı için aksi halde baloncuğun
+        // üstünde kalırdı. Turu olmayan sekmelerde (kayıtlar, ayarlar)
+        // gizlenecek bir şey yok.
+        hideDuringTour: _tourFor(navigationShell.currentIndex),
+      ),
       // Tilavet çubuğu sekmelerin üstünde durur ve hangi sekmede olunursa
       // olunsun görünür: ses çalarken kullanıcı ana sayfaya ya da ayarlara
       // geçtiğinde onu durduramamak, kontrolü aramak için okuma ekranına
