@@ -66,6 +66,7 @@ graphify-out/graph.json
 graphify-out/graph.html
 graphify-out/manifest.json
 graphify-out/cost.json
+graphify-out/.graphify_analysis.json
 graphify-out/.graphify_labels.json
 graphify-out/.graphify_labels.json.sig
 graphify-out/.graphify_python
