@@ -7,6 +7,7 @@ import '../../../data/models/ayah.dart';
 import '../../../data/models/reader_preferences.dart';
 import '../../../data/models/user_marks.dart';
 import '../../../shared/widgets/pressable.dart';
+import 'arabic_verse_text.dart';
 
 /// Okuma akışındaki tek bir ayet.
 ///
@@ -28,6 +29,7 @@ class AyahTile extends StatelessWidget {
     required this.onLongPress,
     this.isFocused = false,
     this.isPlaying = false,
+    this.highlightedWord,
   });
 
   final Ayah ayah;
@@ -45,6 +47,12 @@ class AyahTile extends StatelessWidget {
   /// boyunca her ayette sırayla belirecek bir gösterge, okuma akışının önüne
   /// geçmemeli.
   final bool isPlaying;
+
+  /// Tilavette okunan kelimenin Arapça metindeki sırası (0 tabanlı).
+  ///
+  /// Yalnızca çalan ayette doludur; zamanlama verisi bulunmayan ayetlerde ve
+  /// vurgu kapalıyken null gelir ve metin tek parça çizilir.
+  final int? highlightedWord;
 
   @override
   Widget build(BuildContext context) {
@@ -87,18 +95,11 @@ class AyahTile extends StatelessWidget {
 
             if (showsArabic) ...[
               // Arapça metin sağdan sola akar ve kendi punto ölçeğini kullanır.
-              Align(
-                alignment: Alignment.centerRight,
-                child: Text(
-                  ayah.arabic!,
-                  textDirection: TextDirection.rtl,
-                  textAlign: TextAlign.right,
-                  style: TextStyle(
-                    fontSize: prefs.arabicFontSize,
-                    height: 1.9,
-                    color: theme.colorScheme.onSurface,
-                  ),
-                ),
+              // Tilavet çalarken okunan kelime vurgulanır.
+              ArabicVerseText(
+                text: ayah.arabic!,
+                fontSize: prefs.arabicFontSize,
+                highlightedWord: highlightedWord,
               ),
               const SizedBox(height: Insets.sm),
             ],

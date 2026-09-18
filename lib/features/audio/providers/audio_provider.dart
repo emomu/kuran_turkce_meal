@@ -301,6 +301,14 @@ class AudioNotifier extends StateNotifier<AudioState> {
     );
   }
 
+  /// Çalan ayetin içindeki konum.
+  ///
+  /// Durum nesnesine konmadı: konum saniyede onlarca kez değişir ve
+  /// [AudioState]'e yazılsaydı tilavet boyunca tüm okuma ekranı o sıklıkta
+  /// yeniden çizilirdi. Akış olarak verilir; yalnızca kelime vurgusunu
+  /// çizen widget dinler.
+  Stream<Duration> get positionStream => _player.positionStream;
+
   /// Sesi tamamen kapatır; çubuk gizlenir.
   Future<void> stop() async {
     _playToken++;
@@ -332,6 +340,90 @@ class AudioNotifier extends StateNotifier<AudioState> {
 final audioProvider = StateNotifierProvider<AudioNotifier, AudioState>(
   (ref) => AudioNotifier(ref),
 );
+
+/// Tilavette şu an okunan kelimenin sırası.
+///
+/// Değer `(surah, ayah, wordIndex)` üçlüsüdür: vurgunun hangi ayete ait
+/// olduğu bilinmeden kelime sırası tek başına anlamsızdır — kuyruk sure
+/// sınırını aşarak akabilir.
+///
+/// Zamanlama verisi olmayan ayetlerde (ve paket hiç yüklenemediğinde) null
+/// döner; o durumda vurgu ayet düzeyinde kalır.
+///
+/// Akış, ayet değiştiğinde yeniden kurulur: her ayetin kendi ses dosyası
+/// vardır ve konum o dosyanın başından ölçülür.
+final playingWordProvider = StreamProvider.autoDispose<PlayingWord?>((ref) {
+  final audio = ref.watch(audioProvider);
+  final surahNumber = audio.surahNumber;
+  final ayahNumber = audio.currentAyahNumber;
+
+  if (surahNumber == null || ayahNumber == null) {
+    return Stream.value(null);
+  }
+
+  // Tercih kapalıysa akış hiç kurulmaz: konum dinlemenin maliyeti boşuna
+  // ödenmesin.
+  if (!ref.watch(preferencesProvider.select((p) => p.highlightWords))) {
+    return Stream.value(null);
+  }
+
+  final repo = ref.watch(segmentDataProvider).valueOrNull;
+  if (repo == null) return Stream.value(null);
+
+  // Kimlik oynatıcıdaki ile aynı kuralla çözülmeli: tercih boşsa ya da
+  // tanınmayan bir kariyi gösteriyorsa ses varsayılan kariden çalar,
+  // zamanlama da o karinin olmalı.
+  final reciter = Reciter.byId(
+    ref.watch(preferencesProvider.select((p) => p.reciterId)),
+  );
+  final segments = repo.segmentsFor(
+    reciterId: reciter.id,
+    surahNumber: surahNumber,
+    ayahNumber: ayahNumber,
+  );
+  if (segments == null) return Stream.value(null);
+
+  return ref
+      .watch(audioProvider.notifier)
+      .positionStream
+      .map((position) {
+        final index = segments.wordAt(position.inMilliseconds);
+        if (index == null) return null;
+        return PlayingWord(
+          surahNumber: surahNumber,
+          ayahNumber: ayahNumber,
+          wordIndex: index,
+        );
+      })
+      // Konum akışı kelime değişmese de sürekli akar; aynı kelime için
+      // tekrar tekrar çizim yapılmasın diye yinelenenler elenir.
+      .distinct();
+});
+
+/// Tilavette okunan kelimenin adresi.
+class PlayingWord {
+  const PlayingWord({
+    required this.surahNumber,
+    required this.ayahNumber,
+    required this.wordIndex,
+  });
+
+  final int surahNumber;
+  final int ayahNumber;
+
+  /// Kelimenin ayet içindeki sırası (0 tabanlı).
+  final int wordIndex;
+
+  @override
+  bool operator ==(Object other) =>
+      other is PlayingWord &&
+      other.surahNumber == surahNumber &&
+      other.ayahNumber == ayahNumber &&
+      other.wordIndex == wordIndex;
+
+  @override
+  int get hashCode => Object.hash(surahNumber, ayahNumber, wordIndex);
+}
 
 /// Çalan surenin künyesi. Ses kapalıyken null.
 ///

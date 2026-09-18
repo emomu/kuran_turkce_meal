@@ -8,6 +8,7 @@ import '../../data/repositories/prophet_repository.dart';
 import '../../data/repositories/progress_repository.dart';
 import '../../data/repositories/quran_repository.dart';
 import '../../data/repositories/root_repository.dart';
+import '../../data/repositories/segment_repository.dart';
 import '../../data/repositories/topic_repository.dart';
 
 /// Uygulama genelinde paylaşılan altyapı sağlayıcıları.
@@ -72,6 +73,22 @@ final rootRepositoryProvider = Provider<RootRepository>(
 final rootDataProvider = FutureProvider<RootRepository>((ref) async {
   final repo = ref.watch(rootRepositoryProvider);
   await repo.ensureLoaded();
+  return repo;
+});
+
+/// Tilavet kelime zamanlamaları. Vurgu için gerekir; yoksa vurgu ayet
+/// düzeyinde kalır.
+final segmentRepositoryProvider = Provider<SegmentRepository>(
+  (ref) => SegmentRepository(),
+);
+
+/// Zamanlama paketinin yüklenmesini bekler.
+///
+/// Yükleme başarısız olsa bile hata yayılmaz: paket yalnızca vurguyu
+/// zenginleştirir, tilavetin çalışması ona bağlı değil.
+final segmentDataProvider = FutureProvider<SegmentRepository>((ref) async {
+  final repo = ref.watch(segmentRepositoryProvider);
+  await repo.load();
   return repo;
 });
 

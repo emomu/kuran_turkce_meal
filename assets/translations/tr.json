@@ -47,6 +47,7 @@
     "surahNotFound": "{} numaralı sure bulunamadı",
     "surahFinished": "{} sûresi bitti",
     "next": "SIRADAKİ",
+    "previous": "ÖNCEKİ",
     "completedRevelation": "Son inen sûreyi okudunuz",
     "completedMushaf": "Mushafın son sûresini okudunuz"
   },
@@ -307,6 +308,8 @@
     "playbackSpeed": "Okuma hızı",
     "autoScroll": "Okunan ayeti takip et",
     "autoScrollDescription": "Tilavet ilerledikçe sayfa kendiliğinden kayar.",
+    "highlightWords": "Okunan kelimeyi vurgula",
+    "highlightWordsDescription": "Arapça metinde o an okunan kelime belirginleşir.",
     "downloads": "İndirilen sesler",
     "downloadsSize": "{size} yer kaplıyor",
     "deleteAll": "Tümünü sil",

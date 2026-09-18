@@ -515,6 +515,21 @@ görebilir ve tümünü silebilirsiniz. Sildikten sonra dilediğiniz zaman
 yeniden indirebilirsiniz.
 
 Uygulamayı kaldırdığınızda indirilen tüm sesler de silinir.
+
+## Kelime vurgusu
+
+Tilavet çalarken Arapça metinde o an okunan kelime belirginleşir. Bunun
+için her kelimenin kayıt içindeki başlangıç ve bitiş anını bilmek gerekir;
+bu zamanlama verisi **quran-align** projesinden gelir
+(github.com/cpfair/quran-align) ve **Creative Commons Atıf 4.0** lisansıyla
+dağıtılır.
+
+Zamanlama verisi uygulamayla birlikte gelir ve ses gibi indirilmez;
+vurgulama çevrimdışı çalışır. Birkaç ayette hizalama güvenilir olmadığı
+için vurgu ayet düzeyinde kalır — kelime belirginleşmez, ama tilavet
+normal biçimde akar.
+
+Vurguyu Ayarlar > Dinle bölümünden kapatabilirsiniz.
 ''';
 
   static const _audioInfoEn = '''
@@ -566,5 +581,20 @@ you can delete everything at once. You can download again whenever you
 like.
 
 Uninstalling the app removes all downloaded audio as well.
+
+## Word highlighting
+
+While the recitation plays, the word being spoken is highlighted in the
+Arabic text. This requires knowing where each word starts and ends within
+the recording; that timing data comes from the **quran-align** project
+(github.com/cpfair/quran-align) and is distributed under a **Creative
+Commons Attribution 4.0** licence.
+
+The timing data ships with the app rather than being downloaded, so
+highlighting works offline. For a handful of verses the alignment is not
+reliable, and there the highlight stays at verse level — no word stands
+out, but the recitation plays as usual.
+
+You can turn highlighting off under Settings > Listen.
 ''';
 }

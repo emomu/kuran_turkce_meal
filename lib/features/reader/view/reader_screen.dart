@@ -11,6 +11,8 @@ import '../../../core/theme/app_typography.dart';
 import '../../assistant/view/widgets/assistant_fab.dart';
 import '../../../shared/widgets/responsive_layout.dart';
 import '../../../data/models/ayah.dart';
+import '../../../data/models/reader_preferences.dart';
+import '../../../data/models/user_marks.dart';
 import '../../../data/models/surah.dart';
 import '../../audio/providers/audio_provider.dart';
 import '../../audio/providers/download_provider.dart';
@@ -25,6 +27,7 @@ import '../widgets/ayah_tile.dart';
 import '../widgets/note_editor_sheet.dart';
 import '../widgets/reader_settings_sheet.dart';
 import '../widgets/surah_end_card.dart';
+import '../widgets/surah_start_card.dart';
 import '../../onboarding/providers/tour_provider.dart';
 import '../../onboarding/widgets/coach_mark.dart';
 import '../../onboarding/widgets/tour_host.dart';
@@ -74,6 +77,13 @@ class _ReaderScreenState extends ConsumerState<ReaderScreen> {
   /// ulaştığında sıradaki sureye geçilir. Bu, "kaydırınca sonraki sureye
   /// geç" mekaniğinin ölçüm tarafıdır.
   double _overscroll = 0;
+
+  /// Sure başında listenin üstünü aşan kaydırma miktarı (piksel).
+  ///
+  /// [_overscroll]'un ayna hali: kullanıcı ilk ayetin üstünde yukarı
+  /// çekmeyi sürdürdükçe artar, eşiğe ulaştığında bir önceki sureye
+  /// geçilir.
+  double _overscrollTop = 0;
 
   /// Geçişin tetikleneceği aşım eşiği.
   ///
@@ -202,6 +212,11 @@ class _ReaderScreenState extends ConsumerState<ReaderScreen> {
     double overscrollOf(ScrollMetrics m) =>
         (m.pixels - m.maxScrollExtent).clamp(0.0, double.infinity);
 
+    // Aynı ölçümün baş tarafı: listenin başlangıcından ne kadar yukarı
+    // çekildiği.
+    double overscrollTopOf(ScrollMetrics m) =>
+        (m.minScrollExtent - m.pixels).clamp(0.0, double.infinity);
+
     switch (notification) {
       case ScrollStartNotification(:final dragDetails):
         // Sürükleme ayrıntısı varsa hareketi parmak başlattı; yoksa bu
@@ -228,13 +243,20 @@ class _ReaderScreenState extends ConsumerState<ReaderScreen> {
       case ScrollUpdateNotification(:final metrics, :final dragDetails):
         if (dragDetails == null) break;
         final pulled = overscrollOf(metrics);
-        if (pulled != _overscroll) setState(() => _overscroll = pulled);
+        final pulledTop = overscrollTopOf(metrics);
+        if (pulled != _overscroll || pulledTop != _overscrollTop) {
+          setState(() {
+            _overscroll = pulled;
+            _overscrollTop = pulledTop;
+          });
+        }
 
       // Parmak kaldırıldı: eşik aşıldıysa geçiş burada tetiklenir. Böylece
       // kullanıcı kaydırırken değil bıraktığında geçer — eşiğe varmadan
       // vazgeçme şansı olur.
       case ScrollEndNotification():
         final shouldAdvance = _isDragging && _overscroll >= _pullThreshold;
+        final shouldGoBack = _isDragging && _overscrollTop >= _pullThreshold;
         _isDragging = false;
 
         // Kullanıcı kaydırmayı bıraktı: takip bir süre sonra geri gelir.
@@ -258,8 +280,13 @@ class _ReaderScreenState extends ConsumerState<ReaderScreen> {
         }
         if (shouldAdvance) {
           _advanceToNextSurah();
-        } else if (_overscroll > 0) {
-          setState(() => _overscroll = 0);
+        } else if (shouldGoBack) {
+          _returnToPreviousSurah();
+        } else if (_overscroll > 0 || _overscrollTop > 0) {
+          setState(() {
+            _overscroll = 0;
+            _overscrollTop = 0;
+          });
         }
 
       default:
@@ -316,6 +343,69 @@ class _ReaderScreenState extends ConsumerState<ReaderScreen> {
       _surahNumber = next.number;
       _focusedAyahNumber = null;
       _isAdvancing = false;
+    });
+  }
+
+  /// Bir önceki sureye döner.
+  ///
+  /// [_advanceToNextSurah]'nın aynası, iki farkla:
+  ///
+  ///  1. İlerleme kaydı yazılmaz. Geri gitmek "burayı okudum" demek değil;
+  ///     yazılsaydı kullanıcı geri her dönüşünde önceki sureyi bitirmiş
+  ///     sayılır ve ilerleme çubuğu gerçeği anlatmazdı.
+  ///  2. Yeni surenin başına değil sonuna konumlanılır. Kullanıcı geriye
+  ///     doğru okuyor; önceki surenin başına atılsaydı az önce bulunduğu
+  ///     yerin tam tersine düşerdi.
+  Future<void> _returnToPreviousSurah() async {
+    if (_isAdvancing) return;
+
+    final previous = await ref.read(previousSurahProvider(_surahNumber).future);
+    if (previous == null || !mounted) return;
+
+    HapticFeedback.mediumImpact();
+
+    // Bekleyen ilerleme yazımı iptal edilir. Zamanlayıcı sure değiştikten
+    // sonra ateşlerse okunan ayeti yeni sureye yazardı: kullanıcı geri
+    // gittiği surenin başına, az önce çıktığı surenin ayet numarasıyla
+    // işaretlenirdi.
+    _progressDebounce?.cancel();
+
+    setState(() {
+      _isAdvancing = true;
+      _overscrollTop = 0;
+      _overscroll = 0;
+    });
+
+    if (!mounted) return;
+    setState(() {
+      _surahNumber = previous.number;
+      _focusedAyahNumber = null;
+      _isAdvancing = false;
+    });
+
+    // Liste yeni surenin sonuna konumlanır. Sure değiştiğinde
+    // `ScrollablePositionedList` anahtarıyla birlikte yeniden kurulur, bu
+    // yüzden kaydırma yeni liste çizildikten sonra yapılmalı.
+    _pendingScrollToEnd = true;
+  }
+
+  /// Geri geçişten sonra listenin sonuna konumlanma isteği.
+  ///
+  /// Sure değişimi listeyi baştan kurar; konumlanma ancak yeni liste
+  /// çizildikten sonra yapılabildiği için istek burada bekletilir ve
+  /// [_scrollToEndIfPending] onu ilk karede tüketir.
+  bool _pendingScrollToEnd = false;
+
+  void _scrollToEndIfPending(List<Ayah> ayahs) {
+    if (!_pendingScrollToEnd) return;
+    _pendingScrollToEnd = false;
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted || !_itemScrollController.isAttached) return;
+      // Son ayet: 0 = başlık, 1..n = ayetler olduğu için indeks uzunluğa
+      // eşit. Bitiş kartı değil son ayet hedeflenir; kullanıcı kartı değil
+      // metni görmek ister.
+      _itemScrollController.jumpTo(index: ayahs.length);
     });
   }
 
@@ -379,6 +469,8 @@ class _ReaderScreenState extends ConsumerState<ReaderScreen> {
     final marks = ref.watch(surahMarksProvider(_surahNumber));
     final prefs = ref.watch(preferencesProvider);
     final nextSurah = ref.watch(nextSurahProvider(_surahNumber)).valueOrNull;
+    final previousSurah =
+        ref.watch(previousSurahProvider(_surahNumber)).valueOrNull;
     final audio = ref.watch(audioProvider);
 
     // Çalan ayet değiştikçe liste onu takip eder.
@@ -427,6 +519,7 @@ class _ReaderScreenState extends ConsumerState<ReaderScreen> {
           error: (error, _) => _ReaderError(message: '$error'),
           data: (data) {
             _scrollToInitialAyah(data.ayahs);
+            _scrollToEndIfPending(data.ayahs);
 
             // Tanıtım turu ancak ayetler çizildikten sonra başlayabilir;
             // hedef karelerin ekrandaki yeri ondan önce ölçülemez.
@@ -487,7 +580,14 @@ class _ReaderScreenState extends ConsumerState<ReaderScreen> {
                           ),
                           itemBuilder: (context, index) {
                             if (index == 0) {
-                              return _SurahHeader(surah: data.surah);
+                              return _SurahHeader(
+                                surah: data.surah,
+                                previousSurah: previousSurah,
+                                showRevelationOrder: prefs.sortByRevelation,
+                                pullProgress:
+                                    _overscrollTop / _pullThreshold,
+                                onPrevious: _returnToPreviousSurah,
+                              );
                             }
 
                             // Listenin sonu: sure bitti, sıradakine geçiş kartı.
@@ -503,16 +603,22 @@ class _ReaderScreenState extends ConsumerState<ReaderScreen> {
 
                             final ayah = data.ayahs[index - 1];
 
-                            final tile = AyahTile(
+                            // Kelime vurgusu yalnızca çalan ayette dinlenir;
+                            // ayrıntı için bkz. [_AyahRow]. Tip her ayette
+                            // aynı tutulur: çalan ayet için başka bir widget
+                            // kullanılsaydı ses ilk ayete geldiğinde tur
+                            // anahtarı iki ağaçta birden görünür ve
+                            // "Duplicate GlobalKey" hatası verirdi.
+                            final tile = _AyahRow(
                               ayah: ayah,
                               prefs: prefs,
                               mark: marks[ayah.id],
-                              isFocused: _focusedAyahNumber == ayah.ayahNumber,
+                              isFocused:
+                                  _focusedAyahNumber == ayah.ayahNumber,
                               isPlaying: audio.isBlockActive(
                                 ayah,
                                 _surahNumber,
                               ),
-                              onTap: () {},
                               onLongPress: () =>
                                   _openActions(context, ayah, data.surah),
                             );
@@ -845,9 +951,86 @@ class _ReaderAppBar extends StatelessWidget {
 }
 
 /// Listenin başındaki sure künyesi.
+/// Listedeki bir ayet.
+///
+/// [AyahTile]'ı doğrudan çizer; tek işi kelime vurgusunu yalnızca çalan
+/// ayette dinlemek. Vurgu bilgisi okunan kelimeyle birlikte saniyede
+/// onlarca kez değişir ve bunu liste öğelerinin tamamı dinleseydi tilavet
+/// boyunca ekrandaki her ayet o sıklıkta yeniden çizilirdi.
+///
+/// Çalan ve çalmayan ayet için ayrı widget tipleri kullanılmaz: liste
+/// öğesinin tipi ses ilerledikçe değişseydi, tur anahtarını taşıyan ilk
+/// ayet yeniden kurulur ve aynı [GlobalKey] bir kare boyunca iki ağaçta
+/// birden görünürdü.
+class _AyahRow extends ConsumerWidget {
+  const _AyahRow({
+    required this.ayah,
+    required this.prefs,
+    required this.mark,
+    required this.isFocused,
+    required this.isPlaying,
+    required this.onLongPress,
+  });
+
+  final Ayah ayah;
+  final ReaderPreferences prefs;
+  final AyahMark? mark;
+  final bool isFocused;
+  final bool isPlaying;
+  final VoidCallback onLongPress;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    // Çalmayan ayetler sağlayıcıyı hiç izlemez: `watch` koşullu çağrılamaz
+    // ama bu widget çalan ayet dışında sağlayıcıya hiç dokunmadığı için
+    // yeniden çizim de istemez.
+    final int? highlightedWord;
+    if (isPlaying) {
+      final playing = ref.watch(playingWordProvider).valueOrNull;
+      // Birleşik bloklarda bir öğe birden çok ayeti kapsar ve blok çalarken
+      // okunan ayet değişir; kelime sırası o an okunan ayete aittir.
+      highlightedWord =
+          playing != null && playing.ayahNumber == ayah.ayahNumber
+              ? playing.wordIndex
+              : null;
+    } else {
+      highlightedWord = null;
+    }
+
+    return AyahTile(
+      ayah: ayah,
+      prefs: prefs,
+      mark: mark,
+      isFocused: isFocused,
+      isPlaying: isPlaying,
+      highlightedWord: highlightedWord,
+      onTap: () {},
+      onLongPress: onLongPress,
+    );
+  }
+}
+
 class _SurahHeader extends StatelessWidget {
-  const _SurahHeader({required this.surah});
+  const _SurahHeader({
+    required this.surah,
+    required this.previousSurah,
+    required this.showRevelationOrder,
+    required this.pullProgress,
+    required this.onPrevious,
+  });
+
   final Surah surah;
+
+  /// Bir önceki sure; başlığın üstündeki geri geçiş kartı için. İlk surede
+  /// null gelir ve kart çizilmez.
+  final Surah? previousSurah;
+
+  final bool showRevelationOrder;
+
+  /// Yukarı kaydırarak geri geçişin ilerlemesi (0–1).
+  final double pullProgress;
+
+  final VoidCallback onPrevious;
 
   @override
   Widget build(BuildContext context) {
@@ -858,6 +1041,18 @@ class _SurahHeader extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Geri geçiş kartı başlığın üstünde, listenin ilk öğesinin içinde
+          // durur. Ayrı bir liste öğesi yapılsaydı bütün indeksler bir kayar,
+          // `_indexOfAyah` ve tur anahtarı dahil her hesap bozulurdu.
+          //
+          // Çekilmediği sürece yüksekliği sıfırdır ve yer kaplamaz; başlık
+          // sayfanın en üstünde kalır.
+          SurahStartCard(
+            previousSurah: previousSurah,
+            showRevelationOrder: showRevelationOrder,
+            pullProgress: pullProgress,
+            onTap: onPrevious,
+          ),
           Text(
             surah.nameFor(context.locale.languageCode),
             style: theme.textTheme.displaySmall,

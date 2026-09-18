@@ -18,6 +18,7 @@ class ReaderPreferences {
     this.reciterId,
     this.playbackSpeed = 1.0,
     this.autoScrollWithAudio = true,
+    this.highlightWords = true,
   });
 
   final ThemeMode themeMode;
@@ -61,6 +62,14 @@ class ReaderPreferences {
   /// Ses çalarken listenin çalan ayeti takip edip etmeyeceği.
   final bool autoScrollWithAudio;
 
+  /// Tilavette okunan kelimenin Arapça metinde vurgulanıp vurgulanmayacağı.
+  ///
+  /// Varsayılan açık: takip etmeyi kolaylaştıran asıl özellik bu. Kapatma
+  /// seçeneği, vurgunun dikkatini dağıttığını söyleyenler için var — ve
+  /// zamanlama verisi bulunmayan birkaç ayette vurgu zaten kendiliğinden
+  /// devre dışı kalır.
+  final bool highlightWords;
+
   /// Meal metninin hesaplanmış punto değeri.
   double get translationFontSize => 17 * fontScale;
 
@@ -83,6 +92,7 @@ class ReaderPreferences {
     String? reciterId,
     double? playbackSpeed,
     bool? autoScrollWithAudio,
+    bool? highlightWords,
   }) => ReaderPreferences(
     themeMode: themeMode ?? this.themeMode,
     fontScale: fontScale ?? this.fontScale,
@@ -95,5 +105,6 @@ class ReaderPreferences {
     reciterId: reciterId ?? this.reciterId,
     playbackSpeed: playbackSpeed ?? this.playbackSpeed,
     autoScrollWithAudio: autoScrollWithAudio ?? this.autoScrollWithAudio,
+    highlightWords: highlightWords ?? this.highlightWords,
   );
 }

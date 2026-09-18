@@ -26,6 +26,7 @@ class PreferencesNotifier extends StateNotifier<ReaderPreferences> {
   static const _kReciterId = 'reciter_id';
   static const _kPlaybackSpeed = 'playback_speed';
   static const _kAutoScrollWithAudio = 'auto_scroll_with_audio';
+  static const _kHighlightWords = 'highlight_words';
 
   static ReaderPreferences _read(SharedPreferences prefs) {
     return ReaderPreferences(
@@ -41,6 +42,7 @@ class PreferencesNotifier extends StateNotifier<ReaderPreferences> {
       reciterId: prefs.getString(_kReciterId),
       playbackSpeed: prefs.getDouble(_kPlaybackSpeed) ?? 1.0,
       autoScrollWithAudio: prefs.getBool(_kAutoScrollWithAudio) ?? true,
+      highlightWords: prefs.getBool(_kHighlightWords) ?? true,
     );
   }
 
@@ -106,6 +108,11 @@ class PreferencesNotifier extends StateNotifier<ReaderPreferences> {
   void setAutoScrollWithAudio(bool value) {
     state = state.copyWith(autoScrollWithAudio: value);
     _prefs.setBool(_kAutoScrollWithAudio, value);
+  }
+
+  void setHighlightWords(bool value) {
+    state = state.copyWith(highlightWords: value);
+    _prefs.setBool(_kHighlightWords, value);
   }
 
   /// Okuma ayarlarını varsayılana döndürür. Tema ve bildirim tercihleri

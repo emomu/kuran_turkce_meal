@@ -79,6 +79,21 @@ final nextSurahProvider =
       );
 });
 
+/// Okuma akışında bu sureden önce gelen sure.
+///
+/// [nextSurahProvider] ile aynı kural: sıralama tercihini izler. İlk surede
+/// null döner ve okuma ekranı geri geçiş kartını göstermez.
+final previousSurahProvider =
+    FutureProvider.family<Surah?, int>((ref, surahNumber) {
+  final byRevelation = ref.watch(
+    preferencesProvider.select((p) => p.sortByRevelation),
+  );
+  return ref.watch(quranRepositoryProvider).previousSurah(
+        surahNumber,
+        byRevelation: byRevelation,
+      );
+});
+
 /// Bir surenin işaretlerini tutar ve değişiklikleri veritabanına yazar.
 ///
 /// Okuma ekranı bunu dinler; yer imi veya vurgu değiştiğinde tüm sure yeniden

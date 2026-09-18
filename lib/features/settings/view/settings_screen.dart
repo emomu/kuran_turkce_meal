@@ -148,6 +148,12 @@ class SettingsScreen extends ConsumerWidget {
                   value: prefs.autoScrollWithAudio,
                   onChanged: notifier.setAutoScrollWithAudio,
                 ),
+                _SwitchTile(
+                  label: 'audio.highlightWords'.tr(),
+                  subtitle: 'audio.highlightWordsDescription'.tr(),
+                  value: prefs.highlightWords,
+                  onChanged: notifier.setHighlightWords,
+                ),
                 const _DownloadedAudioTile(),
                 // Kaynak ve indirme koşulları. Ayarların içinde durur çünkü
                 // kullanıcı bu bilgiyi telif sayfasında değil, sesi yönettiği

@@ -47,6 +47,7 @@
     "surahNotFound": "Surah {} not found",
     "surahFinished": "End of {}",
     "next": "UP NEXT",
+    "previous": "PREVIOUS",
     "completedRevelation": "You've reached the last revealed surah",
     "completedMushaf": "You've reached the end of the Mushaf"
   },
@@ -307,6 +308,8 @@
     "playbackSpeed": "Playback speed",
     "autoScroll": "Follow the recitation",
     "autoScrollDescription": "The page scrolls along as the recitation moves forward.",
+    "highlightWords": "Highlight the spoken word",
+    "highlightWordsDescription": "The word being recited stands out in the Arabic text.",
     "downloads": "Downloaded audio",
     "downloadsSize": "Using {size}",
     "deleteAll": "Delete all",

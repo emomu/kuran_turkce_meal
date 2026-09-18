@@ -63,6 +63,34 @@ class QuranRepository {
     return rows.isEmpty ? null : Surah.fromMap(rows.first);
   }
 
+  /// Okuma akışında bir önceki sureyi döndürür.
+  ///
+  /// [nextSurah] ile aynı mantığın ters yönü: sıralama yine kullanıcının
+  /// aktif tercihini izler. İlk surede null döner.
+  Future<Surah?> previousSurah(
+    int currentNumber, {
+    required bool byRevelation,
+  }) async {
+    final db = await _db.database;
+    final orderColumn = byRevelation ? 'revelation_order' : 'number';
+
+    // Mevcut surenin sıra değerinden küçük olanların en büyüğü: sıralamada
+    // hemen öncesi.
+    final rows = await db.rawQuery(
+      '''
+      SELECT * FROM surahs
+      WHERE $orderColumn < (
+        SELECT $orderColumn FROM surahs WHERE number = ?
+      )
+      ORDER BY $orderColumn DESC
+      LIMIT 1
+      ''',
+      [currentNumber],
+    );
+
+    return rows.isEmpty ? null : Surah.fromMap(rows.first);
+  }
+
   /// Bir surenin tüm ayetlerini sırayla döndürür.
   Future<List<Ayah>> ayahsOfSurah(int surahNumber) async {
     final db = await _db.database;

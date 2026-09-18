@@ -1,0 +1,37 @@
+{
+  "version": 1,
+  "source": "cpfair/quran-align release-2016-11-24",
+  "license": "CC BY 4.0",
+  "reciters": [
+    {
+      "id": "alafasy",
+      "source": "Alafasy_128kbps",
+      "ayahCount": 6226,
+      "coverage": 99.84
+    },
+    {
+      "id": "husary",
+      "source": "Husary_64kbps",
+      "ayahCount": 6227,
+      "coverage": 99.86
+    },
+    {
+      "id": "abdulbasit",
+      "source": "Abdul_Basit_Murattal_64kbps",
+      "ayahCount": 6225,
+      "coverage": 99.82
+    },
+    {
+      "id": "sudais",
+      "source": "Abdurrahmaan_As-Sudais_192kbps",
+      "ayahCount": 6229,
+      "coverage": 99.89
+    },
+    {
+      "id": "minshawi",
+      "source": "Minshawy_Murattal_128kbps",
+      "ayahCount": 6223,
+      "coverage": 99.79
+    }
+  ]
+}
