@@ -99,3 +99,9 @@ secrets.json
 
 # App Review yazışmaları — özel, repoda durmaz
 store/appeal_*.md
+
+# ---------------------------------------------------------- tilavet verisi
+# quran-align ham hizalama ciktisi (~27 MB). Depoda durmaz; segments.bin
+# bundan uretilir ve asset olarak paketlenir. Indirme komutu:
+# tool/build_segments.py dosyasinin basinda yazili.
+tool/segments_data/
