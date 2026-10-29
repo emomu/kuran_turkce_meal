@@ -30,6 +30,7 @@ import 'root_search_screen.dart';
 ///
 /// Ekran durumsuz bir `ConsumerWidget`; anahtarlar dosya düzeyinde tutulur.
 final _rootHeaderKey = GlobalKey();
+final _analysisKey = GlobalKey();
 final _occurrencesKey = GlobalKey();
 final _rootSearchKey = GlobalKey();
 
@@ -156,6 +157,17 @@ class RootDetailScreen extends ConsumerWidget {
         title: 'tour.roots.rootTitle'.tr(),
         body: 'tour.roots.rootBody'.tr(),
       ),
+      // Çözümleme bölümü yalnızca verisi olan köklerde çizilir; bir kez
+      // geçen köklerde türev listesi tek satır, fiil kalıbı hiç olmaz ve
+      // bölüm hiç görünmez. Adım da o zaman atlanır — kullanıcıya ekranda
+      // olmayan bir şey anlatılmaz.
+      if (_analysisKey.currentContext != null)
+        TourStep(
+          targetKey: _analysisKey,
+          icon: Icons.insights_outlined,
+          title: 'tour.roots.analysisTitle'.tr(),
+          body: 'tour.roots.analysisBody'.tr(),
+        ),
       TourStep(
         targetKey: _occurrencesKey,
         icon: Icons.format_list_bulleted_rounded,
@@ -196,6 +208,17 @@ class _RootBody extends ConsumerWidget {
         SliverToBoxAdapter(
           child: KeyedSubtree(key: _rootHeaderKey, child: _RootHeader(root: root)),
         ),
+
+        // Kökün künyesi ile geçiş listesi arasında kalan çözümleme
+        // bölümleri. Hepsi veriye bağlı: veri yoksa bölüm hiç çizilmez,
+        // boş başlık görünmez.
+        if (_RootAnalysis.hasContent(root))
+          SliverToBoxAdapter(
+            child: KeyedSubtree(
+              key: _analysisKey,
+              child: _RootAnalysis(root: root),
+            ),
+          ),
 
         SliverPadding(
           padding: centeredContentPadding(
@@ -282,11 +305,13 @@ class _RootHeader extends StatelessWidget {
             child: Text(
               root.arabic,
               textDirection: TextDirection.rtl,
-              style: TextStyle(
+              // Kök harfleri arası boşluk verilmez: Arapça bitişik yazılır
+              // ve letterSpacing harfleri birbirinden kopararak kökü
+              // okunmaz hale getirir.
+              style: AppTypography.arabic(
                 fontSize: 44,
                 height: 1.5,
                 color: theme.colorScheme.onSurface,
-                letterSpacing: 6,
               ),
             ),
           ),
@@ -343,6 +368,345 @@ class _RootHeader extends StatelessWidget {
             ),
           ],
         ],
+      ),
+    );
+  }
+}
+
+/// Kökün çözümlemesi: türeyen kelimeler, sure dağılımı, fiil kalıpları.
+///
+/// Kök harfleri tek başına soyuttur. Bu bölümler kökün Kuran'daki hayatını
+/// gösterir: hangi kelimelere dönüştüğü, nerelerde yoğunlaştığı, hangi
+/// kalıplarda çekimlendiği.
+///
+/// Her bölüm kendi verisi varsa çizilir. Veri Quranic Arabic Corpus'tan
+/// gelir ve her kökte eşit zengin değildir — bir kere geçen köklerde
+/// türev listesi tek satır, fiil kalıbı hiç olmayabilir.
+class _RootAnalysis extends StatelessWidget {
+  const _RootAnalysis({required this.root});
+
+  final QuranRoot root;
+
+  /// Bölümün çizilecek bir şeyi var mı.
+  ///
+  /// Çağıran taraf bunu önceden sorar: boş bir widget'ı ağaca koymak
+  /// yerine hiç koymamak, tanıtım turunun o adımı atlayabilmesi için
+  /// gerekir — tur hedefin ağaçta olup olmadığına bakar.
+  static bool hasContent(QuranRoot root) =>
+      root.derived.length > 1 ||
+      root.verbForms.length > 1 ||
+      root.surahDistribution.length > 1;
+
+  @override
+  Widget build(BuildContext context) {
+    final sections = <Widget>[
+      if (root.derived.length > 1) _DerivedWords(root: root),
+      if (root.verbForms.length > 1) _VerbForms(root: root),
+      if (root.surahDistribution.length > 1) _SurahDistribution(root: root),
+    ];
+    if (sections.isEmpty) return const SizedBox.shrink();
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        for (final section in sections) ...[
+          const SizedBox(height: Insets.lg),
+          section,
+        ],
+      ],
+    );
+  }
+}
+
+/// Bölüm başlığı — geçiş listesinin başlığıyla aynı biçimde.
+class _SectionTitle extends StatelessWidget {
+  const _SectionTitle(this.text, {this.hint});
+
+  final String text;
+  final String? hint;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final note = hint;
+    return Padding(
+      padding: centeredContentPadding(context, bottom: Insets.sm),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            text,
+            style: theme.textTheme.labelSmall?.copyWith(
+              fontWeight: FontWeight.w600,
+              letterSpacing: 0.8,
+            ),
+          ),
+          if (note != null) ...[
+            const SizedBox(height: Insets.xxs),
+            Text(
+              note,
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+/// Kökten türeyen kelimeler, sıklığa göre.
+///
+/// Her satır bir kelime: Arapça biçimi, ne olduğu (isim/fiil/ism-i fail)
+/// ve kaç kez geçtiği. Türkçe karşılık sözlükte varsa yazılır; yoksa tür
+/// etiketi tek başına da kelimenin ne olduğunu anlatır.
+class _DerivedWords extends StatelessWidget {
+  const _DerivedWords({required this.root});
+
+  final QuranRoot root;
+
+  /// Korpusun tür etiketini Türkçeye çevirir.
+  ///
+  /// Etiketler korpusun kendi kısaltmaları; veri ham tutulur ve çeviri
+  /// burada yapılır, böylece dil değiştiğinde veri yeniden üretilmez.
+  static String? _kindLabel(String kind) => switch (kind) {
+        'N' => 'roots.kindNoun'.tr(),
+        'V' => 'roots.kindVerb'.tr(),
+        'ADJ' => 'roots.kindAdjective'.tr(),
+        'PN' => 'roots.kindProperNoun'.tr(),
+        'ACT_PCPL' => 'roots.kindActiveParticiple'.tr(),
+        'PASS_PCPL' => 'roots.kindPassiveParticiple'.tr(),
+        'VN' => 'roots.kindVerbalNoun'.tr(),
+        _ => null,
+      };
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    // En sık türev ölçek olur: çubuklar ona göre oranlanır, böylece
+    // baskın kelime ile seyrek olan arasındaki fark görünür.
+    final top = root.derived.first.count;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        _SectionTitle('roots.derivedTitle'.tr(), hint: 'roots.derivedHint'.tr()),
+        for (final word in root.derived)
+          Padding(
+            padding: centeredContentPadding(context, bottom: Insets.sm),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  width: 104,
+                  child: Text(
+                    word.lemma,
+                    textDirection: TextDirection.rtl,
+                    textAlign: TextAlign.right,
+                    style: AppTypography.arabic(
+                      fontSize: 19,
+                      height: 1.6,
+                      color: theme.colorScheme.onSurface,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: Insets.md),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        [
+                          if (word.hasMeaning) word.meaning,
+                          if (_kindLabel(word.kind) case final label?)
+                            word.hasMeaning ? '($label)' : label,
+                        ].join(' '),
+                        style: theme.textTheme.bodyMedium,
+                      ),
+                      const SizedBox(height: Insets.xxs),
+                      // Sıklık çubuğu: sayıyı okumadan da oran görünür.
+                      Row(
+                        children: [
+                          Expanded(
+                            child: ClipRRect(
+                              borderRadius:
+                                  BorderRadius.circular(Radii.pill),
+                              child: LinearProgressIndicator(
+                                value: word.count / top,
+                                minHeight: 4,
+                                backgroundColor:
+                                    theme.colorScheme.surfaceContainerHighest,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: Insets.sm),
+                          Text(
+                            '${word.count}',
+                            style: theme.textTheme.labelMedium?.copyWith(
+                              fontFeatures: const [
+                                FontFeature.tabularFigures(),
+                              ],
+                              color: theme.colorScheme.onSurface
+                                  .withValues(alpha: 0.6),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+      ],
+    );
+  }
+}
+
+/// Fiil kalıbı (bab) dağılımı.
+///
+/// Arapçada kök sabit kalır, kalıp anlamı değiştirir: aynı kökten I.
+/// kalıpta "bildi", II. kalıpta "öğretti" çıkar. Kullanıcı aynı kökün
+/// neden farklı anlamlara geldiğini burada görür.
+class _VerbForms extends StatelessWidget {
+  const _VerbForms({required this.root});
+
+  final QuranRoot root;
+
+  /// Kalıpların Arap gramerindeki alışılmış Roma rakamı gösterimi.
+  static const _numerals = [
+    '', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X',
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final forms = [...root.verbForms]..sort((a, b) => b.$2.compareTo(a.$2));
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        _SectionTitle(
+          'roots.verbFormsTitle'.tr(),
+          hint: 'roots.verbFormsHint'.tr(),
+        ),
+        Padding(
+          padding: centeredContentPadding(context),
+          child: Wrap(
+            spacing: Insets.sm,
+            runSpacing: Insets.xs,
+            children: [
+              for (final (form, count) in forms)
+                if (form > 0 && form < _numerals.length)
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: Insets.sm,
+                      vertical: Insets.xxs,
+                    ),
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.surfaceContainer,
+                      borderRadius: BorderRadius.circular(Radii.pill),
+                    ),
+                    child: Text(
+                      '${_numerals[form]} · '
+                      '${'roots.formTimes'.tr(args: ['$count'])}',
+                      style: theme.textTheme.labelMedium?.copyWith(
+                        fontFeatures: const [FontFeature.tabularFigures()],
+                      ),
+                    ),
+                  ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+/// Kökün surelere dağılımı.
+///
+/// 114 sureyi tek şeritte gösterir: her sure bir sütun, yüksekliği o
+/// suredeki geçiş sayısıyla orantılı. Kökün Kuran'ın neresinde
+/// yoğunlaştığı tek bakışta görünür — "sabr" Bakara'da, "ilim" baştan
+/// sona yayılmış gibi.
+class _SurahDistribution extends StatelessWidget {
+  const _SurahDistribution({required this.root});
+
+  final QuranRoot root;
+
+  static const _surahCount = 114;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final counts = {for (final (s, c) in root.surahDistribution) s: c};
+    final top = counts.values.reduce((a, b) => a > b ? a : b);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        _SectionTitle(
+          'roots.distributionTitle'.tr(),
+          hint: 'roots.distributionHint'.tr(
+            args: ['${root.surahDistribution.length}'],
+          ),
+        ),
+        Padding(
+          padding: centeredContentPadding(context),
+          child: SizedBox(
+            height: 44,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                for (var surah = 1; surah <= _surahCount; surah++)
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 0.5),
+                      child: _DistributionBar(
+                        // Geçmediği surelerde de ince bir iz bırakılır:
+                        // şerit 114 sureyi temsil eder, boşluk bırakmak
+                        // ölçeği okunmaz hale getirirdi.
+                        ratio: (counts[surah] ?? 0) / top,
+                        color: theme.colorScheme.primary,
+                        emptyColor: theme.colorScheme.surfaceContainerHighest,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+/// Dağılım şeridindeki tek sure sütunu.
+class _DistributionBar extends StatelessWidget {
+  const _DistributionBar({
+    required this.ratio,
+    required this.color,
+    required this.emptyColor,
+  });
+
+  final double ratio;
+  final Color color;
+  final Color emptyColor;
+
+  @override
+  Widget build(BuildContext context) {
+    // Geçişi olan en seyrek sure bile görünür kalsın diye taban yükseklik
+    // verilir; yalnızca orana bırakılsaydı tek geçişli sureler çizilmezdi.
+    final height = ratio == 0 ? 2.0 : 2 + ratio * 42;
+    return Align(
+      alignment: Alignment.bottomCenter,
+      child: Container(
+        height: height,
+        decoration: BoxDecoration(
+          color: ratio == 0 ? emptyColor : color,
+          borderRadius: BorderRadius.circular(1),
+        ),
       ),
     );
   }
@@ -419,7 +783,7 @@ class _OccurrenceRow extends ConsumerWidget {
                     word.arabic,
                     textDirection: TextDirection.rtl,
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
+                    style: AppTypography.arabic(
                       fontSize: 17,
                       height: 1.6,
                       color: theme.colorScheme.onSurface

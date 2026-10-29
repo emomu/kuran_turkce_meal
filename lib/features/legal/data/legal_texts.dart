@@ -53,13 +53,27 @@ internet bağlantısı gerekmez ve yazdıklarınız cihazınızdan çıkmaz.
 Uygulama şunların **hiçbirini** toplamaz, saklamaz veya aktarmaz:
 
 - Ad, e-posta, telefon numarası veya başka kimlik bilgisi
-- Konum bilgisi
 - Cihaz tanımlayıcıları veya reklam kimliği
 - Kullanım istatistiği, analitik veya çökme kaydı
-- Rehber, fotoğraf, mikrofon veya kamera erişimi
+- Rehber, fotoğraf veya kamera erişimi
 
 Uygulamada reklam ağı, analitik aracı veya üçüncü taraf takip kodu
 bulunmaz.
+
+## Cihaz izinleri
+
+Uygulama iki izin ister ve ikisini de yalnızca ilgili ekran açıkken
+kullanır. İstenen bilgi cihazdan çıkmaz, kaydedilmez ve bize ulaşmaz.
+
+**Konum — yalnızca kıble pusulasında.** Kâbe'nin bulunduğunuz yere göre
+hangi yönde kaldığını hesaplamak için konumunuz okunur. Hesap cihazınızda
+yapılır; konumunuz hiçbir sunucuya gönderilmez ve uygulama kapandığında
+saklanmaz. Pusula ekranını açmazsanız izin hiç istenmez.
+
+**Mikrofon — yalnızca asistana sesli soru sorarken.** Sesiniz
+kaydedilmez; işletim sisteminin konuşma tanıma servisine verilir ve
+metne çevrilir. Tanınan metin doğrudan gönderilmez, yazı alanına konur —
+görüp düzeltebilirsiniz.
 
 ## Cihazınızda kalan veriler
 
@@ -147,13 +161,29 @@ internet connection is required, and nothing you write leaves your device.
 The app does **not** collect, store, or transmit any of the following:
 
 - Name, email, phone number, or any other identifying information
-- Location data
 - Device identifiers or advertising IDs
 - Usage statistics, analytics, or crash reports
-- Access to contacts, photos, microphone, or camera
+- Access to contacts, photos, or camera
 
 The app contains no advertising networks, analytics tools, or third-party
 tracking code.
+
+## Device permissions
+
+The app asks for two permissions, and uses each one only while the
+relevant screen is open. What it reads stays on the device: nothing is
+stored, and nothing reaches us.
+
+**Location — only in the qibla compass.** Your location is read to work
+out the direction of the Kaaba from where you are. The calculation
+happens on your device; your location is never sent to a server and is
+not kept once the app closes. If you never open the compass, the
+permission is never requested.
+
+**Microphone — only when you ask the assistant by voice.** Your voice is
+not recorded; it is passed to the operating system's speech recognition
+and turned into text. The recognised text is not sent straight away — it
+goes into the input field, where you can read and correct it.
 
 ## Data that stays on your device
 

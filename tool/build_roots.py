@@ -62,6 +62,25 @@ def strip_harakat(s: str) -> str:
     """Harekeleri ve duraklama işaretlerini atar, iskeleti bırakır."""
     return HARAKAT.sub('', s)
 
+# Kelime sonundaki i'rab harekesi: cümledeki görevi gösterir, kelimenin
+# kendisine ait değildir.
+FINAL_IRAB = re.compile('[ً-َُِْ]+$')
+
+def canonical_lemma(lem: str) -> str:
+    """Lemma'yı sondaki i'rab harekesinden arındırır.
+
+    Korpus aynı kelimeyi cümledeki görevine göre farklı yazar: صابِر
+    (özne) ve صابِرُ (merfû) aynı kelimedir ama ayrı lemma görünür ve
+    türeyen kelimeler listesinde iki satıra bölünürdü.
+
+    Yalnızca sondaki hareke atılır; kelime içindeki harekeler kalır,
+    çünkü onlar kelimeyi birbirinden ayırır (عالِم "bilen" ≠ عالَم
+    "evren").
+    """
+    trimmed = FINAL_IRAB.sub('', lem)
+    # Tamamen hareke olan ya da tek harfe inen biçimlerde dokunulmaz.
+    return trimmed if len(trimmed) >= 2 else lem
+
 def normalize_letters(s: str) -> str:
     """Hemze ve elif varyantlarını tek biçime indirger."""
     for a, b in (('آ','ا'), ('أ','ا'), ('إ','ا'),
@@ -240,12 +259,29 @@ def load_morphology():
         except ValueError:
             continue
         slot = verses[(s, v)].setdefault(w, {'form': '', 'root': None,
-                                             'lemma': None, 'pos': None})
+                                             'lemma': None, 'pos': None,
+                                             'kind': None, 'vf': None})
         slot['form'] += form
         rm = re.search(r'ROOT:([^|]+)', feat)
         if rm and not slot['root']:
             slot['root'] = rm.group(1)
             slot['pos'] = tag
+            # Kelimenin ne olduğu: türemiş biçim etiketi varsa o, yoksa
+            # kaba tür (N/V/P). Etiketler korpusun kendi kısaltmaları;
+            # Türkçeye çeviri uygulama tarafında yapılır, veri ham kalır.
+            #
+            # Sıra önemli: bir kelime hem ACT_PCPL hem ADJ olabilir
+            # (ism-i fail sıfat olarak kullanılmış). Daha belirleyici olan
+            # önce aranır, yoksa etiket kelimenin asıl yapısını gizler.
+            for mark in ('ACT_PCPL', 'PASS_PCPL', 'VN', 'PN', 'ADJ'):
+                if mark in feat.split('|'):
+                    slot['kind'] = mark
+                    break
+            # Fiil kalıbı (bab). Arapçada kalıp anlamı değiştirir: I "yapmak",
+            # II "yaptırmak", VII "yapılmak". Yalnızca fiillerde anlamlı.
+            vm = re.search(r'VF:(\d+)', feat)
+            if vm:
+                slot['vf'] = int(vm.group(1))
         lm = re.search(r'LEM:([^|]+)', feat)
         if lm and not slot['lemma'] and rm:
             slot['lemma'] = lm.group(1)
@@ -316,6 +352,11 @@ def main():
 
     root_occurrences = collections.defaultdict(list)  # root -> [word_index]
     root_lemmas = collections.defaultdict(collections.Counter)
+    # Lemma -> tür. Türeyen kelimeler listesinde her kelimenin yanında
+    # ne olduğu yazsın diye tutulur; ilk görülen tür kalır.
+    root_lemma_kind = collections.defaultdict(dict)
+    # Kök -> {bab: kaç kez}. Fiil kalıbı dağılımı için.
+    root_forms = collections.defaultdict(collections.Counter)
     words_out = []
     stats = collections.Counter()
 
@@ -344,17 +385,32 @@ def main():
                     continue
                 root = info['root']
                 idx = len(words_out)
-                words_out.append({
+                entry = {
                     's': sn,             # sure
                     'v': vn,             # ayet
                     'w': wi,             # ayet içindeki kelime sırası (0 tabanlı)
                     'a': word,           # uygulama metnindeki Arapça kelime
                     'r': root,           # kök
                     'l': info['lemma'] or '',
-                })
+                }
+                # Tür ve kalıp yalnızca varsa yazılır: 50 bin kelimenin
+                # tamamına boş alan koymak dosyayı gereksiz büyütürdü.
+                kind = info.get('kind') or info.get('pos')
+                if kind:
+                    entry['p'] = kind    # kelime türü / türetme biçimi
+                if info.get('vf'):
+                    entry['f'] = info['vf']  # fiil kalıbı (bab), 1-10
+                words_out.append(entry)
                 root_occurrences[root].append(idx)
                 if info['lemma']:
-                    root_lemmas[root][info['lemma']] += 1
+                    root_lemmas[root][canonical_lemma(info['lemma'])] += 1
+                    # Lemma'nın hangi türde geçtiği: türeyen kelimeler
+                    # listesinde "kitap (isim)" diye gösterilir.
+                    if kind:
+                        root_lemma_kind[root].setdefault(
+                            canonical_lemma(info['lemma']), kind)
+                if info.get('vf'):
+                    root_forms[root][info['vf']] += 1
                 stats['kokler_eslesti'] += 1
 
     # Kök kayıtları
@@ -368,7 +424,42 @@ def main():
             rd = turkish_reading(lem)
             if len(rd) >= 2 and rd not in readings:
                 readings.append(rd)
-        roots_out.append({
+        # Türeyen kelimeler: kökün hangi kelimelere dönüştüğü, sıklığına
+        # göre. Kullanıcı kökü görüyor ama ondan ne türediğini görmüyordu;
+        # "k-t-b" kökünün kitap, yazdı, yazılı olduğunu bilmek kök
+        # kavramını somutlaştırır.
+        #
+        # 12 ile sınırlı: bazı kökler 40'tan fazla türev veriyor ve hepsini
+        # yazmak hem dosyayı şişirir hem de ekranda okunmaz bir liste
+        # üretir. Sık olanlar zaten kökün karakterini anlatır.
+        derived = []
+        for lem, n in root_lemmas[root].most_common(12):
+            item = {'l': lem, 'c': n}
+            # Anlam harekeli biçimle aranır. Sözlük i'rab harekesini
+            # taşıyan biçimi de içerebildiği için (صَبَرَ) sondaki hareke
+            # geri eklenerek ikinci bir deneme yapılır.
+            #
+            # Harekesiz eşleşme denenmez: iskelet aynı olan farklı
+            # kelimeler çarpışıyor ve yanlış anlam veriyordu — عالِم
+            # (bilen) ile عالَم (evren) harekesiz ikisi de عالم.
+            meaning = lemma_tr.get(lem)
+            if not meaning:
+                for mark in ('َ', 'ُ', 'ِ'):
+                    meaning = lemma_tr.get(lem + mark)
+                    if meaning:
+                        break
+            if meaning:
+                item['m'] = meaning
+            kind = root_lemma_kind[root].get(lem)
+            if kind:
+                item['p'] = kind
+            derived.append(item)
+
+        # Sure dağılımı: kökün hangi surelerde kaç kez geçtiği. Ekranda
+        # kökün Kuran'a nasıl yayıldığını gösteren şerit buradan çizilir.
+        surah_dist = collections.Counter(words_out[i]['s'] for i in occ)
+
+        record = {
             'r': root,                                  # Arapça kök
             'n': normalize_letters(strip_harakat(root)),# normalize kök (arama)
             'm': tr.get(root, ''),                      # Türkçe anlam
@@ -377,7 +468,14 @@ def main():
             't': translit_variants(skeleton),           # fonetik iskelet yazımlar
             'k': readings,                              # Türkçe okunuşlar
             'L': sorted({c for c in skeleton}),         # içerdiği harfler
-        })
+            'd': derived,                               # türeyen kelimeler
+            'u': sorted(surah_dist.items()),            # [(sure, adet), ...]
+        }
+        # Fiil kalıpları yalnızca fiil olarak geçen köklerde yazılır;
+        # isimden türeyen köklerde alan hiç olmaz.
+        if root_forms[root]:
+            record['b'] = sorted(root_forms[root].items())
+        roots_out.append(record)
 
     payload = {
         'version': 1,

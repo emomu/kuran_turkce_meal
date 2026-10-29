@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/theme/app_typography.dart';
+
 /// Ayetin Arapça metni; tilavette okunan kelime vurgulanır.
 ///
 /// Metin tek bir [Text] olarak da çizilebilirdi ama o zaman vurgulanacak
@@ -59,9 +61,8 @@ class ArabicVerseText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final baseStyle = TextStyle(
+    final baseStyle = AppTypography.arabic(
       fontSize: fontSize,
-      height: 1.9,
       color: theme.colorScheme.onSurface,
     );
 

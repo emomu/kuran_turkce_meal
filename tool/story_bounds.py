@@ -252,4 +252,96 @@ STORY_BOUNDS: dict[str, dict[int, list[tuple[int, int]]]] = {
         # tanımlanmadı, tek ayet olarak kalırlar.
         12: [(4, 101)],
     },
+    # ---------------------------------------------------------------------
+    # Aşağıdakiler sonradan eklendi. Ad taraması bunlarda özellikle zayıf
+    # kalıyordu: kıssa bir kez adla açılıp sonrasında zamirle sürdüğü için
+    # listeye yalnızca açılış ayeti giriyordu. Zekeriyyâ 1, Zülkifl 1,
+    # Elyesa 1 ayetle görünüyordu — kıssa diye açılan ekranda tek cümle.
+    "zekeriya": {
+        # Meryem 2-15: sure Zekeriyyâ'nın kıssasıyla açılır. 2 "Rabbinin
+        # kulu Zekeriyyâ'ya rahmetini anmadır" ile başlar; 15 Yahyâ'ya
+        # selamla kapanır. 16'da "Meryem kıssasını da an" denir ve konu
+        # değişir.
+        #
+        # Ad taraması buradan hiçbir ayet almıyordu: 21:89 dışında listede
+        # yer yoktu, çünkü anlatı 3-6 ve 8-11'de zamirle sürüyor.
+        19: [(2, 15)],
+        # Âl-i İmrân 37-41: Meryem'in himayesi vesilesiyle açılan dua ve
+        # müjde sahnesi. 42'de melekler Meryem'e hitap eder, konu döner.
+        3: [(37, 41)],
+        # Enbiyâ 89-90: kısa anma. 91'de Meryem'e geçilir.
+        21: [(89, 90)],
+    },
+    "yahya": {
+        # Meryem 12-15: Zekeriyyâ kıssasının içinde Yahyâ'nın kendisine
+        # hitap edilen bölümü ("Ey Yahyâ! Kitaba kuvvetle sarıl").
+        # Zekeriyyâ ile ortak blok; her ikisinin de öznesi olduğu için
+        # ikisine de verilir.
+        19: [(12, 15)],
+        # Âl-i İmrân 39: müjdenin kendisi. Öncesi ve sonrası Zekeriyyâ'nın.
+        3: [(39, 39)],
+        21: [(90, 90)],
+    },
+    "eyyub": {
+        # Sâd 41-44: "Kulumuz Eyyûb'u da an" ile açılır, 44'te sabrı
+        # övülerek kapanır. 45'te İbrâhim, İshak ve Yakûb'a geçilir.
+        #
+        # Ad taraması yalnızca 41'i alıyordu; şifa (42), ailesinin iadesi
+        # (43) ve sabrının övülmesi (44) düşüyordu — yani kıssanın
+        # tamamı.
+        38: [(41, 44)],
+        # Enbiyâ 83-84: duası ve duanın kabulü. 85'te başka adlara geçilir.
+        21: [(83, 84)],
+    },
+    "ilyas": {
+        # Sâffât 123-132: tebliğ, yalanlanma ve selam. 133'te Lût'a geçilir.
+        # Ad taraması yalnızca 123'ü alıyordu.
+        37: [(123, 132)],
+    },
+    "idris": {
+        # Meryem 56-57: "Kitapta İdrîs'i de an" ile açılır, 57'de yüce bir
+        # yere yükseltilmesiyle kapanır. 58 peygamberleri toplu anan bir
+        # ayettir, tek kişiye ait değildir.
+        19: [(56, 57)],
+        # Enbiyâ 85-86: İsmâil ve Zülkifl ile birlikte anılır. Üçü de aynı
+        # iki ayette geçtiği için blok üçüne birden verilir.
+        21: [(85, 86)],
+    },
+    "zulkifl": {
+        # Enbiyâ 85-86 ve Sâd 48: Kur'an'da yalnızca bu iki yerde anılır,
+        # kıssası anlatılmaz. Sınır yine de tanımlanır ki ikinci ayet
+        # (sabredenlerden olduğu, rahmete alındığı) listeye girsin.
+        21: [(85, 86)],
+        38: [(48, 48)],
+    },
+    "elyesa": {
+        # En'âm 86 ve Sâd 48: iki anma. Kıssası anlatılmaz.
+        6: [(86, 86)],
+        38: [(48, 48)],
+    },
+    # İshak ve Yakûb'un bağımsız kıssası yoktur; ikisi de başka kıssaların
+    # içinde geçer. Bu yüzden onlara geniş aralık verilmez — verilseydi
+    # Yûsuf kıssasının tamamı Yakûb'a da yazılır ve kıssa yanlış görünürdü.
+    # Yalnızca kendilerinin özne olduğu sahneler ayrılır.
+    "ishak": {
+        # Sâffât 112-113: doğumunun müjdesi ve bereketlenmesi. İbrâhim
+        # kıssasının sonu ama öznesi İshak'tır.
+        37: [(112, 113)],
+        # Hûd 71-73: müjdenin verildiği sahne. İbrâhim'e gelen elçiler
+        # İshak'ı müjdeler.
+        11: [(71, 73)],
+    },
+    "yakub": {
+        # Yûsuf 4-6: kıssanın açılışı, rüyanın babasına anlatılması ve
+        # Yakûb'un yorumu.
+        # Yûsuf 93-101: gömleğin getirilişi, gözünün açılması ve kavuşma.
+        # Yakûb'un kıssadaki asıl payı bu iki bloktur; aradaki bölüm
+        # Yûsuf'un kendi anlatısıdır ve ona verilmez.
+        12: [(4, 6), (93, 101)],
+        # Bakara 132-133: oğullarına vasiyeti ve ölüm döşeğindeki sorusu.
+        2: [(132, 133)],
+    },
+    # Peygamber'in kendisi bir "kıssa" olarak anlatılmaz; Kur'an ona hitap
+    # eder. Adının geçtiği ayetler bir anlatı kurmaz, bu yüzden sınır
+    # tanımlanmaz ve mevcut davranış sürer.
 }

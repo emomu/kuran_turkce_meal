@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/theme/app_typography.dart';
+
 
 /// Arapça ayet metnini çizer ve kökün geçtiği kelimeleri vurgular.
 ///
@@ -49,9 +51,8 @@ class HighlightedArabic extends StatelessWidget {
     final theme = Theme.of(context);
     final words = splitWords(text);
 
-    final base = TextStyle(
+    final base = AppTypography.arabic(
       fontSize: fontSize,
-      height: 1.9,
       color: theme.colorScheme.onSurface,
     );
 

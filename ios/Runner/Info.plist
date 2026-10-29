@@ -17,6 +17,10 @@
 	<!-- Sesli soruyu metne çeviren sistem servisi. Çeviri cihazda yapılır. -->
 	<key>NSSpeechRecognitionUsageDescription</key>
 	<string>Sesli sorduğun soruyu yazıya çevirmek için kullanılır. Metin yalnızca cihazında işlenir.</string>
+	<!-- Kıble yönü. Konum yalnızca pusula ekranı açıkken istenir; açı
+	     cihazda hesaplanır, konum hiçbir yere gönderilmez ve saklanmaz. -->
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Bulunduğun yerden kıble yönünü hesaplamak için konumun kullanılır. Konumun cihazdan çıkmaz, kaydedilmez.</string>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 	<key>CFBundleDevelopmentRegion</key>

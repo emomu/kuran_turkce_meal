@@ -48,6 +48,8 @@ dependencies:
   # bağlantı türü sorulur; ağ erişimi ya da konum izni gerektirmez.
   connectivity_plus: ^6.1.0
   speech_to_text: ^7.4.0
+  flutter_compass: ^0.8.1
+  geolocator: ^14.1.2
 
 dev_dependencies:
   flutter_test:
@@ -96,6 +98,19 @@ flutter:
         - asset: assets/fonts/SourceSerif4.ttf
         - asset: assets/fonts/SourceSerif4-Italic.ttf
           style: italic
+    # Kur'an metni icin naskh hatti. Sistem fontu (iOS Geeza Pro, Android
+    # Noto Naskh) mushaf dizgisi icin tasarlanmadigindan harekeler harfe
+    # dogru oturmuyordu. Amiri Quran, metindeki yuvarlak tenvinler dahil
+    # butun isaretleri kapsar.
+    # KFGQPC Uthmanic Hafs: Kral Fahd Kompleksi'nin mushaf hatti.
+    # Metni eksiksiz kapsar (bkz. tool/normalize_tanween.py — yuvarlak
+    # tenvinler standart karşiliklarina cevrildi).
+    - family: UthmanicHafs
+      fonts:
+        - asset: assets/fonts/UthmanicHafs.ttf
+    - family: AmiriQuran
+      fonts:
+        - asset: assets/fonts/AmiriQuran.ttf
 
   # To add assets to your application, add an assets section, like this:
   # assets:

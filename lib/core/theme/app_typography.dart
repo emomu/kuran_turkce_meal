@@ -16,6 +16,51 @@ abstract final class AppTypography {
   static const String _serif = 'SourceSerif4';
   static const String _sans = 'Inter';
 
+  /// Kur'an metninin yüzü: Kral Fahd Kur'an Basım Kompleksi'nin resmi
+  /// mushaf hattı.
+  ///
+  /// Font metindeki yuvarlak tenvinleri (U+08F0–08F2) taşımıyordu; 2010
+  /// yapımı, o işaretler Unicode'a 2012'de eklendi. Metin bu yüzden
+  /// `tool/normalize_tanween.py` ile standart tenvinlere çevrildi ve font
+  /// artık metni eksiksiz kapsıyor.
+  static const String _arabic = 'UthmanicHafs';
+
+  /// Mushaf yüzünün punto çarpanı.
+  ///
+  /// Her font aynı punto değerinde aynı büyüklükte çizilmez; harflerin
+  /// birim kareye göre oranı fonttan fonta değişir. Bu yüzün oranı 1.76,
+  /// bir önceki yüzünki 2.45'ti — çarpansız metin belirgin biçimde küçük
+  /// kalır ve koyu zeminde silikleşir.
+  ///
+  /// Kullanıcının punto tercihinin yerine geçmez, onunla çarpılır:
+  /// ayarlardaki ölçek anlamını korur.
+  static const double _arabicScale = 1.46;
+
+  /// Arapça ayet metni için mushaf yüzü.
+  ///
+  /// Latin yüzleri Arapça glif taşımadığından metin eskiden sistem fontuna
+  /// düşüyordu (iOS'ta Geeza Pro, Android'de Noto Naskh). Bunlar mushaf
+  /// dizgisi için tasarlanmadığından harekeler harfe doğru oturmuyor ve
+  /// uzun ayetlerde okunurluk düşüyordu.
+  ///
+  /// [height] varsayılanı Latin metninden yüksek: Arapça harekeler harfin
+  /// altına ve üstüne taşar, dar satır aralığında birbirine değerler.
+  static TextStyle arabic({
+    required double fontSize,
+    required Color color,
+    double height = 1.9,
+    FontWeight weight = FontWeight.w400,
+  }) {
+    return TextStyle(
+      fontFamily: _arabic,
+      fontSize: fontSize * _arabicScale,
+      color: color,
+      height: height,
+      fontWeight: weight,
+      letterSpacing: 0,
+    );
+  }
+
   /// Ayet metni için okuma yüzü.
   static TextStyle reading({
     required double fontSize,

@@ -25,6 +25,7 @@
   "home": {
     "surahs": "Sureler",
     "lastRead": "KALDIĞIN YER",
+    "resumeBadge": "Devam Et",
     "verseOfDay": "GÜNÜN AYETİ",
     "outOfVerses": "{} ayetten",
     "orderRevelation": "İniş sırası",
@@ -37,7 +38,8 @@
     "noContentHint": "Meal metni uygulamaya henüz eklenmemiş. assets/data/ayahs.json dosyasını ekleyin.",
     "searchSurah": "Sure ara",
     "noSurahMatch": "Sure bulunamadı",
-    "noSurahMatchHint": "\"{query}\" ile eşleşen bir sure yok. Adını, anlamını ya da mushaf numarasını deneyin."
+    "noSurahMatchHint": "\"{query}\" ile eşleşen bir sure yok. Adını, anlamını ya da mushaf numarasını deneyin.",
+    "tools": "ARAÇLAR"
   },
   "reader": {
     "settings": "Okuma ayarları",
@@ -76,7 +78,21 @@
     "unavailableHint": "assets/data/roots.json dosyası pakete eklenmemiş.",
     "sourceLabel": "Kök verisi: Quranic Arabic Corpus (corpus.quran.com)",
     "highlightNote": "Meal içindeki karşılık tahminidir",
-    "compare": "Ayetleri karşılaştır"
+    "compare": "Ayetleri karşılaştır",
+    "derivedTitle": "TÜREYEN KELİMELER",
+    "derivedHint": "Bu kökten türeyen kelimeler ve Kuran'da kaç kez geçtikleri",
+    "distributionTitle": "SURELERE DAĞILIMI",
+    "distributionHint": "{} surede geçiyor",
+    "verbFormsTitle": "FİİL KALIPLARI",
+    "verbFormsHint": "Arapçada kalıp anlamı değiştirir",
+    "kindNoun": "isim",
+    "kindVerb": "fiil",
+    "kindAdjective": "sıfat",
+    "kindProperNoun": "özel isim",
+    "kindActiveParticiple": "ism-i fail",
+    "kindPassiveParticiple": "ism-i mef'ul",
+    "kindVerbalNoun": "masdar",
+    "formTimes": "{} kez"
   },
   "actions": {
     "addBookmark": "Yer imi ekle",
@@ -269,6 +285,8 @@
     "roots": {
       "rootTitle": "Kelimenin kökü",
       "rootBody": "Arapçada kelimeler üç harfli köklerden türer. Buradaki kök, dokunduğunuz kelimenin kaynağı.",
+      "analysisTitle": "Kökün Kuran'daki hayatı",
+      "analysisBody": "Bu kökten türeyen kelimeler, hangi kalıplarda çekimlendiği ve surelere nasıl dağıldığı. Kök harfleri tek başına soyut kalır; buradaki döküm onu somutlaştırır.",
       "occurrencesTitle": "Kökün geçtiği her yer",
       "occurrencesBody": "Aynı kökten türeyen kelimelerin geçtiği bütün ayetler burada. Vurgulu kısım o ayetteki türevi gösterir.",
       "searchTitle": "Başka kök arayın",
@@ -388,5 +406,33 @@
     "thinking": "Düşünülüyor",
     "searching": "Mealde aranıyor",
     "composing": "Cevap hazırlanıyor"
+  },
+  "qibla": {
+    "title": "Kıble",
+    "subtitle": "Kâbe'nin yönü",
+    "locate": "Konumumu kullan",
+    "locating": "Konum alınıyor…",
+    "retry": "Yeniden dene",
+    "permissionTitle": "Kıble için konum gerekiyor",
+    "permissionBody": "Bulunduğun yerden Kâbe'nin yönünü hesaplamak için konumun kullanılır. Konumun cihazdan çıkmaz, kaydedilmez ve hiçbir yere gönderilmez.",
+    "serviceDisabled": "Konum servisi kapalı",
+    "serviceDisabledBody": "Kıbleyi hesaplamak için cihazının konum servisini açman gerekiyor.",
+    "openLocationSettings": "Konum ayarlarını aç",
+    "denied": "Konum izni verilmedi",
+    "deniedBody": "Kıble yönü konumsuz hesaplanamıyor.",
+    "deniedForever": "Konum izni kapalı",
+    "deniedForeverBody": "İzni uygulama ayarlarından açabilirsin.",
+    "openAppSettings": "Ayarları aç",
+    "unavailable": "Konum alınamadı",
+    "unavailableBody": "Sinyal zayıf olabilir. Açık bir alanda yeniden dene.",
+    "distance": "Kâbe'ye {} km",
+    "aligned": "Kıbleye dönüksün",
+    "turnRight": "Sağa dön",
+    "turnLeft": "Sola dön",
+    "noCompass": "Bu cihazda pusula yok",
+    "noCompassBody": "Kıble açısı {}° — pusula uygulamanla bu yöne dönebilirsin.",
+    "calibrate": "Pusulayı kalibre et",
+    "calibrateBody": "Telefonu havada 8 çizerek birkaç kez salla.",
+    "accuracyNote": "Pusula metal ve elektronik cihazlardan etkilenir."
   }
 }

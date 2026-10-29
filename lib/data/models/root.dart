@@ -50,6 +50,43 @@ class RootWord {
   String get reference => '$surahNumber:$ayahNumber';
 }
 
+/// Kökten türeyen bir kelime.
+///
+/// Kök tek başına soyuttur: "ك-ت-ب" harfleri kullanıcıya bir şey anlatmaz.
+/// Ondan türeyen kelimeler (kitap, yazdı, yazıcı) kökün ne demek olduğunu
+/// somutlaştırır.
+class DerivedWord {
+  const DerivedWord({
+    required this.lemma,
+    required this.count,
+    required this.meaning,
+    required this.kind,
+  });
+
+  /// Sözlük biçimi. Örn. "كِتاب".
+  final String lemma;
+
+  /// Bu kelimenin Kuran'da kaç kez geçtiği.
+  final int count;
+
+  /// Türkçe karşılık. Sözlükte bulunmayan kelimelerde boş kalır; o zaman
+  /// [kind] etiketi tek bilgi kaynağıdır.
+  final String meaning;
+
+  /// Korpusun kelime türü etiketi: N, V, ACT_PCPL, PASS_PCPL, VN, ADJ, PN.
+  /// Türkçeye çevirisi arayüz katmanında yapılır.
+  final String kind;
+
+  factory DerivedWord.fromJson(Map<String, dynamic> json) => DerivedWord(
+    lemma: json['l'] as String,
+    count: json['c'] as int,
+    meaning: (json['m'] as String?) ?? '',
+    kind: (json['p'] as String?) ?? '',
+  );
+
+  bool get hasMeaning => meaning.trim().isNotEmpty;
+}
+
 /// Bir kelime kökü.
 class QuranRoot {
   const QuranRoot({
@@ -61,6 +98,9 @@ class QuranRoot {
     required this.translitterations,
     required this.readings,
     required this.letters,
+    this.derived = const [],
+    this.surahDistribution = const [],
+    this.verbForms = const [],
   });
 
   /// Arapça kök harfleri. Örn. "رسل".
@@ -95,6 +135,19 @@ class QuranRoot {
   /// Kökü oluşturan harfler — harf filtresi bu küme üzerinden tarar.
   final List<String> letters;
 
+  /// Kökten türeyen kelimeler, sıklığa göre azalan. En çok 12 tane.
+  final List<DerivedWord> derived;
+
+  /// Kökün sure dağılımı: `(sure numarası, geçiş sayısı)` çiftleri, sure
+  /// sırasında. Kökün Kuran'a nasıl yayıldığını gösteren şerit bundan
+  /// çizilir.
+  final List<(int, int)> surahDistribution;
+
+  /// Fiil kalıbı (bab) dağılımı: `(kalıp, geçiş sayısı)`. Arapçada kalıp
+  /// anlamı değiştirir — I "yapmak", II "yaptırmak", VII "yapılmak".
+  /// Yalnızca fiil olarak geçen köklerde dolu.
+  final List<(int, int)> verbForms;
+
   factory QuranRoot.fromJson(Map<String, dynamic> json) => QuranRoot(
     arabic: json['r'] as String,
     normalized: json['n'] as String,
@@ -104,7 +157,21 @@ class QuranRoot {
     translitterations: (json['t'] as List).cast<String>(),
     readings: ((json['k'] as List?) ?? const []).cast<String>(),
     letters: (json['L'] as List).cast<String>(),
+    derived: ((json['d'] as List?) ?? const [])
+        .map((e) => DerivedWord.fromJson(e as Map<String, dynamic>))
+        .toList(),
+    surahDistribution: _pairs(json['u']),
+    verbForms: _pairs(json['b']),
   );
+
+  /// `[[sure, adet], ...]` biçimindeki JSON dizisini çiftlere çevirir.
+  static List<(int, int)> _pairs(Object? raw) {
+    if (raw is! List) return const [];
+    return [
+      for (final e in raw)
+        if (e is List && e.length == 2) (e[0] as int, e[1] as int),
+    ];
+  }
 
   /// Anlamın ilk karşılığı — listelerde tek satırda gösterilir.
   String get primaryMeaning {

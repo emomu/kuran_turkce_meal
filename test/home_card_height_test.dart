@@ -59,9 +59,28 @@ void main() async {
       // Kart, altındaki günün ayeti kartını ve sure listesini ekranda
       // bırakmalı. Dikey yığılmış düzende 145pt'ye çıkıyordu ve ana ekranda
       // liste görünmeden önce iki kart tüm alanı yiyordu.
+      //
+      // Künye tek satıra indirildikten sonra 71pt; sınır 80 tutuldu ki
+      // bir satır daha eklenirse test uyarsın.
       final height = await cardHeight(tester);
 
-      expect(height, lessThan(110));
+      expect(height, lessThan(80));
+    });
+
+    testWidgets('rozet, sure adı ve ayet bilgisi aynı hizada', (tester) async {
+      await cardHeight(tester);
+
+      // Üç öğe tek satırda durur; biri diğerlerinden kayarsa satır
+      // dağınık görünür. Dikey merkezleri karşılaştırılır — yazı
+      // boyutları farklı olduğu için üst/alt kenarlar zaten eşit olmaz.
+      final badge = tester.getRect(find.text('Devam Et'));
+      final name = tester.getRect(find.text('Yâsîn'));
+      final counter = tester.getRect(find.textContaining('4/'));
+
+      expect(badge.center.dy, closeTo(name.center.dy, 2.0),
+          reason: 'rozet sure adından kaymış');
+      expect(counter.center.dy, closeTo(name.center.dy, 2.0),
+          reason: 'ayet bilgisi sure adından kaymış');
     });
 
     testWidgets('uzun sure adı kartı büyütmez', (tester) async {
@@ -81,7 +100,9 @@ void main() async {
       await cardHeight(tester);
 
       expect(find.text('Yâsîn'), findsOneWidget);
-      expect(find.textContaining('4. ayet'), findsOneWidget);
+      // Ayet bilgisi sure adının yanında kesirli biçimde: "4/83". Uzun
+      // yazım ("4. ayet · 83 ayetten") kartı bir satır uzatıyordu.
+      expect(find.textContaining('4/'), findsOneWidget);
       expect(find.byType(LinearProgressIndicator), findsOneWidget);
       // Devam etme işareti kartın ne yaptığını etiketten hızlı anlatır.
       expect(find.byIcon(Icons.play_arrow_rounded), findsOneWidget);

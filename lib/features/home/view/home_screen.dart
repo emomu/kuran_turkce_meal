@@ -12,6 +12,7 @@ import '../providers/home_provider.dart';
 import '../widgets/home_cards.dart';
 import '../widgets/surah_row.dart';
 import '../widgets/surah_search_field.dart';
+import '../widgets/tool_row.dart';
 import '../../../shared/widgets/tab_bar_inset.dart';
 import '../../../shared/widgets/responsive_layout.dart';
 import '../../onboarding/providers/tour_provider.dart';
@@ -108,9 +109,11 @@ class HomeScreen extends ConsumerWidget {
                       orElse: () => const SizedBox.shrink(),
                     ),
 
+                    // Günün ayeti yüklenemezse araçlar yine de görünmeli:
+                    // kartın eteğinde duruyorlar ama ona bağlı değiller.
                     ayahOfDay.maybeWhen(
                       data: (data) => data == null
-                          ? const SizedBox.shrink()
+                          ? const ToolCard()
                           : AyahOfTheDayCard(
                               key: _ayahOfDayKey,
                               data: data,
@@ -119,7 +122,7 @@ class HomeScreen extends ConsumerWidget {
                                 '?ayet=${data.ayah.ayahNumber}',
                               ),
                             ),
-                      orElse: () => const SizedBox.shrink(),
+                      orElse: () => const ToolCard(),
                     ),
 
                     // Bağış hatırlatması, günün ayetinin altında ve sure

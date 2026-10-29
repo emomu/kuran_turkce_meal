@@ -199,7 +199,7 @@ class _WordRow extends StatelessWidget {
                 entry.word.arabic,
                 textDirection: TextDirection.rtl,
                 textAlign: TextAlign.right,
-                style: TextStyle(
+                style: AppTypography.arabic(
                   fontSize: 22,
                   height: 1.7,
                   color: theme.colorScheme.onSurface,
@@ -225,9 +225,12 @@ class _WordRow extends StatelessWidget {
                       Text(
                         entry.word.root,
                         textDirection: TextDirection.rtl,
-                        style: theme.textTheme.labelMedium?.copyWith(
+                        style: AppTypography.arabic(
+                          fontSize:
+                              theme.textTheme.labelMedium?.fontSize ?? 12,
                           color: theme.colorScheme.primary,
-                          fontWeight: FontWeight.w600,
+                          height: 1.4,
+                          weight: FontWeight.w600,
                         ),
                       ),
                       if (entry.root != null) ...[

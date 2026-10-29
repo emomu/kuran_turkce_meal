@@ -11,6 +11,11 @@
     <!-- Asistana sesli soru sormak için. Ses kaydedilmez; sistemin konuşma
          tanıma servisine verilir ve metne çevrilir. -->
     <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <!-- Kıble yönünü hesaplamak için. Yalnızca pusula ekranı açıkken
+         istenir; konum cihazdan çıkmaz ve saklanmaz. Kaba konum yeterli:
+         kıble açısı kilometrelerce uzaklıkta bile bir derecenin altında
+         değişir, hassas konum istemek gereksiz olurdu. -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <!-- Ekran kapalıyken tilavetin sürmesi için. -->
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>

@@ -79,10 +79,9 @@ class AyahCard extends StatelessWidget {
                 textAlign: TextAlign.right,
                 maxLines: 4,
                 overflow: TextOverflow.ellipsis,
-                style: AppTypography.reading(
+                style: AppTypography.arabic(
                   fontSize: _arabicFontSize,
                   color: _inkMuted,
-                  height: 1.9,
                 ),
               ),
             ),

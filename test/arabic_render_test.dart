@@ -94,10 +94,27 @@ void main() async {
       // Arap hattı aynı puntoda Latin harflerden küçük göründüğü için
       // bilerek büyütülür.
       expect(arabic.style!.fontSize, greaterThan(translation.style!.fontSize!));
-      expect(arabic.style!.fontSize, prefs.arabicFontSize);
+      // Mushaf yüzü tercih edilen puntoyu kendi ölçek çarpanıyla
+      // uygular (bkz. AppTypography.arabic); çarpan 1'den büyük.
+      expect(
+        arabic.style!.fontSize,
+        greaterThanOrEqualTo(prefs.arabicFontSize),
+      );
     });
 
     testWidgets('punto ölçeği Arapçaya da uygulanır', (tester) async {
+      // Sabit sayı beklemek testi fontun çarpanına bağlar; sınanan şey
+      // oran: punto 1.6 katına çıkınca Arapça metin de 1.6 katına çıkmalı.
+      await _pump(tester, AyahTile(
+        ayah: _ayah,
+        prefs: const ReaderPreferences(showArabic: true),
+        mark: null,
+        onTap: () {},
+        onLongPress: () {},
+      ));
+      final normal =
+          tester.widget<Text>(find.text(_ayah.arabic!)).style!.fontSize!;
+
       await _pump(tester, AyahTile(
         ayah: _ayah,
         prefs: const ReaderPreferences(showArabic: true, fontScale: 1.6),
@@ -105,9 +122,10 @@ void main() async {
         onTap: () {},
         onLongPress: () {},
       ));
+      final scaled =
+          tester.widget<Text>(find.text(_ayah.arabic!)).style!.fontSize!;
 
-      final arabic = tester.widget<Text>(find.text(_ayah.arabic!));
-      expect(arabic.style!.fontSize, closeTo(24 * 1.6, 0.01));
+      expect(scaled / normal, closeTo(1.6, 0.01));
     });
 
     testWidgets('Arapçası olmayan ayette ayar açık olsa da taşma olmaz',
@@ -129,6 +147,28 @@ void main() async {
 
       expect(tester.takeException(), isNull);
       expect(find.text('Meal metni.'), findsOneWidget);
+    });
+
+    testWidgets('mushaf yüzüyle çizilir', (tester) async {
+      await _pump(tester, AyahTile(
+        ayah: _ayah,
+        prefs: const ReaderPreferences(showArabic: true),
+        mark: null,
+        onTap: () {},
+        onLongPress: () {},
+      ));
+
+      // Aile adı pubspec.yaml'daki tanımla birebir eşleşmeli; eşleşmezse
+      // Flutter sessizce sistem fontuna düşer ve harekeler harfe doğru
+      // oturmaz. Hata vermediği için ancak testle yakalanır.
+      final arabic = tester.widget<Text>(find.text(_ayah.arabic!));
+      expect(arabic.style!.fontFamily, 'UthmanicHafs');
+
+
+      // Meal Latin yüzünde kalmalı: Arapça fontu Latin metne uygulanırsa
+      // Türkçe karakterler bozulur.
+      final translation = tester.widget<Text>(find.text(_ayah.translation));
+      expect(translation.style!.fontFamily, isNot('AmiriQuran'));
     });
 
     testWidgets('koyu temada da sorunsuz çizilir', (tester) async {

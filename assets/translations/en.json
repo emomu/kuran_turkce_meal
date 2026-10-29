@@ -25,6 +25,7 @@
   "home": {
     "surahs": "Surahs",
     "lastRead": "CONTINUE READING",
+    "resumeBadge": "Continue",
     "verseOfDay": "VERSE OF THE DAY",
     "outOfVerses": "of {} verses",
     "orderRevelation": "Revelation order",
@@ -37,7 +38,8 @@
     "noContentHint": "The translation text hasn't been added yet. Add the assets/data/ayahs.json file.",
     "searchSurah": "Search surahs",
     "noSurahMatch": "No surah found",
-    "noSurahMatchHint": "Nothing matches \"{query}\". Try the name, its meaning, or the mushaf number."
+    "noSurahMatchHint": "Nothing matches \"{query}\". Try the name, its meaning, or the mushaf number.",
+    "tools": "TOOLS"
   },
   "reader": {
     "settings": "Reading settings",
@@ -76,7 +78,21 @@
     "unavailableHint": "assets/data/roots.json is missing from the bundle.",
     "sourceLabel": "Root data: Quranic Arabic Corpus (corpus.quran.com)",
     "highlightNote": "The match in the translation is approximate",
-    "compare": "Compare verses"
+    "compare": "Compare verses",
+    "derivedTitle": "DERIVED WORDS",
+    "derivedHint": "Words built on this root and how often they occur",
+    "distributionTitle": "ACROSS THE SURAHS",
+    "distributionHint": "appears in {} surahs",
+    "verbFormsTitle": "VERB FORMS",
+    "verbFormsHint": "In Arabic the form changes the meaning",
+    "kindNoun": "noun",
+    "kindVerb": "verb",
+    "kindAdjective": "adjective",
+    "kindProperNoun": "proper noun",
+    "kindActiveParticiple": "active participle",
+    "kindPassiveParticiple": "passive participle",
+    "kindVerbalNoun": "verbal noun",
+    "formTimes": "{} times"
   },
   "actions": {
     "addBookmark": "Add bookmark",
@@ -269,6 +285,8 @@
     "roots": {
       "rootTitle": "The word's root",
       "rootBody": "Arabic words derive from three-letter roots. This is the root of the word you tapped.",
+      "analysisTitle": "The root across the Qur'an",
+      "analysisBody": "The words built on this root, the forms it takes and how it spreads across the surahs. Root letters alone stay abstract; this breakdown gives them substance.",
       "occurrencesTitle": "Every occurrence",
       "occurrencesBody": "All verses containing words from this root. The highlight shows the derived form in that verse.",
       "searchTitle": "Look up another root",
@@ -388,5 +406,33 @@
     "thinking": "Thinking",
     "searching": "Searching the translation",
     "composing": "Composing the answer"
+  },
+  "qibla": {
+    "title": "Qibla",
+    "subtitle": "Direction of the Kaaba",
+    "locate": "Use my location",
+    "locating": "Getting location…",
+    "retry": "Try again",
+    "permissionTitle": "Qibla needs your location",
+    "permissionBody": "Your location is used to work out the direction of the Kaaba from where you are. It never leaves your device, and nothing is stored or sent.",
+    "serviceDisabled": "Location services are off",
+    "serviceDisabledBody": "Turn on location services to work out the qibla.",
+    "openLocationSettings": "Open location settings",
+    "denied": "Location permission denied",
+    "deniedBody": "The qibla cannot be worked out without a location.",
+    "deniedForever": "Location permission is off",
+    "deniedForeverBody": "You can turn it on in the app settings.",
+    "openAppSettings": "Open settings",
+    "unavailable": "Could not get a location",
+    "unavailableBody": "The signal may be weak. Try again somewhere more open.",
+    "distance": "{} km to the Kaaba",
+    "aligned": "You are facing the qibla",
+    "turnRight": "Turn right",
+    "turnLeft": "Turn left",
+    "noCompass": "This device has no compass",
+    "noCompassBody": "The qibla is at {}° — you can use a compass app to face it.",
+    "calibrate": "Calibrate the compass",
+    "calibrateBody": "Wave the phone in a figure-eight a few times.",
+    "accuracyNote": "Compasses are affected by metal and electronics."
   }
 }

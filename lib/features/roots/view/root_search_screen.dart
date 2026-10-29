@@ -217,11 +217,10 @@ class _RootRow extends StatelessWidget {
               child: Text(
                 root.arabic,
                 textDirection: TextDirection.rtl,
-                style: TextStyle(
+                style: AppTypography.arabic(
                   fontSize: 22,
                   height: 1.5,
                   color: theme.colorScheme.onSurface,
-                  letterSpacing: 2,
                 ),
               ),
             ),
@@ -470,7 +469,7 @@ class _LetterChip extends StatelessWidget {
             Text(
               letter.letter,
               textDirection: TextDirection.rtl,
-              style: TextStyle(
+              style: AppTypography.arabic(
                 fontSize: 17,
                 height: 1.2,
                 color: isSelected

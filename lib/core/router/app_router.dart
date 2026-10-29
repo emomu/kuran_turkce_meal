@@ -16,6 +16,7 @@ import '../../features/plans/view/plan_detail_screen.dart';
 import '../../features/plans/view/plans_screen.dart';
 import '../../features/prophets/view/prophet_ayahs_screen.dart';
 import '../../features/reader/view/reader_screen.dart';
+import '../../features/qibla/view/qibla_screen.dart';
 import '../../features/roots/view/root_search_screen.dart';
 import '../../features/settings/view/settings_screen.dart';
 import '../../features/splash/view/splash_screen.dart';
@@ -170,6 +171,12 @@ final appRouter = GoRouter(
     GoRoute(
       path: '/kokler',
       builder: (context, state) => const RootSearchScreen(),
+    ),
+
+    // Kıble pusulası. Konum izni yalnızca bu ekranda istenir.
+    GoRoute(
+      path: '/kible',
+      builder: (context, state) => const QiblaScreen(),
     ),
 
     // Bir sorgunun bütün meal sonuçları. Keşfet'teki sonuç grubu ilk beşi

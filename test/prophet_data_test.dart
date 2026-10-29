@@ -149,22 +149,29 @@ void main() async {
       expect(m.ayahCount, lessThan(30));
     });
 
-    test('kıssasız peygamberlerde her ayette ad geçiyor', () {
-      // Kıssa sınırı tanımlanmamış peygamberlerde liste yalnızca ad
-      // taramasından gelir; orada ad her ayette geçmeli. Yanlış eşleşmeyi
-      // yakalayan asıl denetim budur.
+    test('kısa listelerde ad en az bir ayette geçiyor', () {
+      // Kıssası anlatılmayan, yalnızca anılan peygamberler. Listeleri
+      // birkaç ayetliktir ve sınır tanımlı olsa da dar tutulur; buradaki
+      // denetim listenin hiç alakasız bir yere savrulmadığıdır.
       //
-      // Sınırlı olanlar buraya alınmaz: onlarda anlatı ayetleri de listede
-      // olduğu için oran doğal olarak düşer (Yûsuf %41, Sâlih %29) ve
-      // beklenen davranış budur.
+      // Her ayette ad aranmaz: "İsmail, İdris ve Zülkifl'i de an" ile
+      // açılan blok "Onları da rahmetimizin içine aldık" ile kapanır ve
+      // ikinci ayette ad geçmez — ama kıssanın parçasıdır.
       const spellings = {
-        'yakub': ['Yakûb', 'Yakub', 'Yakup', 'Yâkub'],
-        'ishak': ['İshâk', 'İshak'],
+        'elyesa': ['Elyesa', 'Elyasa'],
+        'zulkifl': ['Zülkifl', "Zü'lKifl"],
+        'idris': ['İdris', 'İdrîs'],
       };
 
       for (final entry in spellings.entries) {
         final p = prophets.firstWhere((x) => x.id == entry.key);
-        expect(mentionRate(p, entry.value), p.ayahCount, reason: p.name);
+        expect(
+          mentionRate(p, entry.value),
+          greaterThan(0),
+          reason: '${p.name}: hiçbir ayette ad geçmiyor',
+        );
+        // Liste birkaç ayeti aşmamalı; aşıyorsa tarama savrulmuş demektir.
+        expect(p.ayahCount, lessThan(10), reason: p.name);
       }
     });
 
@@ -185,6 +192,39 @@ void main() async {
       expect(inSurah, contains(4));
       expect(inSurah, contains(101));
       expect(inSurah.length, greaterThan(90));
+    });
+
+    test('Zekeriyyâ kıssası tek ayete düşmez', () {
+      // Kullanıcının bildirdiği eksiklik: Zekeriyyâ listede tek ayetle
+      // (21:89) görünüyordu. Oysa Meryem suresi onun kıssasıyla açılır
+      // (19:2-15) ve Âl-i İmrân'da ikinci bir anlatı vardır (3:37-41).
+      // Ad taraması ikisini de kaçırıyordu: anlatı 19:3-6 ve 19:8-11'de
+      // zamirle sürüyor, ad tekrarlanmıyor.
+      final z = prophets.firstWhere((p) => p.id == 'zekeriya');
+      expect(z.ayahCount, greaterThan(15));
+
+      final maryam = z.ayahIds
+          .map((id) => ayahsById[id])
+          .whereType<Ayah>()
+          .where((a) => a.surahNumber == 19)
+          .map((a) => a.ayahNumber)
+          .toList();
+      // Meryem 2-15 kesintisiz: duası (4-6), müjde (7) ve alâmet (10) dahil.
+      expect(maryam, containsAll(<int>[2, 4, 6, 7, 10, 15]));
+    });
+
+    test('Eyyûb kıssası sabrın anlatıldığı ayetleri taşır', () {
+      // Sâd 41-44 tek bir anlatıdır: nidâ (41), şifa (42), ailesinin
+      // iadesi (43) ve sabrının övülmesi (44). Ad yalnızca 41'de geçtiği
+      // için tarama kıssanın dörtte üçünü atlıyordu.
+      final e = prophets.firstWhere((p) => p.id == 'eyyub');
+      final sad = e.ayahIds
+          .map((id) => ayahsById[id])
+          .whereType<Ayah>()
+          .where((a) => a.surahNumber == 38)
+          .map((a) => a.ayahNumber)
+          .toList();
+      expect(sad, containsAll(<int>[41, 42, 43, 44]));
     });
 
     test('Îsâ kıssası doğum sahnesini içerir', () {

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../../shared/widgets/pressable.dart';
 import '../providers/home_provider.dart';
+import 'tool_row.dart';
 
 /// "Kaldığın yerden devam et" kartı.
 ///
@@ -36,49 +37,71 @@ class ContinueReadingCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            // Künye ile oynatma düğmesi tek satırda.
+            // Bütün künye tek satırda: sure adı ve kaçıncı ayette
+            // kalındığı yan yana.
             //
-            // Önceki düzende etiket, sure adı ve ayet bilgisi alt alta üç
-            // satır tutuyor ve kart ekranın üçte birini yiyordu. Bilgi aynı,
-            // yalnızca yatay eksene yayıldı: "KALDIĞIN YER" etiketi sure
-            // adının üstünde küçük bir üst satır, ilerleme sayısı da onun
-            // yanında. Sağdaki yuvarlak düğme kartın ne işe yaradığını
-            // etiketten daha hızlı anlatıyor.
+            // Daha önce "KALDIĞIN YER" etiketi, sure adı ve ayet bilgisi
+            // alt alta üç satırdı; kart ana ekranın en büyük öğesiydi ve
+            // sure listesi ekranın dışına taşıyordu. Etiket kaldırıldı:
+            // yeşil zemin, ilerleme çubuğu ve oynat düğmesi kartın ne
+            // olduğunu zaten söylüyor, üstelik kart her zaman aynı yerde
+            // duruyor.
             Row(
               children: [
                 Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.baseline,
+                    textBaseline: TextBaseline.alphabetic,
                     children: [
+                      // Kartın ne olduğunu söyleyen rozet.
+                      //
+                      // Üstte ayrı bir "KALDIĞIN YER" satırı vardı ve kart
+                      // bir satır uzuyordu. Rozet aynı işi sure adının
+                      // yanında görür: yeşil zemin ve oynat düğmesi tek
+                      // başına "dinle" gibi okunabiliyordu, oysa kart
+                      // okumaya götürür.
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 5,
+                        ),
+                        decoration: BoxDecoration(
+                          color: theme.colorScheme.onPrimary.withValues(
+                            alpha: 0.22,
+                          ),
+                          borderRadius: BorderRadius.circular(Radii.pill),
+                        ),
+                        child: Text(
+                          'home.resumeBadge'.tr(),
+                          style: theme.textTheme.labelMedium?.copyWith(
+                            color: theme.colorScheme.onPrimary,
+                            fontWeight: FontWeight.w600,
+                            height: 1.1,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: Insets.xs),
+                      Flexible(
+                        child: Text(
+                          lastRead.surah.name,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: theme.textTheme.titleMedium?.copyWith(
+                            color: theme.colorScheme.onPrimary,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: Insets.xs),
+                      // Ayet bilgisi sure adının yanında ve soluk: adı
+                      // okumayı bölmeden, bakınca görülecek yerde.
                       Text(
-                        'home.lastRead'.tr(),
-                        style: theme.textTheme.labelSmall?.copyWith(
+                        '${lastRead.ayahNumber}/${lastRead.surah.ayahCount}',
+                        maxLines: 1,
+                        style: theme.textTheme.bodySmall?.copyWith(
                           color: theme.colorScheme.onPrimary.withValues(
                             alpha: 0.7,
                           ),
-                          fontWeight: FontWeight.w600,
-                          letterSpacing: 0.8,
-                        ),
-                      ),
-                      const SizedBox(height: 3),
-                      Text(
-                        lastRead.surah.name,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: theme.textTheme.titleMedium?.copyWith(
-                          color: theme.colorScheme.onPrimary,
-                        ),
-                      ),
-                      Text(
-                        '${lastRead.ayahNumber}. ayet · '
-                        '${lastRead.surah.ayahCount} ayetten',
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: theme.textTheme.bodySmall?.copyWith(
-                          color: theme.colorScheme.onPrimary.withValues(
-                            alpha: 0.75,
-                          ),
+                          fontFeatures: const [FontFeature.tabularFigures()],
                         ),
                       ),
                     ],
@@ -88,21 +111,21 @@ class ContinueReadingCard extends StatelessWidget {
                 // Devam etme eylemi. Kartın tamamı zaten dokunulabilir;
                 // düğme görsel bir işaret, ayrı bir hedef değil.
                 Container(
-                  width: 38,
-                  height: 38,
+                  width: 32,
+                  height: 32,
                   decoration: BoxDecoration(
                     color: theme.colorScheme.onPrimary.withValues(alpha: 0.18),
                     shape: BoxShape.circle,
                   ),
                   child: Icon(
                     Icons.play_arrow_rounded,
-                    size: 22,
+                    size: 20,
                     color: theme.colorScheme.onPrimary,
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: Insets.sm),
+            const SizedBox(height: Insets.xs),
             ClipRRect(
               borderRadius: BorderRadius.circular(Radii.pill),
               child: LinearProgressIndicator(
@@ -141,44 +164,66 @@ class AyahOfTheDayCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return Pressable(
-      onTap: onTap,
-      child: Container(
-        width: double.infinity,
-        padding: const EdgeInsets.all(Insets.md),
-        decoration: BoxDecoration(
-          color: theme.colorScheme.surface,
-          borderRadius: BorderRadius.circular(Radii.lg),
-          border: Border.all(color: theme.dividerColor, width: 0.5),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'home.verseOfDay'.tr(),
-              style: theme.textTheme.labelSmall?.copyWith(
-                fontWeight: FontWeight.w600,
-                letterSpacing: 0.8,
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surface,
+        borderRadius: BorderRadius.circular(Radii.lg),
+        border: Border.all(color: theme.dividerColor, width: 0.5),
+      ),
+      // Kart iki bölümden oluşur ve her birinin kendi dokunma alanı
+      // vardır: ayet metni sureye götürür, alttaki araçlar kendi
+      // ekranlarına. Tek bir Pressable sarılsaydı araçlara dokunmak da
+      // sureyi açardı.
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Pressable(
+            onTap: onTap,
+            borderRadius: BorderRadius.circular(Radii.lg),
+            child: Padding(
+              padding: const EdgeInsets.all(Insets.md),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'home.verseOfDay'.tr(),
+                    style: theme.textTheme.labelSmall?.copyWith(
+                      fontWeight: FontWeight.w600,
+                      letterSpacing: 0.8,
+                    ),
+                  ),
+                  const SizedBox(height: Insets.xs),
+                  Text(
+                    data.ayah.translationFor(context.locale.languageCode),
+                    // İki satır: üç satırken kart tek başına ekranın
+                    // dörtte birini kaplıyordu ve sure listesi görünmüyordu.
+                    // Kesilen ayet zaten dokunulunca tam açılır.
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppTypography.reading(
+                      fontSize: 16,
+                      color: theme.colorScheme.onSurface,
+                      height: 1.55,
+                    ),
+                  ),
+                  const SizedBox(height: Insets.xs),
+                  Text(
+                    '${data.surah.name} · ${data.ayah.numberLabel}. ayet',
+                    style: theme.textTheme.labelMedium,
+                  ),
+                ],
               ),
             ),
-            const SizedBox(height: Insets.xs),
-            Text(
-              data.ayah.translationFor(context.locale.languageCode),
-              maxLines: 3,
-              overflow: TextOverflow.ellipsis,
-              style: AppTypography.reading(
-                fontSize: 16,
-                color: theme.colorScheme.onSurface,
-                height: 1.55,
-              ),
-            ),
-            const SizedBox(height: Insets.xs),
-            Text(
-              '${data.surah.name} · ${data.ayah.numberLabel}. ayet',
-              style: theme.textTheme.labelMedium,
-            ),
-          ],
-        ),
+          ),
+
+          Divider(height: 1, color: theme.dividerColor),
+
+          // Araçlar kartın eteğinde: ayrı bir blok olarak durmaları
+          // ekranda bir kart daha demekti ve sure listesi büsbütün
+          // aşağı kaçıyordu.
+          const ToolRow(),
+        ],
       ),
     );
   }
