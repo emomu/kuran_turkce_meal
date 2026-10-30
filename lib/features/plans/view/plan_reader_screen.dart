@@ -19,6 +19,7 @@ import '../../reader/widgets/ayah_actions_sheet.dart';
 import '../../reader/widgets/ayah_tile.dart';
 import '../../reader/widgets/note_editor_sheet.dart';
 import '../../reader/widgets/reader_settings_sheet.dart';
+import '../../review/providers/review_prompt.dart';
 import '../../roots/view/root_detail_screen.dart';
 import '../../roots/widgets/word_picker_sheet.dart';
 import '../../settings/providers/preferences_provider.dart';
@@ -114,6 +115,7 @@ class _PlanReaderScreenState extends ConsumerState<PlanReaderScreen> {
     // Zaten işaretliyse veritabanına dokunma.
     if (reading.day.isCompleted) return;
     ref.read(planActionsProvider).toggleDay(widget.planId, _dayIndex, false);
+    unawaited(recordMilestoneAndMaybeRequestReview(ref));
   }
 
   /// Sıradaki güne geçer.

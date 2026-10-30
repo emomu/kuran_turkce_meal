@@ -13,6 +13,7 @@ import '../../audio/providers/download_provider.dart';
 import '../../audio/widgets/audio_download_sheet.dart';
 import '../../donate/data/donation_links.dart';
 import '../../donate/widgets/support_banner.dart';
+import '../../review/widgets/rate_banner.dart';
 import '../../../shared/widgets/pressable.dart';
 import '../providers/preferences_provider.dart';
 import '../../onboarding/providers/tour_provider.dart';
@@ -56,8 +57,14 @@ class SettingsScreen extends ConsumerWidget {
             // yapılandırılmamışsa hiç çizilmez.
             if (DonationLinks.isConfigured) ...[
               const SupportBanner(),
-              const SizedBox(height: Insets.lg),
+              const SizedBox(height: Insets.sm),
             ],
+
+            // Puan kartı desteğin hemen altında: ikisi de uygulamaya
+            // katkının yolları. Bağış kanalı yoksa da durur; puan vermek
+            // bağışa bağlı değil.
+            const RateBanner(),
+            const SizedBox(height: Insets.lg),
 
             _Section(
               title: 'settings.appearance'.tr(),

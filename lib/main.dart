@@ -17,6 +17,7 @@ import 'core/widgets_bridge/home_widget_service.dart';
 import 'core/widgets_bridge/home_widget_sync.dart';
 import 'features/donate/providers/donation_provider.dart';
 import 'features/donate/providers/donation_reminder.dart';
+import 'features/review/providers/review_provider.dart';
 import 'features/settings/providers/preferences_provider.dart';
 
 Future<void> main() async {
@@ -131,8 +132,8 @@ class _QuranAppState extends ConsumerState<QuranApp>
     });
   }
 
-  /// Açılışta yapılan hafif işler: bildirim kaydını tazelemek, bağış
-  /// sayacını artırmak ve gerekiyorsa bağış hatırlatmasını planlamak.
+  /// Açılışta yapılan hafif işler: bildirim kaydını tazelemek, bağış ve
+  /// puan sayaçlarını artırmak ve gerekiyorsa bağış hatırlatmasını planlamak.
   ///
   /// İlk kareden sonra çalışır — hiçbiri açılışı bekletmeye değmez ve
   /// hiçbiri kullanıcının o anda gördüğü ekranı etkilemez.
@@ -145,6 +146,7 @@ class _QuranAppState extends ConsumerState<QuranApp>
   Future<void> _registerOpen() async {
     if (!mounted) return;
     ref.read(donationProvider.notifier).registerAppOpen();
+    ref.read(reviewProvider.notifier).registerAppOpen();
 
     await refreshDailyAyahNotification(ref);
     if (!mounted) return;

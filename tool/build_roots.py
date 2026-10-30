@@ -243,6 +243,26 @@ def load_lemma_tr():
         out.setdefault(normalize_letters(strip_harakat(k)), v)
     return out
 
+def lemma_meaning(lemma_tr, lem):
+    """Lemma'nın Türkçe karşılığı; sözlükte yoksa None.
+
+    Anlam harekeli biçimle aranır. Sözlük i'rab harekesini taşıyan biçimi
+    de içerebildiği için (صَبَرَ) sondaki hareke geri eklenerek ikinci bir
+    deneme yapılır.
+
+    Harekesiz eşleşme denenmez: iskelet aynı olan farklı kelimeler
+    çarpışıyor ve yanlış anlam veriyordu — عالِم (bilen) ile عالَم (evren)
+    harekesiz ikisi de عالم.
+    """
+    meaning = lemma_tr.get(lem)
+    if meaning:
+        return meaning
+    for mark in ('َ', 'ُ', 'ِ'):
+        meaning = lemma_tr.get(lem + mark)
+        if meaning:
+            return meaning
+    return None
+
 def load_morphology():
     """(surah, ayah) -> [ {w, form, root, lemma, pos}, ... ]"""
     verses = collections.defaultdict(dict)
@@ -357,6 +377,10 @@ def main():
     root_lemma_kind = collections.defaultdict(dict)
     # Kök -> {bab: kaç kez}. Fiil kalıbı dağılımı için.
     root_forms = collections.defaultdict(collections.Counter)
+    # Kök -> bab -> {fiil lemma: kaç kez}. Her kalıbın örnek fiili için:
+    # "IV" tek başına bir şey anlatmıyor, أَقْرَأَ yanında anlatıyor.
+    root_form_lemmas = collections.defaultdict(
+        lambda: collections.defaultdict(collections.Counter))
     words_out = []
     stats = collections.Counter()
 
@@ -411,6 +435,12 @@ def main():
                             canonical_lemma(info['lemma']), kind)
                 if info.get('vf'):
                     root_forms[root][info['vf']] += 1
+                    # Örnek olarak yalnızca fiiller sayılır: kalıp etiketi
+                    # ism-i fail ve masdarlarda da var (مُسْتَغْفِر), ama
+                    # kalıbı en açık fiil anlatır (اسْتَغْفَرَ).
+                    if info.get('pos') == 'V' and info['lemma']:
+                        root_form_lemmas[root][info['vf']][
+                            canonical_lemma(info['lemma'])] += 1
                 stats['kokler_eslesti'] += 1
 
     # Kök kayıtları
@@ -435,19 +465,7 @@ def main():
         derived = []
         for lem, n in root_lemmas[root].most_common(12):
             item = {'l': lem, 'c': n}
-            # Anlam harekeli biçimle aranır. Sözlük i'rab harekesini
-            # taşıyan biçimi de içerebildiği için (صَبَرَ) sondaki hareke
-            # geri eklenerek ikinci bir deneme yapılır.
-            #
-            # Harekesiz eşleşme denenmez: iskelet aynı olan farklı
-            # kelimeler çarpışıyor ve yanlış anlam veriyordu — عالِم
-            # (bilen) ile عالَم (evren) harekesiz ikisi de عالم.
-            meaning = lemma_tr.get(lem)
-            if not meaning:
-                for mark in ('َ', 'ُ', 'ِ'):
-                    meaning = lemma_tr.get(lem + mark)
-                    if meaning:
-                        break
+            meaning = lemma_meaning(lemma_tr, lem)
             if meaning:
                 item['m'] = meaning
             kind = root_lemma_kind[root].get(lem)
@@ -474,7 +492,18 @@ def main():
         # Fiil kalıpları yalnızca fiil olarak geçen köklerde yazılır;
         # isimden türeyen köklerde alan hiç olmaz.
         if root_forms[root]:
-            record['b'] = sorted(root_forms[root].items())
+            forms = []
+            for vf, n in sorted(root_forms[root].items()):
+                item = {'f': vf, 'c': n}
+                verbs = root_form_lemmas[root][vf]
+                if verbs:
+                    lem = verbs.most_common(1)[0][0]
+                    item['l'] = lem
+                    meaning = lemma_meaning(lemma_tr, lem)
+                    if meaning:
+                        item['m'] = meaning
+                forms.append(item)
+            record['b'] = forms
         roots_out.append(record)
 
     payload = {

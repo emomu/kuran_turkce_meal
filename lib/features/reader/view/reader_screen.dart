@@ -18,6 +18,7 @@ import '../../audio/providers/audio_provider.dart';
 import '../../audio/providers/download_provider.dart';
 import '../../audio/widgets/audio_download_sheet.dart';
 import '../../audio/widgets/audio_player_bar.dart';
+import '../../review/providers/review_prompt.dart';
 import '../../roots/view/root_detail_screen.dart';
 import '../../roots/widgets/word_picker_sheet.dart';
 import '../../settings/providers/preferences_provider.dart';
@@ -344,6 +345,9 @@ class _ReaderScreenState extends ConsumerState<ReaderScreen> {
       _focusedAyahNumber = null;
       _isAdvancing = false;
     });
+
+    // Geçiş bittikten sonra: pencere kayan listenin üstüne açılmasın.
+    unawaited(recordMilestoneAndMaybeRequestReview(ref));
   }
 
   /// Bir önceki sureye döner.

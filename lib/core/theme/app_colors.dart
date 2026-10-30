@@ -62,6 +62,13 @@ abstract final class AppColors {
   /// Vurgu rengi — koyu tema. Koyu zeminde okunabilirlik için açılmış.
   static const accentDark = Color(0xFF7FB394);
 
+  /// Altın — açık tema. Puan kartının vurgusu; açık zeminde okunsun diye
+  /// koyulaştırılmış.
+  static const goldLight = Color(0xFF9A7424);
+
+  /// Altın — koyu tema.
+  static const goldDark = Color(0xFFE6C47A);
+
   /// Ayet vurgulama renkleri. Kullanıcı bir ayeti işaretlediğinde kullanılır.
   /// Düşük alfa ile metnin üstüne bindirilir, metni bastırmaz.
   static const highlightYellow = Color(0xFFF5D77E);

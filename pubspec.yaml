@@ -3,7 +3,7 @@ description: "Kur'an-ı Kerim Türkçe ve İngilizce meali — iniş sırasına 
 publish_to: 'none' 
 
 
-version: 1.0.6+10
+version: 1.1.0+11
 
 environment:
   sdk: ^3.11.1
@@ -50,6 +50,10 @@ dependencies:
   speech_to_text: ^7.4.0
   flutter_compass: ^0.8.1
   geolocator: ^14.1.2
+  # Puan isteği sistemin kendi penceresiyle açılır (iOS StoreKit, Android
+  # Play In-App Review). Ne zaman sorulacağına uygulama karar verir; pencerenin
+  # gerçekten görünüp görünmeyeceğine işletim sistemi.
+  in_app_review: ^2.0.12
 
 dev_dependencies:
   flutter_test:

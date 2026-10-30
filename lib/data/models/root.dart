@@ -87,6 +87,41 @@ class DerivedWord {
   bool get hasMeaning => meaning.trim().isNotEmpty;
 }
 
+/// Kökün bir fiil kalıbı (bab) ve o kalıptaki örnek fiil.
+///
+/// Kalıp numarası tek başına bir şey anlatmaz; "IV" yerine أَقْرَأَ
+/// (okuttu) görmek, kökün kalıpla nasıl anlam değiştirdiğini gösterir.
+class VerbForm {
+  const VerbForm({
+    required this.form,
+    required this.count,
+    required this.lemma,
+    required this.meaning,
+  });
+
+  /// Kalıp numarası, 1-10.
+  final int form;
+
+  /// Kökün bu kalıpta kaç kez geçtiği. Kalıptan türeyen isimler (ism-i
+  /// fail, masdar) de sayılır.
+  final int count;
+
+  /// Kalıbın en sık geçen fiili. Kalıp yalnızca isimlerde geçiyorsa boş.
+  final String lemma;
+
+  /// Fiilin Türkçe karşılığı. Sözlükte yoksa boş.
+  final String meaning;
+
+  factory VerbForm.fromJson(Map<String, dynamic> json) => VerbForm(
+    form: json['f'] as int,
+    count: json['c'] as int,
+    lemma: (json['l'] as String?) ?? '',
+    meaning: (json['m'] as String?) ?? '',
+  );
+
+  bool get hasMeaning => meaning.trim().isNotEmpty;
+}
+
 /// Bir kelime kökü.
 class QuranRoot {
   const QuranRoot({
@@ -143,10 +178,10 @@ class QuranRoot {
   /// çizilir.
   final List<(int, int)> surahDistribution;
 
-  /// Fiil kalıbı (bab) dağılımı: `(kalıp, geçiş sayısı)`. Arapçada kalıp
-  /// anlamı değiştirir — I "yapmak", II "yaptırmak", VII "yapılmak".
-  /// Yalnızca fiil olarak geçen köklerde dolu.
-  final List<(int, int)> verbForms;
+  /// Fiil kalıbı (bab) dağılımı, kalıp sırasında. Arapçada kalıp anlamı
+  /// değiştirir — I "yapmak", II "yaptırmak", VII "yapılmak". Yalnızca fiil
+  /// olarak geçen köklerde dolu.
+  final List<VerbForm> verbForms;
 
   factory QuranRoot.fromJson(Map<String, dynamic> json) => QuranRoot(
     arabic: json['r'] as String,
@@ -161,7 +196,9 @@ class QuranRoot {
         .map((e) => DerivedWord.fromJson(e as Map<String, dynamic>))
         .toList(),
     surahDistribution: _pairs(json['u']),
-    verbForms: _pairs(json['b']),
+    verbForms: ((json['b'] as List?) ?? const [])
+        .map((e) => VerbForm.fromJson(e as Map<String, dynamic>))
+        .toList(),
   );
 
   /// `[[sure, adet], ...]` biçimindeki JSON dizisini çiftlere çevirir.

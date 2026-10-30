@@ -1,16 +1,16 @@
-# Graph Report - kuran_turkce_meal  (2026-09-11)
+# Graph Report - kuran_turkce_meal  (2026-10-30)
 
 ## Corpus Check
-- 278 files · ~3,494,637 words
+- 313 files · ~8,115,218 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 3468 nodes · 5288 edges · 186 communities (174 shown, 8 thin omitted)
+- 3825 nodes · 5799 edges · 195 communities (183 shown, 8 thin omitted)
 - Extraction: 98% EXTRACTED · 2% INFERRED · 0% AMBIGUOUS · INFERRED: 98 edges (avg confidence: 0.87)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `c94e9e5f`
+- Built from commit: `798bf63e`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -22,7 +22,7 @@
 - import_meal.dart
 - pressable.dart
 - reader_screen.dart
-- bookmarks_provider.dart
+- bookmarks_screen.dart
 - app_typography.dart
 - _
 - ayah_actions_sheet.dart
@@ -31,7 +31,7 @@
 - AppDelegate
 - reader_provider.dart
 - package:kuran_turkce_meal/core/theme/app_theme.dart
-- StatelessWidget
+- settings_screen.dart
 - quran_repository.dart
 - prophet_ayahs_screen.dart
 - WidgetData.kt
@@ -42,14 +42,14 @@
 - plan_detail_screen.dart
 - topic_ayahs_screen.dart
 - app_router.dart
-- screens_preview.dart
+- package:flutter/material.dart
 - note_editor_sheet.dart
 - app_providers.dart
 - audio_repository.dart
 - marks_repository.dart
 - responsive_layout.dart
-- helpers/localized_app.dart
-- reader_preferences.dart
+- audio_ui_test.dart
+- ayah_card.dart
 - progress_repository.dart
 - build
 - app_shell.dart
@@ -59,7 +59,7 @@
 - home_provider.dart
 - audio_download_sheet.dart
 - WidgetStrings
-- package:flutter/material.dart
+- segment_repository.dart
 - Android Density Bucket Ladder
 - root_navigation_test.dart
 - ayah_card_render_test.dart
@@ -67,7 +67,7 @@
 - coach_mark.dart
 - root_search_screen.dart
 - plan_reader_screen.dart
-- splash_test.dart
+- state_sync_test.dart
 - App Store Marketing Icon (1024x1024, Flutter Logo)
 - iOS Launch Image (2x)
 - iPhone Spotlight Icon 40pt @3x (120x120)
@@ -88,7 +88,7 @@
 - Konu promptları
 - main.dart
 - note_editor_test.dart
-- package:easy_localization/easy_localization.dart
+- assistant_results_screen.dart
 - assistant_thinking_indicator.dart
 - donation_provider.dart
 - home_widget_data.dart
@@ -96,68 +96,68 @@
 - splash_screen.dart
 - search_suggestion_marquee.dart
 - topic.dart
-- prophet_repository.dart
+- qibla_screen.dart
 - static const
 - App.jsx
-- word_picker_sheet.dart
-- screens_smoke_test.dart
+- notification_bootstrap_test.dart
+- helpers/localized_app.dart
 - package.json
 - CLAUDE.md
 - State
-- List
+- StatelessWidget
 - ContinueReadingWidget
 - daily_ayah_notifications.dart
 - build_prophets.py
 - home_widget_service.dart
-- package:flutter_test/flutter_test.dart
-- return
+- plan_streak_ui_test.dart
+- package:kuran_turkce_meal/data/models/ayah.dart
 - Planlar bölümü — geliştirme promptları
 - StreakEntry
 - assistant_provider.dart
 - ContinueEntry
-- package:flutter_riverpod/flutter_riverpod.dart
+- rootDataProvider
 - WidgetMidnightRefresh.kt
 - DailyAyahEntry
 - assistant_history.dart
-- package:kuran_turkce_meal/features/search/data/verse_reference.dart
-- package:flutter/services.dart
+- qibla_provider.dart
+- topic_repository.dart
 - donation_links.dart
 - ContinueReadingWidgetProvider
 - StreakWidgetProvider
 - MaterialPageRoute
 - home_widget_sync.dart
 - AppDemo.jsx
-- root_highlight.dart
+- qibla_math.dart
 - int?
 - SharedPreferences
 - String?
 - Widget
-- preferencesProvider
-- search_integration_test.dart
+- core/providers/app_providers.dart
+- assistant_intent_test.dart
 - assistant_stats.dart
 - assistant_screen.dart
-- donation_ui_test.dart
+- review_provider.dart
 - deploy
-- donation_reminder.dart
+- preferencesProvider
 - user_marks.dart
-- audio_player_bar.dart
+- _ReaderScreenState
 - bool get
-- StateNotifier
+- reader_preferences.dart
 - reciter.dart
-- assistant_english_test.dart
-- donate_screen.dart
-- topic_repository.dart
 - home_cards.dart
+- ConsumerWidget
+- package:flutter_riverpod/flutter_riverpod.dart
+- _CompassState
 - answer_composer.dart
 - Kur'an Meal — tanıtım sitesi
 - verse_reference.dart
-- notification_bootstrap_test.dart
-- selectedReciterProvider
+- prophets_screen.dart
+- package:flutter/services.dart
 - .oxlintrc.json
 - turkish_suffix.dart
 - assistant_message.dart
 - App Store Connect — Türkçe metinler
-- assistant_screen_test.dart
+- PlanDetailScreen
 - topic_lexicon.dart
 - daily_ayah_bootstrap.dart
 - Icons.jsx
@@ -166,49 +166,58 @@
 - voice_input_provider.dart
 - surah.dart
 - assistant_message_bubble.dart
-- package:shared_preferences/shared_preferences.dart
+- screens_preview.dart
 - prophet.dart
 - ReaderScreen.jsx
 - assistant_ayah_card.dart
-- ../../../shared/widgets/responsive_layout.dart
+- screen_tours_test.dart
 - discover_screen.dart
-- assistant_smart_intent_test.dart
-- build_topics.py
-- app_theme.dart
-- ../../../data/models/ayah.dart
-- TopBar.jsx
-- reader_advance_test.dart
-- surah_search_field.dart
-- query_cleaner.dart
-- dart:async
-- search_result_parts.dart
-- ayah_card.dart
-- SearchScreen.jsx
-- VoidCallback?
-- fuzzy_match.dart
-- localized_app.dart
-- day_download_sheet.dart
-- ConsumerState
-- surah_end_card.dart
 - plan_day_end_card.dart
-- PlanDetailScreen
+- build_topics.py
+- assistant_english_test.dart
+- ../../../data/models/ayah.dart
+- StateNotifier
+- reader_advance_test.dart
+- donation_reminder.dart
+- query_cleaner.dart
+- arabic_font_coverage_test.dart
+- search_result_parts.dart
+- normalize_tanween.py
+- CustomPainter
+- ../../core/theme/app_typography.dart
+- fuzzy_match.dart
+- package:shared_preferences/shared_preferences.dart
+- segment_repository_test.dart
+- List
+- assistant_answer_test.dart
+- app_theme.dart
+- prophet_repository.dart
+- VoidCallback?
+- surah_search_field.dart
+- TopBar.jsx
+- package:kuran_turkce_meal/features/search/data/verse_reference.dart
+- dart:async
+- package:flutter_test/flutter_test.dart
 - _QuranAppState
-- result_ranker.dart
+- assistantProvider
+- review_prompt.dart
 - HomeScreen
-- streak_summary.dart
-- AssistantNotifier
+- assistant_screen_test.dart
+- return
+- SearchScreen.jsx
+- ReaderPreferences
 
 ## God Nodes (most connected - your core abstractions)
 1. `_` - 43 edges
-2. `_` - 33 edges
+2. `_` - 39 edges
 3. `WidgetStrings` - 22 edges
 4. `preferencesProvider` - 16 edges
 5. `AssistantIntent` - 15 edges
-6. `StreakEntry` - 13 edges
-7. `useDemoStore` - 13 edges
-8. `ContinueEntry` - 12 edges
-9. `Ayah` - 12 edges
-10. `Surah` - 12 edges
+6. `Ayah` - 14 edges
+7. `Surah` - 14 edges
+8. `StreakEntry` - 13 edges
+9. `useDemoStore` - 13 edges
+10. `ContinueEntry` - 12 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `Türkçe Arama Normalleştiricisi` --semantically_similar_to--> `easy_localization ^3.0.8`  [INFERRED] [semantically similar]
@@ -235,7 +244,7 @@
 - **All App Icons Render the Same Default Flutter Logo Artwork** — ios_runner_assets_xcassets_appiconset_icon_app_1024x1024_1x_flutter_logo_marketing_icon, ios_runner_assets_xcassets_appiconset_icon_app_60x60_3x_iphone_home_screen_icon, ios_runner_assets_xcassets_appiconset_icon_app_76x76_2x_ipad_home_screen_icon, ios_runner_assets_xcassets_appiconset_icon_app_83_5x83_5_2x_ipad_pro_home_screen_icon, ios_runner_assets_xcassets_appiconset_icon_app_1024x1024_1x_default_flutter_branding [INFERRED 0.95]
 - **iOS LaunchImage Scale-Variant Asset Set** — ios_runner_assets_xcassets_launchimage_imageset_launchimage_1x, ios_runner_assets_xcassets_launchimage_imageset_launchimage_2x, ios_runner_assets_xcassets_launchimage_imageset_launchimage_3x, ios_runner_assets_xcassets_launchimage_imageset_launchimage_scale_variant_set [INFERRED 0.95]
 
-## Communities (186 total, 8 thin omitted)
+## Communities (195 total, 8 thin omitted)
 
 ### Community 0 - "lib/features (home, reader, search, plans, bookmarks, settings)"
 Cohesion: 0.05
@@ -243,15 +252,15 @@ Nodes (51): Dart Analyzer Yapılandırması, tool/** Analiz Dışı Bırakma, iO
 
 ### Community 1 - "app_colors.dart"
 Cohesion: 0.07
-Nodes (26): accentDark, accentLight, AppColors, darkBackground, darkDivider, darkInk, darkInkFaint, darkInkMuted (+18 more)
+Nodes (28): accentDark, accentLight, AppColors, darkBackground, darkDivider, darkInk, darkInkFaint, darkInkMuted (+20 more)
 
 ### Community 2 - "search_provider.dart"
 Cohesion: 0.07
 Nodes (27): ../data/verse_reference.dart, ayahNumber, clear, copyWith, _debounce, dispose, hasQuery, hasReference (+19 more)
 
 ### Community 3 - "preferences_provider.dart"
-Cohesion: 0.08
-Nodes (24): _kAutoScrollWithAudio, _kDailyAyahEnabled, _kDailyAyahHour, _kDailyAyahMinute, _kFontScale, _kLineHeight, _kPlaybackSpeed, _kReciterId (+16 more)
+Cohesion: 0.07
+Nodes (26): _kAutoScrollWithAudio, _kDailyAyahEnabled, _kDailyAyahHour, _kDailyAyahMinute, _kFontScale, _kHighlightWords, _kLineHeight, _kPlaybackSpeed (+18 more)
 
 ### Community 4 - "import_meal.dart"
 Cohesion: 0.06
@@ -262,28 +271,28 @@ Cohesion: 0.12
 Nodes (16): BorderRadius?, borderRadius, build, child, createState, _handleLongPress, _handleTap, hapticOnTap (+8 more)
 
 ### Community 6 - "reader_screen.dart"
-Cohesion: 0.04
-Nodes (49): ../../assistant/view/widgets/assistant_fab.dart, ../../audio/widgets/audio_download_sheet.dart, createState, CupertinoStyleLoader, _didScrollToInitial, dispose, _fabClearance, _firstAyahKey (+41 more)
+Cohesion: 0.03
+Nodes (62): ../../assistant/view/widgets/assistant_fab.dart, ayah, createState, CupertinoStyleLoader, _didScrollToInitial, dispose, _fabClearance, _firstAyahKey (+54 more)
 
-### Community 7 - "bookmarks_provider.dart"
-Cohesion: 0.14
-Nodes (15): ../../../data/models/user_marks.dart, ayah, ayahById, ayahs, mark, marks, marksRepo, quran (+7 more)
+### Community 7 - "bookmarks_screen.dart"
+Cohesion: 0.08
+Nodes (27): ../../../data/models/user_marks.dart, ayah, ayahById, ayahs, mark, marks, marksRepo, quran (+19 more)
 
 ### Community 8 - "app_typography.dart"
-Cohesion: 0.07
-Nodes (26): AppTypography, emphasized, fast, Insets, lg, md, Motion, normal (+18 more)
+Cohesion: 0.05
+Nodes (43): AppTypography, _arabic, _arabicScale, emphasized, fast, Insets, lg, md (+35 more)
 
 ### Community 9 - "_"
 Cohesion: 0.07
 Nodes (29): _, _buildDays, bySurah, calculateStreak, completed, completions, days, endAyah (+21 more)
 
 ### Community 10 - "ayah_actions_sheet.dart"
-Cohesion: 0.08
-Nodes (24): _ActionRow, ayah, AyahActionsSheet, build, color, _ColorDot, _HighlightPicker, icon (+16 more)
+Cohesion: 0.06
+Nodes (29): ../../../core/theme/app_colors.dart, _ActionRow, ayah, AyahActionsSheet, build, color, _ColorDot, _HighlightPicker (+21 more)
 
 ### Community 11 - "plans_screen.dart"
 Cohesion: 0.09
-Nodes (22): ../../donate/providers/donation_provider.dart, ../../donate/widgets/donation_card.dart, GlobalKey?, _ayahOfDayKey, _orderToggleKey, _surahSearchKey, _tourSteps, badgeKey (+14 more)
+Nodes (23): ../../donate/providers/donation_provider.dart, ../../donate/widgets/donation_card.dart, GlobalKey?, _ayahOfDayKey, _orderToggleKey, _surahSearchKey, _tourSteps, badgeKey (+15 more)
 
 ### Community 12 - "reader_settings_sheet.dart"
 Cohesion: 0.09
@@ -298,16 +307,16 @@ Cohesion: 0.11
 Nodes (18): ../../bookmarks/providers/bookmarks_provider.dart, ../../home/providers/home_provider.dart, _apply, ayahs, byRevelation, call, _load, quran (+10 more)
 
 ### Community 15 - "package:kuran_turkce_meal/core/theme/app_theme.dart"
-Cohesion: 0.12
-Nodes (15): package:kuran_turkce_meal/core/theme/app_theme.dart, package:kuran_turkce_meal/data/models/surah.dart, package:kuran_turkce_meal/features/home/providers/home_provider.dart, package:kuran_turkce_meal/features/home/widgets/home_cards.dart, package:kuran_turkce_meal/features/reader/widgets/surah_end_card.dart, ensureInitialized, main, _surah (+7 more)
+Cohesion: 0.10
+Nodes (18): package:kuran_turkce_meal/core/theme/app_theme.dart, package:kuran_turkce_meal/features/home/widgets/home_cards.dart, package:kuran_turkce_meal/features/reader/widgets/surah_end_card.dart, ensureInitialized, main, _surah, _alak, ensureInitialized (+10 more)
 
-### Community 16 - "StatelessWidget"
-Cohesion: 0.06
-Nodes (41): ../../donate/data/donation_links.dart, ../../donate/widgets/support_banner.dart, _ActionTile, children, _confirmReset, createState, displayValue, divisions (+33 more)
+### Community 16 - "settings_screen.dart"
+Cohesion: 0.05
+Nodes (41): ../../audio/widgets/audio_download_sheet.dart, ../../donate/data/donation_links.dart, ../../donate/widgets/support_banner.dart, _ActionTile, children, _confirmReset, createState, displayValue (+33 more)
 
 ### Community 17 - "quran_repository.dart"
 Cohesion: 0.10
-Nodes (19): ../db/search_normalizer.dart, ayah, ayahById, ayahOfTheDay, ayahPoolFrom, ayahRange, ayahsByIds, ayahsOfSurah (+11 more)
+Nodes (20): ../db/search_normalizer.dart, ayah, ayahById, ayahOfTheDay, ayahPoolFrom, ayahRange, ayahsByIds, ayahsOfSurah (+12 more)
 
 ### Community 18 - "prophet_ayahs_screen.dart"
 Cohesion: 0.08
@@ -327,7 +336,7 @@ Nodes (18): async, close, _createSchema, _databasesPath, _db, factoryOverride, _
 
 ### Community 22 - "ayah_tile.dart"
 Cohesion: 0.11
-Nodes (18): ../../../data/models/reader_preferences.dart, ReaderPreferences, ayah, _AyahHeader, AyahTile, build, highlightColor, isFocused (+10 more)
+Nodes (18): arabic_verse_text.dart, ../../../data/models/reader_preferences.dart, ayah, _AyahHeader, AyahTile, build, highlightColor, highlightedWord (+10 more)
 
 ### Community 23 - "home_widget_keys.dart"
 Cohesion: 0.07
@@ -338,24 +347,24 @@ Cohesion: 0.11
 Nodes (17): color, completedDays, completions, day, _DayRow, _Dot, onOpen, onRestart (+9 more)
 
 ### Community 25 - "topic_ayahs_screen.dart"
-Cohesion: 0.05
-Nodes (44): ../../../core/theme/app_colors.dart, ../../../data/models/topic.dart, ayah, _AyahEntry, _AyahItem, ayahs, _Body, build (+36 more)
+Cohesion: 0.06
+Nodes (37): ayah, _AyahEntry, _AyahItem, ayahs, _Body, build, _buildItems, byId (+29 more)
 
 ### Community 26 - "app_router.dart"
-Cohesion: 0.07
-Nodes (30): app_shell.dart, ../../features/assistant/view/assistant_screen.dart, ../../features/bookmarks/view/bookmarks_screen.dart, ../../features/discover/view/discover_screen.dart, ../../features/discover/view/prophets_screen.dart, ../../features/discover/view/topic_ayahs_screen.dart, ../../features/discover/view/verse_search_screen.dart, ../../features/donate/view/donate_screen.dart (+22 more)
+Cohesion: 0.06
+Nodes (31): app_shell.dart, ../../features/assistant/view/assistant_screen.dart, ../../features/bookmarks/view/bookmarks_screen.dart, ../../features/discover/view/discover_screen.dart, ../../features/discover/view/prophets_screen.dart, ../../features/discover/view/topic_ayahs_screen.dart, ../../features/discover/view/verse_search_screen.dart, ../../features/donate/view/donate_screen.dart (+23 more)
 
-### Community 27 - "screens_preview.dart"
-Cohesion: 0.11
-Nodes (15): package:kuran_turkce_meal/core/router/app_router.dart, package:kuran_turkce_meal/core/widgets_bridge/home_widget_data.dart, package:kuran_turkce_meal/core/widgets_bridge/home_widget_keys.dart, package:kuran_turkce_meal/core/widgets_bridge/home_widget_service.dart, Route /sure/2?ayet=255, main, buildRouter, main (+7 more)
+### Community 27 - "package:flutter/material.dart"
+Cohesion: 0.07
+Nodes (23): Container, Directionality, bottomInsetFor, package:flutter/material.dart, package:kuran_turkce_meal/features/legal/data/legal_texts.dart, package:kuran_turkce_meal/features/legal/view/legal_document_screen.dart, package:kuran_turkce_meal/features/qibla/providers/qibla_provider.dart, package:kuran_turkce_meal/features/qibla/view/qibla_screen.dart (+15 more)
 
 ### Community 28 - "note_editor_sheet.dart"
 Cohesion: 0.11
 Nodes (18): FocusNode, ayah, build, _confirmDelete, _controller, createState, dispose, enabled (+10 more)
 
 ### Community 29 - "app_providers.dart"
-Cohesion: 0.10
-Nodes (19): ../../data/db/app_database.dart, ../../data/repositories/audio_repository.dart, ../../data/repositories/marks_repository.dart, ../../data/repositories/progress_repository.dart, ../../data/repositories/prophet_repository.dart, ../../data/repositories/root_repository.dart, ../../../data/repositories/topic_repository.dart, databaseProvider (+11 more)
+Cohesion: 0.09
+Nodes (22): ../../data/db/app_database.dart, ../../data/repositories/audio_repository.dart, ../../data/repositories/marks_repository.dart, ../../data/repositories/progress_repository.dart, ../../data/repositories/prophet_repository.dart, ../../data/repositories/root_repository.dart, ../../data/repositories/segment_repository.dart, ../../../data/repositories/topic_repository.dart (+14 more)
 
 ### Community 30 - "audio_repository.dart"
 Cohesion: 0.06
@@ -363,59 +372,59 @@ Nodes (35): Client, Directory, Exception, File, AudioDownloadException, AudioRep
 
 ### Community 31 - "marks_repository.dart"
 Cohesion: 0.12
-Nodes (16): ../db/app_database.dart, AppDatabase, bookmarks, _db, highlights, mark, marksForIds, marksForSurah (+8 more)
+Nodes (15): ../db/app_database.dart, bookmarks, _db, highlights, mark, marksForIds, marksForSurah, MarksRepository (+7 more)
 
 ### Community 32 - "responsive_layout.dart"
 Cohesion: 0.07
 Nodes (27): AdaptiveSheet, available, bottom, Breakpoints, build, centeredContentPadding, child, compact (+19 more)
 
-### Community 33 - "helpers/localized_app.dart"
-Cohesion: 0.05
-Nodes (44): Container, Directionality, helpers/localized_app.dart, package:kuran_turkce_meal/core/notifications/daily_ayah_notifications.dart, package:kuran_turkce_meal/core/theme/app_colors.dart, package:kuran_turkce_meal/data/models/ayah.dart, package:kuran_turkce_meal/data/models/reader_preferences.dart, package:kuran_turkce_meal/data/models/user_marks.dart (+36 more)
+### Community 33 - "audio_ui_test.dart"
+Cohesion: 0.07
+Nodes (23): AnimatedContainer, package:kuran_turkce_meal/core/router/app_shell.dart, package:kuran_turkce_meal/data/models/audio_download.dart, package:kuran_turkce_meal/features/audio/providers/audio_provider.dart, package:kuran_turkce_meal/features/audio/widgets/audio_download_sheet.dart, package:kuran_turkce_meal/features/audio/widgets/audio_player_bar.dart, package:kuran_turkce_meal/shared/widgets/tab_bar_inset.dart, ensureInitialized (+15 more)
 
-### Community 34 - "reader_preferences.dart"
+### Community 34 - "ayah_card.dart"
 Cohesion: 0.11
-Nodes (17): double get, arabicFontSize, autoScrollWithAudio, copyWith, dailyAyahEnabled, dailyAyahHour, dailyAyahMinute, dailyAyahTime (+9 more)
+Nodes (18): Color get, double get, _accent, appName, arabic, _arabicFontSize, AyahCard, _background (+10 more)
 
 ### Community 35 - "progress_repository.dart"
 Cohesion: 0.11
-Nodes (18): allProgress, clearPlanStartDate, completedDayCount, completedDays, _db, ensurePlanStarted, hasCompletionOn, markDayComplete (+10 more)
+Nodes (18): AppDatabase, allProgress, clearPlanStartDate, completedDayCount, completedDays, _db, ensurePlanStarted, hasCompletionOn (+10 more)
 
 ### Community 36 - "build"
 Cohesion: 0.29
 Nodes (8): downloadedSizeProvider, downloadedSurahsProvider, build, _DownloadedAudioTile, Route /gizlilik, Route /kaynaklar, Route /kosullar, Route /ses-hakkinda
 
 ### Community 37 - "app_shell.dart"
-Cohesion: 0.10
-Nodes (20): ../../features/assistant/view/widgets/assistant_fab.dart, ../../features/audio/widgets/audio_player_bar.dart, get, barHeight, build, _buildTab, _controller, createState (+12 more)
+Cohesion: 0.09
+Nodes (22): ../../features/assistant/view/widgets/assistant_fab.dart, ../../features/audio/widgets/audio_player_bar.dart, ../../features/onboarding/providers/tour_provider.dart, get, barHeight, build, _buildTab, _controller (+14 more)
 
 ### Community 38 - "audio_provider.dart"
-Cohesion: 0.06
-Nodes (35): AudioPlayer, _attachPlayer, call, currentAyahNumber, dispose, _ensureSession, errorMessage, _finish (+27 more)
+Cohesion: 0.04
+Nodes (46): AudioPlayer, _attachPlayer, audio, ayahNumber, call, currentAyahNumber, dispose, _ensureSession (+38 more)
 
 ### Community 39 - "assistant_intent.dart"
 Cohesion: 0.08
 Nodes (24): ayah, ayahNumber, facet, index, intent, IntentResult, isFromLexicon, isSituational (+16 more)
 
 ### Community 40 - "download_provider.dart"
-Cohesion: 0.12
-Nodes (16): ../../../data/models/reciter.dart, byId, cancel, _cancelled, delete, download, ensureLoaded, id (+8 more)
+Cohesion: 0.10
+Nodes (27): ../../../data/models/reciter.dart, audioRepositoryProvider, ayahSetDownloadProvider, byId, cancel, _cancelled, delete, download (+19 more)
 
 ### Community 41 - "home_provider.dart"
 Cohesion: 0.14
-Nodes (13): AsyncValue, ayah, ayahNumber, fraction, progress, query, quran, sortByRevelation (+5 more)
+Nodes (13): AsyncValue, Surah, ayah, ayahNumber, fraction, progress, query, quran (+5 more)
 
 ### Community 42 - "audio_download_sheet.dart"
-Cohesion: 0.08
-Nodes (24): ../../../data/models/surah.dart, Surah, download, _Failure, formatBytes, label, mb, message (+16 more)
+Cohesion: 0.06
+Nodes (35): audio_download_sheet.dart, ../../../data/models/audio_download.dart, download, _Failure, formatBytes, label, mb, message (+27 more)
 
 ### Community 43 - "WidgetStrings"
 Cohesion: 0.10
 Nodes (21): Foundation, Any, Bool, Date, Int, String, todayDayNumber(), WidgetKeys (+13 more)
 
-### Community 44 - "package:flutter/material.dart"
-Cohesion: 0.10
-Nodes (17): bottomInsetFor, package:flutter/material.dart, package:kuran_turkce_meal/features/legal/data/legal_texts.dart, package:kuran_turkce_meal/features/legal/view/legal_document_screen.dart, package:kuran_turkce_meal/main.dart, package:kuran_turkce_meal/shared/widgets/pressable.dart, RichText, hitsInteractiveAt (+9 more)
+### Community 44 - "segment_repository.dart"
+Cohesion: 0.07
+Nodes (26): AssetBundle, ByteData?, Int32List, _assetPath, AyahSegments, _bundle, _cache, _cachedReciterId (+18 more)
 
 ### Community 45 - "Android Density Bucket Ladder"
 Cohesion: 0.39
@@ -430,24 +439,24 @@ Cohesion: 0.17
 Nodes (11): await, BuildContext, context, done, future, main, pumpWidget, _render (+3 more)
 
 ### Community 48 - "root_detail_screen.dart"
-Cohesion: 0.09
-Nodes (25): rootDetailProvider, ayahs, build, detail, focusAyah, focusSurah, _groupByVerse, highlightIndexes (+17 more)
+Cohesion: 0.04
+Nodes (54): surahListProvider, rootDetailProvider, _analysisKey, arabic, arabicLine, ayah, ayahNumber, build (+46 more)
 
 ### Community 49 - "coach_mark.dart"
 Cohesion: 0.05
-Nodes (38): CustomPainter, body, build, _controller, createState, dispose, _fade, _finish (+30 more)
+Nodes (37): body, _boxOf, build, _controller, createState, dispose, _fade, _finish (+29 more)
 
 ### Community 50 - "root_search_screen.dart"
-Cohesion: 0.07
-Nodes (28): core/providers/app_providers.dart, hasSeen, markSeen, _prefs, _read, resetAll, storageKey, TourNotifier (+20 more)
+Cohesion: 0.06
+Nodes (33): ../../../data/models/root.dart, AnalysedWord, verseWordsProvider, _buildResults, _controller, createState, dispose, isExpanded (+25 more)
 
 ### Community 51 - "plan_reader_screen.dart"
 Cohesion: 0.05
-Nodes (46): ../../audio/providers/audio_provider.dart, ../../audio/providers/download_provider.dart, ../../audio/widgets/audio_player_bar.dart, ../../audio/widgets/day_download_sheet.dart, planDayMarksProvider, planDayReadingProvider, _advanceToNextDay, build (+38 more)
+Nodes (42): ../../audio/providers/audio_provider.dart, ../../audio/providers/download_provider.dart, ../../audio/widgets/audio_player_bar.dart, ../../audio/widgets/day_download_sheet.dart, planDayMarksProvider, _advanceToNextDay, _buildList, createState (+34 more)
 
-### Community 52 - "splash_test.dart"
-Cohesion: 0.22
-Nodes (8): dart:io, package:kuran_turkce_meal/features/splash/view/splash_screen.dart, package:lottie/lottie.dart, Scaffold, ensureInitialized, main, pumpSplash, _splashDuration
+### Community 52 - "state_sync_test.dart"
+Cohesion: 0.08
+Nodes (25): main, main, ProgressRepository, package:flutter/rendering.dart, package:integration_test/integration_test.dart, package:kuran_turkce_meal/core/providers/app_providers.dart, package:kuran_turkce_meal/data/db/app_database.dart, package:kuran_turkce_meal/data/repositories/progress_repository.dart (+17 more)
 
 ### Community 53 - "App Store Marketing Icon (1024x1024, Flutter Logo)"
 Cohesion: 0.50
@@ -482,24 +491,24 @@ Cohesion: 0.09
 Nodes (22): _apply, ayahs, byNumber, day, dayIndex, days, isEmpty, _load (+14 more)
 
 ### Community 66 - "root_provider.dart"
-Cohesion: 0.10
-Nodes (20): clear, clearLetters, copyWith, isActive, isEmpty, meaning, occurrences, query (+12 more)
+Cohesion: 0.09
+Nodes (22): QuranRoot, RootWord, clear, clearLetters, copyWith, isActive, isEmpty, meaning (+14 more)
 
 ### Community 67 - "root.dart"
-Cohesion: 0.09
-Nodes (21): arabic, ArabicLetter, ayahNumber, count, fromJson, hasMeaning, lemma, letter (+13 more)
+Cohesion: 0.08
+Nodes (25): arabic, ArabicLetter, ayahNumber, count, derived, DerivedWord, form, fromJson (+17 more)
 
 ### Community 68 - "tour_host.dart"
-Cohesion: 0.09
-Nodes (22): coach_mark.dart, TourId, tourProvider, build, child, createState, didChangeDependencies, didUpdateWidget (+14 more)
+Cohesion: 0.10
+Nodes (22): coach_mark.dart, activeToursProvider, tourProvider, build, child, createState, didChangeDependencies, didUpdateWidget (+14 more)
 
 ### Community 69 - "_"
-Cohesion: 0.07
-Nodes (31): content or, _, amaçlıdır, audioInfo, _audioInfoEn, _audioInfoTr, contactEmail, have (+23 more)
+Cohesion: 0.06
+Nodes (37): content or, happens on your, _, amaçlıdır, audioInfo, _audioInfoEn, _audioInfoTr, contactEmail (+29 more)
 
 ### Community 70 - "build_roots.py"
-Cohesion: 0.17
-Nodes (18): align(), load_lemma_tr(), load_morphology(), load_tr_dict(), main(), normalize_letters(), Harekeli lemmayı kabaca Türkçe okunuşa çevirir. Uzun ünlüler ayrıca ele alınır:…, Kökün olası latin yazımlarını üretir. 'rsl', 'rasul' değil — iskelet. (+10 more)
+Cohesion: 0.08
+Nodes (36): align(), canonical_lemma(), lemma_meaning(), load_lemma_tr(), load_morphology(), load_tr_dict(), main(), normalize_letters() (+28 more)
 
 ### Community 71 - "reading_plan.dart"
 Cohesion: 0.10
@@ -518,16 +527,16 @@ Cohesion: 0.10
 Nodes (20): Ahiret — #6B4F6B, Ahlak — #7C6545, Bölüm renkleri, Denetim, Dosya adlandırma, Figma iş akışı, Fihrist kartı görselleri — üretim promptları, Hukuk ve Toplum — #5A5A78 (+12 more)
 
 ### Community 75 - "main.dart"
-Cohesion: 0.08
-Nodes (25): core/notifications/daily_ayah_bootstrap.dart, core/theme/app_theme.dart, core/widgets_bridge/home_widget_service.dart, core/widgets_bridge/home_widget_sync.dart, features/donate/providers/donation_provider.dart, features/donate/providers/donation_reminder.dart, createState, didChangeAppLifecycleState (+17 more)
+Cohesion: 0.07
+Nodes (26): core/notifications/daily_ayah_bootstrap.dart, core/theme/app_theme.dart, core/widgets_bridge/home_widget_service.dart, core/widgets_bridge/home_widget_sync.dart, features/donate/providers/donation_provider.dart, features/donate/providers/donation_reminder.dart, features/review/providers/review_provider.dart, createState (+18 more)
 
 ### Community 76 - "note_editor_test.dart"
 Cohesion: 0.10
 Nodes (17): AnimatedOpacity, CircularProgressIndicator, package:kuran_turkce_meal/features/assistant/view/widgets/assistant_thinking_indicator.dart, package:kuran_turkce_meal/features/plans/widgets/plan_day_end_card.dart, package:kuran_turkce_meal/features/reader/widgets/note_editor_sheet.dart, main, show, stop (+9 more)
 
-### Community 77 - "package:easy_localization/easy_localization.dart"
-Cohesion: 0.08
-Nodes (30): core/router/app_router.dart, ../../core/theme/app_typography.dart, ../../../data/models/prophet.dart, AssistantFab, bottomOffset, SavedEntry, SavedTab, _emptyFor (+22 more)
+### Community 77 - "assistant_results_screen.dart"
+Cohesion: 0.17
+Nodes (10): core/router/app_router.dart, AssistantResultsScreen, ayahs, build, languageCode, title, build, title (+2 more)
 
 ### Community 78 - "assistant_thinking_indicator.dart"
 Cohesion: 0.10
@@ -557,9 +566,9 @@ Nodes (28): build, _controller, createRenderObject, createState, dispose, durati
 Cohesion: 0.12
 Nodes (15): ayahCount, ayahIds, categoryId, core, coreCount, fromMap, hasScanned, id (+7 more)
 
-### Community 85 - "prophet_repository.dart"
-Cohesion: 0.15
-Nodes (12): Future, all, _assetPath, byId, byName, ensureLoaded, isLoaded, _load (+4 more)
+### Community 85 - "qibla_screen.dart"
+Cohesion: 0.08
+Nodes (25): aligned, _AlignmentLabel, bearing, _CalibrationNotice, color, createState, _Dial, distanceKm (+17 more)
 
 ### Community 86 - "static const"
 Cohesion: 0.22
@@ -569,13 +578,13 @@ Nodes (8): _diacriticFolding, normalize, SearchNormalizer, _stopWords, toFtsOrQu
 Cohesion: 0.13
 Nodes (19): react, App(), featureIcons, IconApple(), IconCheck(), IconGithub(), IconLock(), IconPlayStore() (+11 more)
 
-### Community 88 - "word_picker_sheet.dart"
-Cohesion: 0.10
-Nodes (20): ../../../data/models/root.dart, build, FilterChips, labels, onSelected, selectedIndex, AnalysedWord, verseWordsProvider (+12 more)
+### Community 88 - "notification_bootstrap_test.dart"
+Cohesion: 0.17
+Nodes (11): package:kuran_turkce_meal/core/notifications/daily_ayah_bootstrap.dart, build, createState, done, ensureInitialized, initState, main, pump (+3 more)
 
-### Community 89 - "screens_smoke_test.dart"
-Cohesion: 0.06
-Nodes (34): AnimatedAlign, Brightness, package:kuran_turkce_meal/features/bookmarks/providers/bookmarks_provider.dart, package:kuran_turkce_meal/features/bookmarks/view/bookmarks_screen.dart, package:kuran_turkce_meal/features/discover/view/discover_screen.dart, package:kuran_turkce_meal/features/plans/view/plans_screen.dart, package:kuran_turkce_meal/features/settings/view/settings_screen.dart, SliverGrid (+26 more)
+### Community 89 - "helpers/localized_app.dart"
+Cohesion: 0.05
+Nodes (44): AnimatedAlign, AnimatedDefaultTextStyle, Brightness, helpers/localized_app.dart, package:kuran_turkce_meal/core/theme/app_typography.dart, package:kuran_turkce_meal/features/bookmarks/providers/bookmarks_provider.dart, package:kuran_turkce_meal/features/bookmarks/view/bookmarks_screen.dart, package:kuran_turkce_meal/features/plans/view/plans_screen.dart (+36 more)
 
 ### Community 90 - "package.json"
 Cohesion: 0.06
@@ -585,33 +594,33 @@ Nodes (33): express, oxlint, react-dom, @types/react, @types/react-dom, vite, @v
 Cohesion: 0.16
 Nodes (21): _NavItem, _NavItemState, _MicButton, _MicButtonState, AssistantThinkingIndicator, _AssistantThinkingIndicatorState, CoachMarkOverlay, _CoachMarkOverlayState (+13 more)
 
-### Community 93 - "List"
-Cohesion: 0.13
-Nodes (13): Ayah, List, package:kuran_turkce_meal/data/repositories/prophet_repository.dart, ayahsById, ensureInitialized, main, prophets, surahs (+5 more)
+### Community 93 - "StatelessWidget"
+Cohesion: 0.08
+Nodes (27): build, _CompletionNote, current, isReady, lang, next, nextSurah, _NextSurahTile (+19 more)
 
 ### Community 94 - "ContinueReadingWidget"
 Cohesion: 0.11
 Nodes (22): ContinueReadingWidget, .body, .supportedFamilies, WidgetConfiguration, WidgetFamily, DailyAyahWidget, .body, .supportedFamilies (+14 more)
 
 ### Community 95 - "daily_ayah_notifications.dart"
-Cohesion: 0.10
-Nodes (20): cancel, cancelDonationReminder, _channelId, DailyAyahNotifications, _donateChannelId, _donateNotificationId, hasPermission, init (+12 more)
+Cohesion: 0.05
+Nodes (37): cancel, cancelDonationReminder, _channelId, DailyAyahNotifications, _donateChannelId, _donateNotificationId, hasPermission, init (+29 more)
 
 ### Community 96 - "build_prophets.py"
 Cohesion: 0.27
 Nodes (8): build_regex(), load(), main(), Sınır dosyasındaki kimlikleri ve aralıkları denetler. Yazım hatası sessizce…, Ad varyantlarını tek bir kelime-sınırlı desende birleştirir., Meal metninden peygamber-ayet eşleştirmesi üretir. Kullanım: python3…, validate_bounds(), Peygamber kıssalarının ayet sınırları. `build_prophets.py` kıssa listesini meal…
 
 ### Community 97 - "home_widget_service.dart"
-Cohesion: 0.13
-Nodes (14): @visibleForTesting, HomeWidgetService, init, _initialized, instance, launchRoute, listenForClicks, _refresh (+6 more)
+Cohesion: 0.15
+Nodes (12): home_widget_data.dart, home_widget_keys.dart, HomeWidgetService, init, _initialized, instance, launchRoute, listenForClicks (+4 more)
 
-### Community 98 - "package:flutter_test/flutter_test.dart"
+### Community 98 - "plan_streak_ui_test.dart"
+Cohesion: 0.10
+Nodes (18): ReadingStreak, package:kuran_turkce_meal/data/models/plan_schedule.dart, package:kuran_turkce_meal/data/models/reading_plan.dart, package:kuran_turkce_meal/features/plans/providers/plans_provider.dart, package:kuran_turkce_meal/features/plans/view/plan_detail_screen.dart, package:kuran_turkce_meal/features/plans/widgets/streak_summary.dart, ensureInitialized, fakeDays (+10 more)
+
+### Community 99 - "package:kuran_turkce_meal/data/models/ayah.dart"
 Cohesion: 0.06
-Nodes (31): package:flutter_test/flutter_test.dart, package:kuran_turkce_meal/data/db/app_database.dart, package:kuran_turkce_meal/data/models/plan_schedule.dart, package:kuran_turkce_meal/data/models/reading_plan.dart, package:kuran_turkce_meal/data/repositories/progress_repository.dart, package:kuran_turkce_meal/features/assistant/domain/fuzzy_match.dart, package:kuran_turkce_meal/features/assistant/domain/query_cleaner.dart, package:kuran_turkce_meal/features/plans/providers/plans_provider.dart (+23 more)
-
-### Community 99 - "return"
-Cohesion: 0.33
-Nodes (5): return, _block, entries, main, started
+Nodes (34): package:kuran_turkce_meal/core/notifications/daily_ayah_notifications.dart, package:kuran_turkce_meal/core/theme/app_colors.dart, package:kuran_turkce_meal/data/models/ayah.dart, package:kuran_turkce_meal/data/models/reader_preferences.dart, package:kuran_turkce_meal/data/models/user_marks.dart, package:kuran_turkce_meal/features/reader/widgets/ayah_actions_sheet.dart, package:kuran_turkce_meal/features/reader/widgets/ayah_tile.dart, _ayah (+26 more)
 
 ### Community 100 - "Planlar bölümü — geliştirme promptları"
 Cohesion: 0.22
@@ -623,15 +632,15 @@ Nodes (13): StreakEntry, StreakProvider, StreakWidgetView, .body, .lockScreenCir
 
 ### Community 102 - "assistant_provider.dart"
 Cohesion: 0.03
-Nodes (60): ../data/assistant_history.dart, ../data/assistant_stats.dart, ../domain/intent_classifier.dart, ../domain/result_ranker.dart, _answerFor, _append, ask, assistantStatsProvider (+52 more)
+Nodes (62): ../data/assistant_history.dart, ../data/assistant_stats.dart, ../domain/intent_classifier.dart, ../domain/result_ranker.dart, _answerFor, _append, ask, AssistantNotifier (+54 more)
 
 ### Community 103 - "ContinueEntry"
 Cohesion: 0.24
 Nodes (10): ContinueEntry, ContinueProvider, Context, Date, Int, String, Timeline, Void (+2 more)
 
-### Community 104 - "package:flutter_riverpod/flutter_riverpod.dart"
-Cohesion: 0.07
-Nodes (24): AnimatedContainer, package:flutter_riverpod/flutter_riverpod.dart, package:kuran_turkce_meal/core/router/app_shell.dart, package:kuran_turkce_meal/data/models/audio_download.dart, package:kuran_turkce_meal/features/audio/providers/audio_provider.dart, package:kuran_turkce_meal/features/audio/widgets/audio_download_sheet.dart, package:kuran_turkce_meal/features/audio/widgets/audio_player_bar.dart, package:kuran_turkce_meal/shared/widgets/tab_bar_inset.dart (+16 more)
+### Community 104 - "rootDataProvider"
+Cohesion: 0.40
+Nodes (6): rootDataProvider, _EntryCards, rootSearchProvider, build, RootSearchScreen, _RootSearchScreenState
 
 ### Community 105 - "WidgetMidnightRefresh.kt"
 Cohesion: 0.40
@@ -645,17 +654,17 @@ Nodes (12): DailyAyahEntry, DailyAyahProvider, DailyAyahWidgetView, .body, .lock
 Cohesion: 0.08
 Nodes (24): allAyahIds, AssistantHistory, ayahIds, clear, fromJson, highlightTerms, _intList, isUser (+16 more)
 
-### Community 108 - "package:kuran_turkce_meal/features/search/data/verse_reference.dart"
-Cohesion: 0.33
-Nodes (5): package:kuran_turkce_meal/features/search/data/verse_reference.dart, main, names, parse, _resolve
+### Community 108 - "qibla_provider.dart"
+Cohesion: 0.12
+Nodes (20): ../data/qibla_math.dart, accuracy, bearing, distanceKm, events, locate, needsCalibration, openLocationSettings (+12 more)
 
-### Community 109 - "package:flutter/services.dart"
-Cohesion: 0.09
-Nodes (21): dart:convert, TopicRepository, PlanDayMarksNotifier, SurahMarksNotifier, Map, package:flutter/services.dart, package:kuran_turkce_meal/data/repositories/topic_repository.dart, package:kuran_turkce_meal/features/assistant/data/topic_lexicon.dart (+13 more)
+### Community 109 - "topic_repository.dart"
+Cohesion: 0.14
+Nodes (13): all, _assetPath, byId, _categories, ensureLoaded, inCategory, isLoaded, _load (+5 more)
 
 ### Community 110 - "donation_links.dart"
-Cohesion: 0.12
-Nodes (15): active, channels, DonationChannel, DonationKind, DonationLinks, enabled, holder, id (+7 more)
+Cohesion: 0.10
+Nodes (19): @visibleForTesting, routeFromUri, active, channels, debugOverrideChannels, DonationChannel, DonationKind, DonationLinks (+11 more)
 
 ### Community 111 - "ContinueReadingWidgetProvider"
 Cohesion: 0.42
@@ -666,84 +675,84 @@ Cohesion: 0.42
 Nodes (5): AppWidgetManager, AppWidgetProvider, Context, IntArray, StreakWidgetProvider
 
 ### Community 113 - "MaterialPageRoute"
-Cohesion: 0.33
-Nodes (6): _openResults, _openDay, _openWordPicker, _openWordPicker, MaterialPageRoute, main
+Cohesion: 0.29
+Nodes (7): _openResults, _openDay, _openWordPicker, _openWordPicker, _openSearch, MaterialPageRoute, main
 
 ### Community 114 - "home_widget_sync.dart"
-Cohesion: 0.14
-Nodes (13): home_widget_data.dart, home_widget_keys.dart, home_widget_service.dart, _collect, _continueReading, _dailyAyahPool, HomeWidgetSync, _inFlight (+5 more)
+Cohesion: 0.15
+Nodes (12): ../../../data/models/plan_schedule.dart, home_widget_service.dart, _collect, _continueReading, _dailyAyahPool, HomeWidgetSync, _inFlight, _ref (+4 more)
 
 ### Community 115 - "AppDemo.jsx"
 Cohesion: 0.14
 Nodes (13): IconChevron(), IconPlay(), AppDemo(), PhoneFrame(), PLANS, PlansScreen(), ReaderScreen(), ReadScreen() (+5 more)
 
-### Community 116 - "root_highlight.dart"
-Cohesion: 0.20
-Nodes (9): build, fontSize, HighlightedArabic, highlightIndexes, _roundTanween, splitWords, _tanweenTail, text (+1 more)
-
-### Community 121 - "preferencesProvider"
+### Community 116 - "qibla_math.dart"
 Cohesion: 0.13
-Nodes (19): playSurahProvider, maybeScheduleDonationReminder, nextSurahProvider, readerDataProvider, saveProgressProvider, surahMarksProvider, _advanceToNextSurah, build (+11 more)
+Nodes (14): dart:math, alignmentToleranceDegrees, bearing, deviation, distanceKm, _earthRadiusKm, isAligned, kaabaLatitude (+6 more)
 
-### Community 122 - "search_integration_test.dart"
-Cohesion: 0.22
-Nodes (7): Database, package:kuran_turkce_meal/data/db/search_normalizer.dart, db, factory, main, search, main
+### Community 121 - "core/providers/app_providers.dart"
+Cohesion: 0.20
+Nodes (9): core/providers/app_providers.dart, hasSeen, hide, markSeen, _prefs, _read, resetAll, show (+1 more)
+
+### Community 122 - "assistant_intent_test.dart"
+Cohesion: 0.12
+Nodes (23): AssistantIntent, GreetingIntent, MultiTopicIntent, OpenResultIntent, OutOfScopeIntent, ProphetIntent, ReferenceIntent, SameSurahIntent (+15 more)
 
 ### Community 123 - "assistant_stats.dart"
 Cohesion: 0.12
 Nodes (15): AssistantStats, clear, count, fromJson, _key, kind, load, maxEntries (+7 more)
 
 ### Community 124 - "assistant_screen.dart"
-Cohesion: 0.07
-Nodes (31): assistant_results_screen.dart, assistantProvider, voiceInputProvider, build, _Composer, _composerKey, _controller, createState (+23 more)
+Cohesion: 0.08
+Nodes (25): assistant_results_screen.dart, _composerKey, _controller, createState, didUpdateWidget, dispose, enabled, _focusNode (+17 more)
 
-### Community 125 - "donation_ui_test.dart"
-Cohesion: 0.18
-Nodes (10): package:kuran_turkce_meal/features/donate/data/donation_links.dart, package:kuran_turkce_meal/features/donate/providers/donation_provider.dart, package:kuran_turkce_meal/features/donate/view/donate_screen.dart, package:kuran_turkce_meal/features/donate/widgets/donation_card.dart, package:kuran_turkce_meal/features/donate/widgets/support_banner.dart, build, main, ensureInitialized (+2 more)
+### Community 125 - "review_provider.dart"
+Cohesion: 0.08
+Nodes (25): cooldownDays, copyWith, firstLaunch, _kFirstLaunch, _kLastRequestedAt, _kMilestoneCount, _kOpenCount, _kRequestCount (+17 more)
 
 ### Community 126 - "deploy"
 Cohesion: 0.22
 Nodes (8): build, buildCommand, builder, deploy, restartPolicyMaxRetries, restartPolicyType, startCommand, $schema
 
-### Community 127 - "donation_reminder.dart"
-Cohesion: 0.22
-Nodes (8): core/notifications/daily_ayah_notifications.dart, ../data/donation_links.dart, donation_provider.dart, delay, fireAt, notificationsOn, notifier, ../../settings/providers/preferences_provider.dart
+### Community 127 - "preferencesProvider"
+Cohesion: 0.14
+Nodes (16): ConsumerState, ConsumerStatefulWidget, maybeScheduleDonationReminder, planDayReadingProvider, build, _onPositionsChanged, PlanReaderScreen, _PlanReaderScreenState (+8 more)
 
 ### Community 128 - "user_marks.dart"
 Cohesion: 0.14
 Nodes (13): DateTime, ayahId, AyahMark, copyWith, fromMap, hasNote, highlightColor, isBookmarked (+5 more)
 
-### Community 129 - "audio_player_bar.dart"
-Cohesion: 0.12
-Nodes (18): audioProvider, playingSurahProvider, applyBottomSafeArea, AudioPlayerBar, _Bar, barHeight, build, _ControlButton (+10 more)
+### Community 129 - "_ReaderScreenState"
+Cohesion: 0.15
+Nodes (19): audioProvider, playingWordProvider, playSurahProvider, AudioPlayerBar, _isDayPlaying, nextSurahProvider, previousSurahProvider, readerDataProvider (+11 more)
 
 ### Community 130 - "bool get"
 Cohesion: 0.17
 Nodes (11): bool get, AudioDownloadStatus, completedAyahs, copyWith, errorMessage, hasFailed, isDownloading, isReady (+3 more)
 
-### Community 131 - "StateNotifier"
-Cohesion: 0.43
-Nodes (7): AudioDownload, AudioNotifier, AudioState, AyahSetDownloadNotifier, SurahDownloadNotifier, StateNotifier, _FakeAudioNotifier
+### Community 131 - "reader_preferences.dart"
+Cohesion: 0.11
+Nodes (17): arabicFontSize, autoScrollWithAudio, copyWith, dailyAyahEnabled, dailyAyahHour, dailyAyahMinute, dailyAyahTime, fontScale (+9 more)
 
 ### Community 132 - "reciter.dart"
 Cohesion: 0.15
 Nodes (12): all, approximateBytesPerAyah, baseUrl, byId, estimatedBytesFor, fallback, fileName, id (+4 more)
 
-### Community 133 - "assistant_english_test.dart"
-Cohesion: 0.13
-Nodes (17): GreetingIntent, HelpIntent, MoreResultsIntent, TopicIntent, package:kuran_turkce_meal/features/assistant/domain/intent_classifier.dart, bakara, classifier, classify (+9 more)
+### Community 133 - "home_cards.dart"
+Cohesion: 0.10
+Nodes (18): build, FilterChips, labels, onSelected, selectedIndex, AyahWithSurah, LastRead, AyahOfTheDayCard (+10 more)
 
-### Community 134 - "donate_screen.dart"
-Cohesion: 0.07
-Nodes (33): ConsumerWidget, prophetDataProvider, AppShell, _Body, _EntryCards, build, ProphetsScreen, donationProvider (+25 more)
+### Community 134 - "ConsumerWidget"
+Cohesion: 0.09
+Nodes (27): ConsumerWidget, AppShell, donationProvider, build, channel, _ChannelTile, _confirmDonated, _confirmNever (+19 more)
 
-### Community 135 - "topic_repository.dart"
-Cohesion: 0.14
-Nodes (13): all, _assetPath, byId, _categories, ensureLoaded, inCategory, isLoaded, _load (+5 more)
-
-### Community 136 - "home_cards.dart"
+### Community 135 - "package:flutter_riverpod/flutter_riverpod.dart"
 Cohesion: 0.17
-Nodes (11): AyahWithSurah, LastRead, AyahOfTheDayCard, build, ContinueReadingCard, data, lastRead, onChanged (+3 more)
+Nodes (14): AssistantFab, bottomOffset, build, hideDuringTour, build, build, isTourActiveProvider, TourId (+6 more)
+
+### Community 136 - "_CompassState"
+Cohesion: 0.50
+Nodes (4): compassProvider, build, _Compass, _CompassState
 
 ### Community 137 - "answer_composer.dart"
 Cohesion: 0.05
@@ -757,13 +766,13 @@ Nodes (11): Bağlantılar, Diğer statik barındırıcılar, Durum yönetimi, Ek
 Cohesion: 0.11
 Nodes (18): ayahNumber, buffer, _build, byName, folding, foldSurahName, hashCode, isExplicitAyah (+10 more)
 
-### Community 140 - "notification_bootstrap_test.dart"
-Cohesion: 0.07
-Nodes (24): AnimatedDefaultTextStyle, package:kuran_turkce_meal/core/notifications/daily_ayah_bootstrap.dart, package:kuran_turkce_meal/core/theme/app_typography.dart, package:kuran_turkce_meal/features/settings/providers/preferences_provider.dart, package:kuran_turkce_meal/shared/widgets/responsive_layout.dart, SliderTheme, landscape, main (+16 more)
+### Community 140 - "prophets_screen.dart"
+Cohesion: 0.13
+Nodes (16): ../../../data/models/prophet.dart, prophetDataProvider, _Body, build, prophets, ProphetsScreen, _buildBody, createState (+8 more)
 
-### Community 141 - "selectedReciterProvider"
-Cohesion: 0.29
-Nodes (11): audioRepositoryProvider, ayahSetDownloadProvider, isOnMobileDataProvider, missingAyahCountProvider, selectedReciterProvider, surahDownloadProvider, AudioDownloadSheet, build (+3 more)
+### Community 141 - "package:flutter/services.dart"
+Cohesion: 0.13
+Nodes (14): TopicRepository, PlanDayMarksNotifier, SurahMarksNotifier, Map, package:flutter/services.dart, package:kuran_turkce_meal/data/repositories/topic_repository.dart, ayahCountByNumber, ensureInitialized (+6 more)
 
 ### Community 142 - ".oxlintrc.json"
 Cohesion: 0.33
@@ -781,13 +790,13 @@ Nodes (20): assistant_intent.dart, actions, allAyahs, AssistantActionKind, autho
 Cohesion: 0.50
 Nodes (3): App Store Connect — Türkçe metinler, Description (4.000), Promotional Text (170)
 
-### Community 146 - "assistant_screen_test.dart"
-Cohesion: 0.11
-Nodes (16): package:kuran_turkce_meal/data/models/prophet.dart, package:kuran_turkce_meal/features/assistant/data/assistant_intent.dart, package:kuran_turkce_meal/features/assistant/data/assistant_message.dart, package:kuran_turkce_meal/features/assistant/domain/answer_composer.dart, package:kuran_turkce_meal/features/assistant/domain/result_ranker.dart, package:kuran_turkce_meal/features/assistant/domain/turkish_suffix.dart, package:kuran_turkce_meal/features/assistant/view/widgets/assistant_message_bubble.dart, bakara (+8 more)
+### Community 146 - "PlanDetailScreen"
+Cohesion: 0.25
+Nodes (11): planActionsProvider, planCompletionsProvider, planDaysProvider, planProgressProvider, planScheduleProvider, planStreakProvider, build, _confirmRestart (+3 more)
 
 ### Community 147 - "topic_lexicon.dart"
-Cohesion: 0.11
-Nodes (17): all, byId, concepts, id, isSituational, label, labelEn, labelFor (+9 more)
+Cohesion: 0.12
+Nodes (16): all, byId, concepts, id, isSituational, label, labelEn, labelFor (+8 more)
 
 ### Community 148 - "daily_ayah_bootstrap.dart"
 Cohesion: 0.15
@@ -817,9 +826,9 @@ Nodes (15): ayahCount, fromMap, labelKey, meaning, meaningEn, meaningFor, medine
 Cohesion: 0.12
 Nodes (16): assistant_ayah_card.dart, ../../data/assistant_message.dart, ../../domain/answer_composer.dart, AssistantAction, AssistantMessage, AnswerSection, action, _ActionChip (+8 more)
 
-### Community 155 - "package:shared_preferences/shared_preferences.dart"
-Cohesion: 0.06
-Nodes (32): CustomPaint, ask, main, openAssistant, main, main, build, package:integration_test/integration_test.dart (+24 more)
+### Community 155 - "screens_preview.dart"
+Cohesion: 0.08
+Nodes (21): ask, main, openAssistant, package:kuran_turkce_meal/core/router/app_router.dart, package:kuran_turkce_meal/core/widgets_bridge/home_widget_data.dart, package:kuran_turkce_meal/core/widgets_bridge/home_widget_keys.dart, package:kuran_turkce_meal/core/widgets_bridge/home_widget_service.dart, package:kuran_turkce_meal/features/assistant/view/assistant_screen.dart (+13 more)
 
 ### Community 156 - "prophet.dart"
 Cohesion: 0.15
@@ -830,108 +839,144 @@ Cohesion: 0.31
 Nodes (8): IconBack(), IconHeadphones(), IconTextSize(), isRootInAyah(), normalise(), rootKeyFor(), ROOTS, Words()
 
 ### Community 158 - "assistant_ayah_card.dart"
-Cohesion: 0.14
-Nodes (13): AnswerAyah, answer, AssistantAyahCard, build, highlightColor, highlightTerms, languageCode, showDivider (+5 more)
+Cohesion: 0.10
+Nodes (20): ../../data/assistant_intent.dart, ../../../data/db/search_normalizer.dart, AnswerAyah, _matchCeiling, rank, ResultRanker, _score, _shortTextThreshold (+12 more)
 
-### Community 159 - "../../../shared/widgets/responsive_layout.dart"
-Cohesion: 0.12
-Nodes (14): AssistantResultsScreen, ayahs, build, languageCode, title, body, _bodyStyle, build (+6 more)
+### Community 159 - "screen_tours_test.dart"
+Cohesion: 0.17
+Nodes (11): CustomPaint, package:kuran_turkce_meal/features/discover/view/discover_screen.dart, package:kuran_turkce_meal/features/onboarding/providers/tour_provider.dart, package:kuran_turkce_meal/features/onboarding/widgets/coach_mark.dart, package:kuran_turkce_meal/features/onboarding/widgets/tour_host.dart, ensureInitialized, main, pumpScreen (+3 more)
 
 ### Community 160 - "discover_screen.dart"
-Cohesion: 0.04
-Nodes (51): topicDataProvider, _applySuggestion, _browseSlivers, build, _categoryIndex, _clear, _controller, count (+43 more)
+Cohesion: 0.05
+Nodes (47): topicDataProvider, _applySuggestion, _Body, _browseSlivers, build, _categoryIndex, _clear, _controller (+39 more)
 
-### Community 161 - "assistant_smart_intent_test.dart"
-Cohesion: 0.17
-Nodes (15): AssistantIntent, MultiTopicIntent, OpenResultIntent, OutOfScopeIntent, ProphetIntent, ReferenceIntent, SameSurahIntent, SaveAyahIntent (+7 more)
+### Community 161 - "plan_day_end_card.dart"
+Cohesion: 0.18
+Nodes (10): ../../../data/models/reading_plan.dart, PlanDay, build, _CompletedBadge, day, isCompleted, nextDay, onContinue (+2 more)
 
 ### Community 162 - "build_topics.py"
 Cohesion: 0.23
 Nodes (10): build_regex(), load(), main(), mutual_related(), Kur'an konu fihristini üretir. Kullanım: python3 tool/build_topics.py #…, Terimleri kelime başı sınırlı tek bir desende birleştirir. Sınır yalnızca BAŞTA…, Veri tutarlılığını üretimden önce denetler. Yazım hatası sessizce kaybolur:…, `related` bağlarını karşılıklı hâle getirir. Elle yazarken tek yön yazmak… (+2 more)
 
-### Community 163 - "app_theme.dart"
-Cohesion: 0.25
-Nodes (7): app_colors.dart, app_typography.dart, AppTheme, _build, dark, light, static ThemeData get
+### Community 163 - "assistant_english_test.dart"
+Cohesion: 0.20
+Nodes (9): HelpIntent, MoreResultsIntent, bakara, classifier, classify, composer, kehf, main (+1 more)
 
 ### Community 164 - "../../../data/models/ayah.dart"
 Cohesion: 0.20
 Nodes (9): ayah_card.dart, ayah_card_renderer.dart, ../../../data/models/ayah.dart, AyahShare, card, _format, text, package:path_provider/path_provider.dart (+1 more)
 
-### Community 165 - "TopBar.jsx"
-Cohesion: 0.27
-Nodes (8): zustand, IconMoon(), IconSun(), Logo(), TopBar(), useAppStore, useLang(), useTheme()
+### Community 165 - "StateNotifier"
+Cohesion: 0.29
+Nodes (10): AudioDownload, AudioNotifier, AudioState, AyahSetDownloadNotifier, SurahDownloadNotifier, ActiveToursNotifier, TourNotifier, Set (+2 more)
 
 ### Community 166 - "reader_advance_test.dart"
 Cohesion: 0.14
 Nodes (13): ScrollController, ScrollNotification, advanceCount, _AdvanceDecider, controller, decider, handle, isDragging (+5 more)
 
-### Community 167 - "surah_search_field.dart"
-Cohesion: 0.23
-Nodes (11): surahQueryProvider, build, _clear, _controller, createState, dispose, initState, SurahSearchField (+3 more)
+### Community 167 - "donation_reminder.dart"
+Cohesion: 0.22
+Nodes (8): core/notifications/daily_ayah_notifications.dart, ../data/donation_links.dart, donation_provider.dart, delay, fireAt, notificationsOn, notifier, ../../settings/providers/preferences_provider.dart
 
 ### Community 168 - "query_cleaner.dart"
 Cohesion: 0.17
 Nodes (11): clean, CleanedQuery, isEmpty, isStopWord, original, query, QueryCleaner, _stopWords (+3 more)
 
-### Community 169 - "dart:async"
-Cohesion: 0.20
-Nodes (9): dart:async, dart:typed_data, dart:ui, AyahCardRenderer, _capture, _paintedBoundary, _renderTimeout, toPng (+1 more)
+### Community 169 - "arabic_font_coverage_test.dart"
+Cohesion: 0.22
+Nodes (8): dart:typed_data, chars, cmapOffset, data, _fontCharacters, main, subtableCount, tableCount
 
 ### Community 170 - "search_result_parts.dart"
 Cohesion: 0.12
-Nodes (15): ../../../data/repositories/quran_repository.dart, ReferenceHit, build, HighlightedText, hit, maxLines, onTap, prophet (+7 more)
+Nodes (16): ../../../data/repositories/quran_repository.dart, SearchHit, ReferenceHit, build, HighlightedText, hit, maxLines, onTap (+8 more)
 
-### Community 171 - "ayah_card.dart"
-Cohesion: 0.11
-Nodes (17): Color get, _accent, appName, arabic, _arabicFontSize, AyahCard, _background, build (+9 more)
+### Community 171 - "normalize_tanween.py"
+Cohesion: 0.50
+Nodes (4): convert(), main(), Ayet metnindeki yuvarlak tenvinleri standart tenvinlere çevirir. Kullanım…, Bir ayet metnini dönüştürür.
 
-### Community 173 - "VoidCallback?"
-Cohesion: 0.11
-Nodes (16): IconData, build, count, DiscoverEntryCard, hint, icon, onTap, title (+8 more)
+### Community 172 - "CustomPainter"
+Cohesion: 0.50
+Nodes (4): CustomPainter, _SpotlightPainter, _DialPainter, _NeedlePainter
+
+### Community 173 - "../../core/theme/app_typography.dart"
+Cohesion: 0.07
+Nodes (28): ../../core/theme/app_typography.dart, IconData, build, icon, labelKey, route, _Tool, _ToolButton (+20 more)
 
 ### Community 174 - "fuzzy_match.dart"
 Cohesion: 0.29
 Nodes (6): distance, FuzzyMatch, isNear, matchesWithSuffix, _min3, toleranceFor
 
-### Community 175 - "localized_app.dart"
-Cohesion: 0.22
-Nodes (8): static int, ensureInitialized, _instance, pump, reset, TestApp, wrap, wrapRouter
+### Community 175 - "package:shared_preferences/shared_preferences.dart"
+Cohesion: 0.06
+Nodes (27): package:kuran_turkce_meal/features/assistant/data/assistant_history.dart, package:kuran_turkce_meal/features/assistant/data/assistant_stats.dart, package:kuran_turkce_meal/features/donate/data/donation_links.dart, package:kuran_turkce_meal/features/donate/providers/donation_provider.dart, package:kuran_turkce_meal/features/donate/view/donate_screen.dart, package:kuran_turkce_meal/features/donate/widgets/donation_card.dart, package:kuran_turkce_meal/features/donate/widgets/support_banner.dart, package:kuran_turkce_meal/features/review/providers/review_provider.dart (+19 more)
 
-### Community 176 - "day_download_sheet.dart"
-Cohesion: 0.13
-Nodes (14): audio_download_sheet.dart, ../../../data/models/audio_download.dart, dayLabel, download, _Failure, label, _MobileDataNotice, onCancel (+6 more)
+### Community 176 - "segment_repository_test.dart"
+Cohesion: 0.17
+Nodes (11): CachingAssetBundle, SegmentRepository, package:flutter/foundation.dart, package:kuran_turkce_meal/data/repositories/segment_repository.dart, bundle, _FileBundle, load, main (+3 more)
 
-### Community 177 - "ConsumerState"
-Cohesion: 0.21
-Nodes (13): ConsumerState, ConsumerStatefulWidget, rootDataProvider, AssistantScreen, _AssistantScreenState, VerseSearchScreen, _VerseSearchScreenState, rootSearchProvider (+5 more)
+### Community 177 - "List"
+Cohesion: 0.11
+Nodes (17): Ayah, List, package:kuran_turkce_meal/data/models/surah.dart, package:kuran_turkce_meal/data/repositories/prophet_repository.dart, package:kuran_turkce_meal/features/home/providers/home_provider.dart, ayahsById, ensureInitialized, main (+9 more)
 
-### Community 178 - "surah_end_card.dart"
-Cohesion: 0.13
-Nodes (14): build, _CompletionNote, current, isReady, lang, next, nextSurah, _NextSurahTile (+6 more)
+### Community 178 - "assistant_answer_test.dart"
+Cohesion: 0.17
+Nodes (10): package:kuran_turkce_meal/data/models/prophet.dart, package:kuran_turkce_meal/features/assistant/data/assistant_intent.dart, package:kuran_turkce_meal/features/assistant/domain/answer_composer.dart, package:kuran_turkce_meal/features/assistant/domain/result_ranker.dart, package:kuran_turkce_meal/features/assistant/domain/turkish_suffix.dart, bakara, kehf, main (+2 more)
 
-### Community 179 - "plan_day_end_card.dart"
-Cohesion: 0.18
-Nodes (10): ../../../data/models/reading_plan.dart, PlanDay, build, _CompletedBadge, day, isCompleted, nextDay, onContinue (+2 more)
-
-### Community 180 - "PlanDetailScreen"
+### Community 179 - "app_theme.dart"
 Cohesion: 0.25
-Nodes (11): planActionsProvider, planCompletionsProvider, planDaysProvider, planProgressProvider, planScheduleProvider, planStreakProvider, build, _confirmRestart (+3 more)
+Nodes (7): app_colors.dart, app_typography.dart, AppTheme, _build, dark, light, static ThemeData get
 
-### Community 181 - "_QuranAppState"
-Cohesion: 0.40
-Nodes (5): homeWidgetSyncProvider, QuranApp, _QuranAppState, _syncWidgets, WidgetsBindingObserver
+### Community 180 - "prophet_repository.dart"
+Cohesion: 0.15
+Nodes (12): Future, all, _assetPath, byId, byName, ensureLoaded, isLoaded, _load (+4 more)
 
-### Community 182 - "result_ranker.dart"
+### Community 181 - "VoidCallback?"
+Cohesion: 0.05
+Nodes (37): ../../../data/models/surah.dart, ../../../data/models/topic.dart, build, count, DiscoverEntryCard, hint, icon, onTap (+29 more)
+
+### Community 182 - "surah_search_field.dart"
+Cohesion: 0.23
+Nodes (11): surahQueryProvider, build, _clear, _controller, createState, dispose, initState, SurahSearchField (+3 more)
+
+### Community 183 - "TopBar.jsx"
+Cohesion: 0.27
+Nodes (8): zustand, IconMoon(), IconSun(), Logo(), TopBar(), useAppStore, useLang(), useTheme()
+
+### Community 184 - "package:kuran_turkce_meal/features/search/data/verse_reference.dart"
+Cohesion: 0.33
+Nodes (5): package:kuran_turkce_meal/features/search/data/verse_reference.dart, main, names, parse, _resolve
+
+### Community 185 - "dart:async"
 Cohesion: 0.25
-Nodes (7): ../../data/assistant_intent.dart, ../../../data/db/search_normalizer.dart, _matchCeiling, rank, ResultRanker, _score, _shortTextThreshold
+Nodes (7): dart:async, dart:ui, AyahCardRenderer, _capture, _paintedBoundary, _renderTimeout, toPng
 
-### Community 183 - "HomeScreen"
+### Community 186 - "package:flutter_test/flutter_test.dart"
+Cohesion: 0.05
+Nodes (37): dart:convert, dart:io, Database, package:flutter_test/flutter_test.dart, package:kuran_turkce_meal/data/db/search_normalizer.dart, package:kuran_turkce_meal/data/models/root.dart, package:kuran_turkce_meal/features/assistant/data/topic_lexicon.dart, package:kuran_turkce_meal/features/assistant/domain/fuzzy_match.dart (+29 more)
+
+### Community 187 - "_QuranAppState"
+Cohesion: 0.25
+Nodes (8): homeWidgetSyncProvider, recordMilestoneAndMaybeRequestReview, reviewProvider, QuranApp, _QuranAppState, _registerOpen, _syncWidgets, WidgetsBindingObserver
+
+### Community 188 - "assistantProvider"
+Cohesion: 0.25
+Nodes (8): assistantProvider, voiceInputProvider, AssistantScreen, _AssistantScreenState, build, _Composer, _send, _toggleVoice
+
+### Community 189 - "review_prompt.dart"
+Cohesion: 0.25
+Nodes (7): appStoreId, notifier, openStoreListing, requestReview, review, package:in_app_review/in_app_review.dart, review_provider.dart
+
+### Community 190 - "HomeScreen"
 Cohesion: 0.48
 Nodes (7): showDonationCardProvider, ayahOfTheDayProvider, filteredSurahListProvider, lastReadProvider, surahProgressProvider, build, HomeScreen
 
-### Community 184 - "streak_summary.dart"
+### Community 191 - "assistant_screen_test.dart"
+Cohesion: 0.29
+Nodes (6): package:kuran_turkce_meal/features/assistant/data/assistant_message.dart, package:kuran_turkce_meal/features/assistant/view/widgets/assistant_message_bubble.dart, ayah, ensureInitialized, main, pumpBubble
+
+### Community 192 - "return"
 Cohesion: 0.33
-Nodes (5): ../../../data/models/plan_schedule.dart, ReadingStreak, build, streak, StreakSummary
+Nodes (5): return, _block, entries, main, started
 
 ## Ambiguous Edges - Review These
 - `iOS Launch Screen Assets` → `Sıcak Kırık Ton Renk Paleti`  [AMBIGUOUS]
@@ -940,8 +985,8 @@ Nodes (5): ../../../data/models/plan_schedule.dart, ReadingStreak, build, streak
   android/app/src/main/res/mipmap-xhdpi/ic_launcher.png · relation: rationale_for
 
 ## Knowledge Gaps
-- **2068 isolated node(s):** `ask`, `context`, `result`, `done`, `future` (+2063 more)
-  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 2380 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
+- **2286 isolated node(s):** `ask`, `context`, `result`, `done`, `future` (+2281 more)
+  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 2640 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
 - **8 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
@@ -951,13 +996,13 @@ _Questions this graph is uniquely positioned to answer:_
   _Edge tagged AMBIGUOUS (relation: conceptually_related_to) - confidence is low._
 - **What is the exact relationship between `App Launcher Icon (xhdpi, 96x96)` and `Missing Adaptive Icon Configuration`?**
   _Edge tagged AMBIGUOUS (relation: rationale_for) - confidence is low._
-- **Why does `tool/** Analiz Dışı Bırakma` connect `lib/features (home, reader, search, plans, bookmarks, settings)` to `screens_preview.dart`?**
-  _High betweenness centrality (0.031) - this node is a cross-community bridge._
+- **Why does `_` connect `_` to `static const`?**
+  _High betweenness centrality (0.027) - this node is a cross-community bridge._
 - **What connects `ask`, `context`, `result` to the rest of the system?**
-  _2068 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _2286 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `lib/features (home, reader, search, plans, bookmarks, settings)` be split into smaller, more focused modules?**
   _Cohesion score 0.05254901960784314 - nodes in this community are weakly interconnected._
 - **Should `app_colors.dart` be split into smaller, more focused modules?**
-  _Cohesion score 0.07407407407407407 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.06896551724137931 - nodes in this community are weakly interconnected._
 - **Should `search_provider.dart` be split into smaller, more focused modules?**
   _Cohesion score 0.07407407407407407 - nodes in this community are weakly interconnected._

@@ -94,18 +94,28 @@ void main() {
       // Arapçada 10 yaygın kalıp vardır. Dışına çıkan bir değer korpus
       // ayrıştırmasının bozulduğunu gösterir.
       for (final root in roots.values) {
-        for (final (form, count) in root.verbForms) {
-          expect(form, inInclusiveRange(1, 11), reason: root.arabic);
-          expect(count, greaterThan(0));
+        for (final vf in root.verbForms) {
+          expect(vf.form, inInclusiveRange(1, 11), reason: root.arabic);
+          expect(vf.count, greaterThan(0));
         }
       }
+    });
+
+    test('kalıbın örnek fiili ve anlamı gelir', () {
+      // ق-ر-أ: I. kalıp "okudu" (sözlükte var), IV. kalıp "okuttu"
+      // (sözlükte yok; fiil yine de gösterilir).
+      final qara = {for (final vf in roots['قرأ']!.verbForms) vf.form: vf};
+      expect(qara[1]!.lemma, isNotEmpty);
+      expect(qara[1]!.meaning, 'Okudu');
+      expect(qara[4]!.lemma, isNotEmpty);
+      expect(qara[4]!.hasMeaning, isFalse);
     });
 
     test('fiil olarak geçen köklerde dolu', () {
       // ع-ل-م hem I. kalıpta (bildi) hem II. kalıpta (öğretti) geçer;
       // kökün farklı anlamlara gelmesinin sebebi budur.
       final ilm = roots['علم']!;
-      final forms = {for (final (f, _) in ilm.verbForms) f};
+      final forms = {for (final vf in ilm.verbForms) vf.form};
       expect(forms, containsAll(<int>[1, 2]));
     });
   });
